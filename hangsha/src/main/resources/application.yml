@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: CampusCalendar
+
+  datasource:
+    url: jdbc:mysql://localhost:3307/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: user     # docker-compose.yml과 일치
+    password: password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # 배포 시엔 validate or none
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+# Swagger UI http://localhost:8080/swagger-ui/index.html
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    groups-order: DESC
+    operations-sorter: method
+    disable-swagger-default-url: true
+    display-request-duration: true
+  api-docs:
+    path: /api-docs
+
+jwt:
+  secret: "v3rys3cr3tk3y_must_be_l0ng_enough_to_be_secure_minimum_256_bits"
+  expiration: 86400000

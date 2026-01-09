@@ -38,3 +38,7 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+db_data/
+**/db_data/
+hangsha/db_data/
