@@ -1,3 +1,5 @@
 package com.team1.hangsha.user
 
-annotation class LoggedInUser()
+@Target(AnnotationTarget.VALUE_PARAMETER)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class LoggedInUser

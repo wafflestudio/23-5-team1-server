@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS users
 (
     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NULL,
+    username VARCHAR(50),
     email VARCHAR(255) NULL,
     profile_image_url VARCHAR(1024) NULL,
 

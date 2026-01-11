@@ -13,7 +13,7 @@ data class UserIdentity(
     val userId: Long,
     val provider: AuthProvider,
     val providerUserId: String,
-    val email: String? = null,  // 소셜에서 주는 이메일과
+    val email: String? = null,  // 소셜에서 주는 이메일과 로컬 이메일이 다를 수 있음
     val password: String? = null,
     @CreatedDate
     var createdAt: Instant? = null,
