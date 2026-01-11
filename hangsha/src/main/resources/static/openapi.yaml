@@ -98,6 +98,12 @@ components:
         email: { type: string, format: email, nullable: true }
         profileImageUrl: { type: string, nullable: true }
 
+    RefreshResponse:
+      type: object
+      required: [accessToken]
+      properties:
+        accessToken: { type: string }
+
     # ---------------- Categories ----------------
     CategoryGroupDto:
       type: object
@@ -557,12 +563,7 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                type: object
-                required: [accessToken]
-                properties:
-                  accessToken:
-                    type: string
+              schema: { $ref: '#/components/schemas/RefreshResponse' }
 
   # ---------------- Users ----------------
   /users/me:
