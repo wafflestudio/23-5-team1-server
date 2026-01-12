@@ -50,7 +50,7 @@ jobs:
 
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            # docker compose(v2) 없으면 설치
+            # docker compose(v2) 없으면 설치(apt 없이)
             if ! docker compose version >/dev/null 2>&1; then
               ARCH="$(uname -m)"
               case "$ARCH" in
@@ -65,32 +65,39 @@ jobs:
               chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
-            # ✅ 현재 서버에 존재하는 mysql 컨테이너 이름(너 로그 기준)
-            DB_CONTAINER="2a0ff43ed90a_campus-mysql"
+            # ✅ campus_default 네트워크 보장(없으면 생성)
+            docker network inspect campus_default >/dev/null 2>&1 || docker network create campus_default
 
-            # mysql 컨테이너 존재/기동
-            if ! docker ps -a --format '{{.Names}}' | grep -qx "$DB_CONTAINER"; then
-              echo "ERROR: DB container $DB_CONTAINER not found"
+            # ✅ DB 컨테이너 자동 탐색
+            # 1) 실행 중 mysql:8.0 중 "campus-mysql" 포함
+            DB_CONTAINER="$(docker ps --filter 'ancestor=mysql:8.0' --format '{{.Names}}' | grep -m1 'campus-mysql' || true)"
+            # 2) 전체(mysql:8.0) 중 "campus-mysql" 포함
+            if [ -z "$DB_CONTAINER" ]; then
+              DB_CONTAINER="$(docker ps -a --filter 'ancestor=mysql:8.0' --format '{{.Names}}' | grep -m1 'campus-mysql' || true)"
+            fi
+            # 3) 그래도 없으면 mysql:8.0 아무거나(최소한 살려야 하니까)
+            if [ -z "$DB_CONTAINER" ]; then
+              DB_CONTAINER="$(docker ps -a --filter 'ancestor=mysql:8.0' --format '{{.Names}}' | head -n1 || true)"
+            fi
+
+            if [ -z "$DB_CONTAINER" ]; then
+              echo "ERROR: No mysql:8.0 container found on server."
               docker ps -a
               exit 1
             fi
+            echo "DB_CONTAINER=$DB_CONTAINER"
+
+            # DB 컨테이너 기동 + 네트워크에 alias(db)로 연결 (이미 연결돼있으면 무시)
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
+            docker network connect --alias db campus_default "$DB_CONTAINER" >/dev/null 2>&1 || true
 
-            # mysql 컨테이너가 붙어있는 네트워크 찾기(첫 번째 네트워크 사용)
-            DB_NET="$(docker inspect -f '{{range $k,$v := .NetworkSettings.Networks}}{{println $k}}{{end}}' "$DB_CONTAINER" | head -n1)"
-            if [ -z "$DB_NET" ]; then
-              echo "ERROR: could not detect network of $DB_CONTAINER"
-              docker inspect "$DB_CONTAINER" | head -n 40
-              exit 1
-            fi
-            echo "DB network = $DB_NET"
-
-            # app 컨테이너 충돌/찌꺼기 제거
+            # ✅ app 컨테이너/레거시 충돌 제거
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
-            # ✅ app compose 파일: DB host를 기존 컨테이너 이름으로 직접 지정
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
+
+            # ✅ app만 compose로 관리(네트워크는 campus_default 외부 사용)
             cat > docker-compose.prod.yml <<EOF
             version: '3.8'
             services:
@@ -100,20 +107,21 @@ jobs:
                 ports:
                   - "8080:8080"
                 environment:
-                  SPRING_DATASOURCE_URL: jdbc:mysql://${DB_CONTAINER}:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+                  SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
                   SPRING_DATASOURCE_USERNAME: user
                   SPRING_DATASOURCE_PASSWORD: password
+                networks:
+                  - campus_default
                 restart: always
+
+            networks:
+              campus_default:
+                external: true
             EOF
 
-            # app pull
+            # app 업데이트
             docker compose -f docker-compose.prod.yml pull app
-
-            # app up
             docker compose -f docker-compose.prod.yml up -d --no-deps app
-
-            # ✅ app을 DB 네트워크에 연결 (이미 연결돼있으면 무시)
-            docker network connect "$DB_NET" campus-server >/dev/null 2>&1 || true
 
             echo "=== ps ==="
             docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
