@@ -43,13 +43,8 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           port: 22
-
-          # SSH 연결 타임아웃(짧게 OK)
           timeout: 2m
-
-          # 원격 스크립트 실행 타임아웃(다운로드 느리면 크게)
           command_timeout: 40m
-
           script: |
             set -euo pipefail
 
@@ -72,7 +67,7 @@ jobs:
               docker compose version
             fi
 
-            # compose 파일 생성 (EOF 줄은 그대로 둬야 함)
+            # compose 파일 생성 (EOF 줄은 그대로, 공백 없이 닫힘)
             cat > docker-compose.prod.yml <<'EOF'
             services:
               app:
@@ -101,10 +96,14 @@ jobs:
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
             sed -i "s|\${DOCKER_USERNAME}|${DOCKER_USERNAME}|g" docker-compose.prod.yml
 
-            # 기존 컨테이너 꼬임 방지
+            # ✅ 과거 compose 프로젝트명이 붙은 '..._campus-server' 컨테이너가 남아있어서 충돌남
+            # - campus-server(현재 이름) 제거
             docker rm -f campus-server 2>/dev/null || true
+            # - *_campus-server(레거시 이름) 전부 제거
+            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
             # ✅ app만 pull (db는 매번 안 받음)
             docker compose -f docker-compose.prod.yml pull app
 
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
+            # ✅ db 건드리지 말고 app만 올리기(이름 충돌/재생성 리스크 최소화)
+            docker compose -f docker-compose.prod.yml up -d --no-deps app
