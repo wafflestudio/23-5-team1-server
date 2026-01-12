@@ -65,13 +65,9 @@ jobs:
               chmod +x ~/.docker/cli-plugins/docker-compose
             fi
 
-            # ✅ 레거시 컨테이너 충돌 제거 (app만)
-            docker rm -f campus-server 2>/dev/null || true
-            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
-
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
 
-            # compose 파일 덮어쓰기
+            # compose 파일 생성(현재 디렉토리)
             cat > docker-compose.prod.yml <<EOF
             version: '3.8'
             services:
@@ -81,51 +77,52 @@ jobs:
                 ports:
                   - "8080:8080"
                 environment:
-                  SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+                  # ✅ db 대신 "campus-mysql"로 고정 (기존 컨테이너를 그대로 씀)
+                  SPRING_DATASOURCE_URL: jdbc:mysql://campus-mysql:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
                   SPRING_DATASOURCE_USERNAME: user
                   SPRING_DATASOURCE_PASSWORD: password
-                depends_on:
-                  db:
-                    condition: service_healthy
                 restart: always
-
-              db:
-                image: mysql:8.0
-                container_name: campus-mysql
-                environment:
-                  MYSQL_DATABASE: campus_db
-                  MYSQL_ROOT_PASSWORD: root
-                  MYSQL_USER: user
-                  MYSQL_PASSWORD: password
-                volumes:
-                  - ./db_data:/var/lib/mysql
-                command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-                restart: always
-                healthcheck:
-                  test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-                  interval: 10s
-                  timeout: 5s
-                  retries: 5
             EOF
 
             COMPOSE="docker compose -p campus -f docker-compose.prod.yml"
 
-            # ✅ app만 pull
-            $COMPOSE pull app
+            # ✅ campus 네트워크 생성(없으면)
+            docker network inspect campus_default >/dev/null 2>&1 || docker network create campus_default
 
-            # ✅ db는 올리지 않음. (이미 떠있으면 그대로 쓰게)
+            # ✅ 기존 mysql 컨테이너가 없으면 여기서 바로 실패(원인 명확히)
+            if ! docker ps -a --format '{{.Names}}' | grep -qx 'campus-mysql'; then
+              echo "ERROR: campus-mysql container not found on server."
+              docker ps -a
+              exit 1
+            fi
+
+            # ✅ mysql이 멈춰있으면 켜기
+            docker start campus-mysql >/dev/null 2>&1 || true
+
+            # ✅ mysql을 campus_default 네트워크에 연결 (이미 연결돼있으면 무시)
+            docker network connect campus_default campus-mysql >/dev/null 2>&1 || true
+
+            # ✅ app 레거시/충돌 컨테이너 정리
+            docker rm -f campus-server 2>/dev/null || true
+            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
+
+            # ✅ app만 pull + up
+            $COMPOSE pull app
             $COMPOSE up -d --no-deps app
 
-            echo "=== ps ==="
-            $COMPOSE ps || true
+            echo "=== inspect ==="
+            docker inspect -f 'status={{.State.Status}} restarting={{.State.Restarting}} restartCount={{.RestartCount}} exit={{.State.ExitCode}}' campus-server || true
 
-            echo "=== app logs(tail) ==="
+            echo "=== ps ==="
+            docker ps --format 'table {{.Names}}\t{{.Status}}\t{{.Ports}}'
+
+            echo "=== app logs (tail 200) ==="
             docker logs --tail 200 campus-server || true
 
-            echo "=== health (wait up to 60s) ==="
-            for i in {1..30}; do
+            echo "=== health wait (up to 120s) ==="
+            for i in {1..60}; do
               if curl -fsS http://127.0.0.1:8080/api/v1/health >/dev/null; then
-                echo "✅ app is responding"
+                echo "✅ health OK"
                 break
               fi
               sleep 2
