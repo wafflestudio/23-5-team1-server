@@ -1,0 +1,435 @@
+package org.example.crawler
+
+import com.microsoft.playwright.Browser
+import com.microsoft.playwright.BrowserType
+import com.microsoft.playwright.Page
+import com.microsoft.playwright.Playwright
+import com.microsoft.playwright.options.WaitUntilState
+import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
+import java.util.concurrent.TimeUnit
+
+class ExtraSnuCrawler(
+    private val baseUrl: String = "https://extra.snu.ac.kr",
+    private val listPath: String = "/ptfol/pgm/index.do",
+    private val viewPath: String = "/ptfol/pgm/view.do",
+    private val delayMsBetweenPages: Long = 200,
+    private val delayMsBetweenDetails: Long = 100,
+    private val debug: Boolean = true,
+    private val userAgent: String =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/143.0.0.0 Safari/537.36",
+    private val applyChkCodes: List<String> = listOf("0001", "0002", "0004"), // sync 기본
+    private val client: OkHttpClient = OkHttpClient.Builder()
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(25, TimeUnit.SECONDS)
+        .callTimeout(40, TimeUnit.SECONDS)
+        .followRedirects(true)
+        .build(),
+) : AutoCloseable {
+
+    // ✅ 상세(NetFunnel)는 JS 실행이 필요 → Playwright로 처리
+    private val playwright: Playwright = Playwright.create()
+    private val browser: Browser = playwright.chromium().launch(
+        BrowserType.LaunchOptions().setHeadless(true)
+    )
+    private val context: Browser.NewContextOptions = Browser.NewContextOptions().setUserAgent(userAgent)
+
+    // ✅ 재사용 (매 요청마다 newContext/newPage 만들지 않음)
+    private val pwContext = browser.newContext(context)
+    init {
+        // 무거운 리소스 차단 (JS는 살림)
+        pwContext.route("**/*") { route ->
+            val rt = route.request().resourceType()
+            if (rt == "image" || rt == "media" || rt == "font") route.abort()
+            else route.resume()
+        }
+    }
+    private val pwPage = pwContext.newPage()
+
+    override fun close() {
+        runCatching { pwPage.close() }
+        runCatching { pwContext.close() }
+        runCatching { browser.close() }
+        runCatching { playwright.close() }
+    }
+
+    fun crawlAll(startPage: Int = 1, maxPages: Int = 10_000): List<ProgramEvent> {
+        val results = mutableListOf<ProgramEvent>()
+        val seenSignatures = mutableSetOf<String>()
+
+        var page = startPage
+        while (page < startPage + maxPages) {
+            val html = fetchListPage(page) ?: break
+            val events = parseListHtml(html)
+            if (events.isEmpty()) break
+
+            val sig = signatureOf(events)
+            if (!seenSignatures.add(sig)) break // 같은 페이지 반복 방지
+
+            results += events
+            page++
+
+            if (delayMsBetweenPages > 0) Thread.sleep(delayMsBetweenPages)
+        }
+        return results
+    }
+
+    fun parseListHtml(html: String): List<ProgramEvent> {
+        val doc = Jsoup.parse(html, baseUrl)
+        val cards = doc.select("div.lica_gp")
+        if (cards.isEmpty()) return emptyList()
+
+        return cards.mapNotNull { cardToEvent(it) }
+            .filter { !it.title.isNullOrBlank() }
+    }
+
+    /**
+     * ✅ 상세 크롤링 (조건부 실행 지원)
+     * - init 모드에서 "마감" 스킵 같은 정책을 main에서 람다로 주입 가능
+     */
+    fun enrichDetails(
+        events: List<ProgramEvent>,
+        shouldFetch: (ProgramEvent) -> Boolean = { true }
+    ): List<ProgramEvent> {
+        return events.map { e ->
+            val dataSeq = e.dataSeq
+            if (dataSeq.isNullOrBlank()) return@map e
+            if (!shouldFetch(e)) return@map e
+
+            val html = fetchDetailPageByPlaywright(dataSeq) ?: return@map e
+            val sessions = parseDetailSessions(html)
+
+            if (delayMsBetweenDetails > 0) Thread.sleep(delayMsBetweenDetails)
+            e.copy(detailSessions = sessions)
+        }
+    }
+
+    private fun fetchListPage(pageNo: Int): String? {
+        val builder = (baseUrl + listPath).toHttpUrl().newBuilder()
+            .addQueryParameter("currentPageNo", pageNo.toString())
+
+        // ✅ applyChkCdSh만 붙임 (init/sync 모드에 따라 applyChkCodes가 다름)
+        for (code in applyChkCodes) {
+            builder.addQueryParameter("applyChkCdSh", code)
+        }
+
+        val url = builder.build()
+
+        val req = Request.Builder()
+            .url(url)
+            .get()
+            .header("User-Agent", userAgent)
+            .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+            .header("Accept-Language", "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7")
+            .header("Cache-Control", "no-cache")
+            .header("Pragma", "no-cache")
+            .build()
+
+        if (debug) println("[LIST] GET $url")
+
+        client.newCall(req).execute().use { resp ->
+            if (!resp.isSuccessful) {
+                if (debug) println("[LIST] FAIL code=${resp.code} url=$url")
+                return null
+            }
+            return resp.body?.string()
+        }
+    }
+
+    /**
+     * ✅ NetFunnel/Wait.jsp 때문에 OkHttp만으로는 302 루프가 날 수 있음
+     * Playwright로 실제 브라우저처럼 진입해서 최종 DOM(html)을 가져온다.
+     *
+     * - pwPage 재사용
+     * - wait.jsp / netfunnel 감지 시 재시도 + 백오프(지터)
+     */
+    private fun fetchDetailPageByPlaywright(dataSeq: String): String? {
+        val viewUrl = "$baseUrl$viewPath?dataSeq=$dataSeq"
+        if (debug) println("\n[PW] goto(view) => $viewUrl")
+
+        fun isWait(u: String) = u.contains("/wait.jsp")
+        fun isDetail(u: String) = u.contains("/ptfol/imng/icmpNsbjtPgm/findIcmpNsbjtPgmInfo.do")
+
+        return try {
+            // ✅ domcontentloaded 기다리지 말고 'commit'까지만 (응답만 받으면 됨)
+            pwPage.navigate(
+                viewUrl,
+                Page.NavigateOptions()
+                    .setWaitUntil(WaitUntilState.COMMIT)
+                    .setTimeout(20_000.0)
+            )
+
+            val hardDeadlineMs = System.currentTimeMillis() + 120_000L // 총 2분까지 기다림
+            var lastUrl = pwPage.url()
+
+            while (System.currentTimeMillis() < hardDeadlineMs) {
+                val curUrl = pwPage.url()
+                if (curUrl != lastUrl && debug) println("[PW] url => $curUrl")
+                lastUrl = curUrl
+
+                // 1) wait.jsp면: 서버가 대기열 처리 중. 재navigate 하지 말고 잠깐 기다림.
+                if (isWait(curUrl)) {
+                    if (debug) println("[PW] wait.jsp... (sleep)")
+                    pwPage.waitForTimeout(800.0 + Math.random() * 1200.0) // 0.8~2.0s
+                    continue
+                }
+
+                // 2) 최종 상세(findIcmp...)로 왔으면: 필요한 DOM이 생길 때까지 조금만 기다렸다가 content
+                if (isDetail(curUrl)) {
+                    runCatching {
+                        pwPage.waitForSelector(
+                            "table.table.t_view.add_tr",
+                            Page.WaitForSelectorOptions().setTimeout(8_000.0)
+                        )
+                    }
+                    // navigating 중 content() 터질 수 있어 방어
+                    val html = try {
+                        pwPage.content()
+                    } catch (e: Exception) {
+                        pwPage.waitForTimeout(500.0 + Math.random() * 600.0)
+                        pwPage.content()
+                    }
+
+                    if (debug) println("[PW] OK detail url=$curUrl htmlLen=${html.length}")
+                    return html
+                }
+
+                // 3) 그 외 상태: 아직 view.do이거나 중간 이동 중
+                pwPage.waitForTimeout(400.0 + Math.random() * 600.0)
+            }
+
+            if (debug) println("[PW] FAIL timeout waiting for detail dataSeq=$dataSeq lastUrl=${pwPage.url()}")
+            null
+        } catch (e: Exception) {
+            if (debug) println("[PW] FAIL dataSeq=$dataSeq : ${e::class.simpleName} ${e.message}")
+            null
+        }
+    }
+
+    // ---------------------------
+    // ✅ 리스트 카드 -> ProgramEvent (신형 모델 + status + tags)
+    // ---------------------------
+    private fun cardToEvent(card: Element): ProgramEvent? {
+        val li = card.closest("li")
+
+        // dataSeq
+        val onclick = card.selectFirst("a[onclick*=global.write]")?.attr("onclick")?.normalize()
+        val dataSeq = onclick?.let { Regex("""global\.write\('([^']+)'""").find(it)?.groupValues?.get(1) }
+
+        // status ("모집중" / "마감임박" / "마감" ...)
+        val status = card.selectFirst(".label_box a.btn01 span")?.text()?.normalize()
+            ?: card.selectFirst(".label_box a.btn01")?.text()?.normalize()
+
+        val majors = card.select("ul.major_type > li")
+            .map { it.text().normalize() }
+            .filter { it.isNotEmpty() }
+
+        val title = card.selectFirst("a.tit")?.text()?.normalize()
+
+        val operationMode = card.selectFirst("dl.class_cd dd")?.text()?.normalize()
+
+        // 기간 raw
+        val applyRaw = card.selectFirst("dl.apl_date dd")?.text()?.normalize()
+        val activityRaw = card.selectFirst("dl.edu_date dd")?.text()?.normalize()
+
+        val (applyStart, applyEnd) = parseDotRangeToYmd(applyRaw)
+        val (activityStart, activityEnd) = parseDotRangeToYmd(activityRaw)
+
+        val counts = li?.select(".cnt_gp > li")
+            ?.associate { row ->
+                val label = row.selectFirst("span.lg")?.text()?.normalize().orEmpty()
+                val value = row.selectFirst("strong")?.text()?.normalize().orEmpty()
+                label to value
+            }.orEmpty()
+
+        val applyCount = counts["신청"]?.toIntOrNullSafe()
+        val capacity = counts["정원"]?.toIntOrNullSafe()
+
+        val imageUrl = card.selectFirst(".img_wrap img")
+            ?.absUrl("src")
+            ?.takeIf { it.isNotBlank() }
+
+        // tags: "#..." 원문 그대로 저장
+        val tags = card.select(".keyword_list .keyword")
+            .map { it.text().normalize() }
+            .filter { it.isNotBlank() }
+
+        return ProgramEvent(
+            dataSeq = dataSeq,
+            status = status,
+            majorTypes = majors,
+            title = title,
+            operationMode = operationMode,
+            applyStart = applyStart,
+            applyEnd = applyEnd,
+            activityStart = activityStart,
+            activityEnd = activityEnd,
+            applyCount = applyCount,
+            capacity = capacity,
+            imageUrl = imageUrl,
+            tags = tags,
+            detailSessions = emptyList()
+        )
+    }
+
+    // ---------------------------
+    // ✅ 상세 페이지 -> DetailSession (start/end/time 평탄화, n회차, 우측 날짜 생략 처리)
+    // ---------------------------
+    private fun parseDetailSessions(html: String): List<DetailSession> {
+        val doc = Jsoup.parse(html, baseUrl)
+
+        val table = doc.select("table.table.t_view.add_tr")
+            .firstOrNull { it.text().normalize().contains("교육(활동)기간") }
+            ?: return emptyList()
+
+        val trs = table.select("tr")
+        if (trs.isEmpty()) return emptyList()
+
+        val sessions = linkedMapOf<Int, MutableSession>()
+        var currentRound = 1
+
+        fun ensure(round: Int): MutableSession {
+            sessions.putIfAbsent(round, MutableSession(round))
+            return sessions[round]!!
+        }
+
+        for (tr in trs) {
+            // 회차 감지: th.bg2 내부의 [n]
+            tr.selectFirst("th.bg2")?.text()?.normalize()?.let { t ->
+                Regex("""\[(\d+)]""").find(t)?.groupValues?.get(1)?.toIntOrNull()?.let { n ->
+                    currentRound = n
+                }
+            }
+
+            val loc = tdAfterThContains(tr, "교육(활동)장소")
+            if (!loc.isNullOrBlank()) ensure(currentRound).location = loc
+
+            val periodRaw = tdAfterThContains(tr, "교육(활동)기간")
+            if (!periodRaw.isNullOrBlank()) {
+                val f = parseDetailPeriod(periodRaw)
+                val s = ensure(currentRound)
+                s.startDate = f.startDate
+                s.endDate = f.endDate
+                s.startTime = f.startTime
+                s.endTime = f.endTime
+            }
+        }
+
+        return sessions.values
+            .map { it.toImmutable() }
+            .sortedBy { it.round ?: Int.MAX_VALUE }
+            .filter { it.location != null || it.startDate != null || it.startTime != null }
+    }
+
+    private fun tdAfterThContains(tr: Element, label: String): String? {
+        val th = tr.select("th")
+            .firstOrNull { it.text().normalize().contains(label) }
+            ?: return null
+
+        val td = th.nextElementSibling() ?: return null
+        return td.text().normalize().takeIf { it.isNotBlank() }
+    }
+
+    // ---------------------------
+    // helpers
+    // ---------------------------
+
+    private fun signatureOf(events: List<ProgramEvent>): String =
+        events.take(5).joinToString("|") { e ->
+            "${e.dataSeq}:${e.title}:${e.status}:${e.applyStart}:${e.applyEnd}"
+        }
+
+    private fun String.toIntOrNullSafe(): Int? {
+        val cleaned = this.replace(",", "").trim()
+        return cleaned.toIntOrNull()
+    }
+
+    private fun String.normalize(): String =
+        this.replace("\u00a0", " ")
+            .replace(Regex("""\s+"""), " ")
+            .trim()
+
+    // "2026.01.07.~2026.01.13." -> ("2026-01-07","2026-01-13")
+    // "" or null -> (null,null)
+    private fun parseDotRangeToYmd(raw: String?): Pair<String?, String?> {
+        val s = raw?.normalize()?.takeIf { it.isNotBlank() } ?: return null to null
+        val parts = s.split("~")
+        val left = parts.getOrNull(0)?.trim().orEmpty()
+        val right = parts.getOrNull(1)?.trim().orEmpty()
+        return parseDotDateToYmd(left) to parseDotDateToYmd(right)
+    }
+
+    private fun parseDotDateToYmd(x: String): String? {
+        val t = x.trim().removeSuffix(".")
+        if (t.isBlank()) return null
+        val m = Regex("""(\d{4})\.(\d{2})\.(\d{2})""").find(t) ?: return null
+        val (y, mo, d) = m.destructured
+        return "$y-$mo-$d"
+    }
+
+    private data class PeriodFields(
+        val startDate: String?,
+        val endDate: String?,
+        val startTime: String?,
+        val endTime: String?
+    )
+
+    /**
+     * "2026.01.15. 09:30 ~ 2026.01.15. 18:00"
+     * "2026.01.20. 14:00 ~ 2026.01.22. 17:00"
+     * "2026.01.20. 14:00 ~ 17:00" (우측 날짜 생략)
+     */
+    private fun parseDetailPeriod(raw: String): PeriodFields {
+        val s = raw.normalize()
+        val parts = s.split("~").map { it.trim() }
+        val left = parts.getOrNull(0).orEmpty()
+        val right = parts.getOrNull(1).orEmpty()
+
+        val (lsDate, lsTime) = parseDateTimeLoose(left)
+        val (rsDate, rsTime) = parseDateTimeLoose(right)
+
+        val startDate = lsDate
+        val startTime = lsTime
+
+        // 우측 날짜 없고 시간만 있으면 same-day
+        val endDate = rsDate ?: (if (rsTime != null) lsDate else null)
+        val endTime = rsTime
+
+        return PeriodFields(startDate, endDate, startTime, endTime)
+    }
+
+    private fun parseDateTimeLoose(x: String): Pair<String?, String?> {
+        val t = x.trim()
+        if (t.isBlank()) return null to null
+
+        val dm = Regex("""(\d{4})\.(\d{2})\.(\d{2})""").find(t)
+        val date = dm?.let { "${it.groupValues[1]}-${it.groupValues[2]}-${it.groupValues[3]}" }
+
+        val tm = Regex("""(\d{2}:\d{2})""").find(t)
+        val time = tm?.groupValues?.get(1)
+
+        return date to time
+    }
+
+    private data class MutableSession(
+        val round: Int,
+        var location: String? = null,
+        var startDate: String? = null,
+        var endDate: String? = null,
+        var startTime: String? = null,
+        var endTime: String? = null
+    ) {
+        fun toImmutable(): DetailSession =
+            DetailSession(
+                round = round,
+                location = location,
+                startDate = startDate,
+                endDate = endDate,
+                startTime = startTime,
+                endTime = endTime
+            )
+    }
+}

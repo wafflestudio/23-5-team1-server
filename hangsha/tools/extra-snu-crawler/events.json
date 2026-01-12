@@ -1,0 +1,4100 @@
+[
+  {
+    "dataSeq": "PGM012001481",
+    "majorTypes": [
+      "경력개발센터",
+      "기타"
+    ],
+    "title": "기업탐방 삼성바이오로직스",
+    "status": "모집중",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-09",
+    "applyEnd": "2026-01-18",
+    "activityStart": "2026-01-27",
+    "activityEnd": "2026-01-27",
+    "applyCount": 58,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=32&y=85&encSvrFileNm=d6f416820e58d451172a61586ee3d88ea948a7e98223e5afdd85b122606db5fef620faea481283e0622b4c623d4e740761acff7e354c585d8e8a3842e40070e5&thumbW=708&thumbH=999",
+    "tags": [
+      "#기업탐방",
+      "#경력개발센터",
+      "#현직자",
+      "#취업",
+      "#진로",
+      "#경력개발센터",
+      "#삼성",
+      "#바이오",
+      "#삼성바이오"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "삼성바이오 로직스&에피스",
+        "startDate": "2026-01-27",
+        "endDate": "2026-01-27",
+        "startTime": "11:00",
+        "endTime": "16:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001480",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "파이썬 데이터분석 에센스 집중과정 - 데이터 수집부터 분석 & 시각화까지",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2026-01-07",
+    "applyEnd": "2026-01-13",
+    "activityStart": "2026-01-15",
+    "activityEnd": "2026-01-16",
+    "applyCount": 120,
+    "capacity": 70,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_7.png",
+    "tags": [
+      "#파이썬",
+      "#데이터분석",
+      "#프로그래밍"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면(ZOOM)",
+        "startDate": "2026-01-15",
+        "endDate": "2026-01-15",
+        "startTime": "09:30",
+        "endTime": "18:00"
+      },
+      {
+        "round": 2,
+        "location": "비대면(ZOOM)",
+        "startDate": "2026-01-16",
+        "endDate": "2026-01-16",
+        "startTime": "09:30",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001479",
+    "majorTypes": [
+      "글쓰기지원센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "외국인 학생 한국어 논문 쓰기 특강 ② - 연구 내용은 어떻게 논문이 되는가?",
+    "status": "모집중",
+    "operationMode": "온라인",
+    "applyStart": "2026-01-08",
+    "applyEnd": "2026-01-20",
+    "activityStart": "2026-01-21",
+    "activityEnd": "2026-01-23",
+    "applyCount": 0,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=30&y=24&encSvrFileNm=bf4a827d812d5331b726f248172273f248fe87ff46f9c751a4daa9fce706d53752abe833b5462eea767639f36b6cb9fac22ad32e99f132162859818db9a6dfe5&thumbW=700&thumbH=470",
+    "tags": [
+      "#글쓰기",
+      "#한국어로논문쓰기",
+      "#외국인학생특강"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "Zoom을 활용한 비대면 특강",
+        "startDate": "2026-01-21",
+        "endDate": "2026-01-21",
+        "startTime": "15:00",
+        "endTime": "17:00"
+      },
+      {
+        "round": 2,
+        "location": "Zoom을 활용한 비대면 특강",
+        "startDate": "2026-01-23",
+        "endDate": "2026-01-23",
+        "startTime": "17:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001478",
+    "majorTypes": [
+      "글쓰기지원센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "외국인 학생 한국어 논문 쓰기 특강 ① - 연구 문제는 어떻게 설계되는가?",
+    "status": "모집중",
+    "operationMode": "온라인",
+    "applyStart": "2026-01-08",
+    "applyEnd": "2026-01-19",
+    "activityStart": "2026-01-20",
+    "activityEnd": "2026-01-22",
+    "applyCount": 0,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=30&y=19&encSvrFileNm=bf4a827d812d5331b726f248172273f2d6f55812f23b596b6cc51a29e81f65b5bf5883ab3e7e492c6635497c50fe658a1958d212acb9c52bd30672d5d549e26d&thumbW=700&thumbH=470",
+    "tags": [
+      "#글쓰기",
+      "#한국어로논문쓰기",
+      "#외국인학생특강"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "Zoom을 활용한 비대면 특강",
+        "startDate": "2026-01-20",
+        "endDate": "2026-01-20",
+        "startTime": "15:00",
+        "endTime": "17:00"
+      },
+      {
+        "round": 2,
+        "location": "Zoom을 활용한 비대면 특강",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-22",
+        "startTime": "15:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001477",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "금융권 직무탐색 챌린지 (은행·증권·보험·자산운용 완전 정복)",
+    "status": "마감임박",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-05",
+    "applyEnd": "2026-01-15",
+    "activityStart": "2026-01-20",
+    "activityEnd": "2026-01-22",
+    "applyCount": 162,
+    "capacity": 130,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=31&y=259&encSvrFileNm=dd6f14b6123457fd0ccc00a0cd4aca1fe1b58c42218feca745340bc479594c3cceea4c69f380156240d6a022ec0fe888926d9428a7e2fd8b5e7377981d87774e&thumbW=700&thumbH=874",
+    "tags": [
+      "#경력개발센터",
+      "#금융권취업",
+      "#은행취업",
+      "#증권사취업",
+      "#자산운용사취업",
+      "#보험사취업"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "롯데국제교육관(152-1동) 207호",
+        "startDate": "2026-01-20",
+        "endDate": "2026-01-22",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001476",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "금융공기업 A매치, 기관별 전략으로 시작하기",
+    "status": "마감임박",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-05",
+    "applyEnd": "2026-01-15",
+    "activityStart": "2026-01-19",
+    "activityEnd": "2026-01-19",
+    "applyCount": 197,
+    "capacity": 180,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=684&height=459&x=61&y=303&encSvrFileNm=dd6f14b6123457fd0ccc00a0cd4aca1f5c4bd7d0480f1d9ae5399c56883adacac07501c469e4fa6ac7290b81300abfc956f66cdbf1b9a6149cca499e31381904&thumbW=800&thumbH=999",
+    "tags": [
+      "#경력개발센터",
+      "#금융공기업",
+      "#A매치",
+      "#금융감독원",
+      "#한국은행",
+      "#KDB산업은행",
+      "#수출입은행",
+      "#한국무역보험공사",
+      "#예금보험공사"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "롯데국제교육관(152-1동) 208호",
+        "startDate": "2026-01-19",
+        "endDate": "2026-01-19",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001475",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "AI와 함께하는 취업준비, <나임> 활용법 특강",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2026-01-02",
+    "applyEnd": "2026-01-14",
+    "activityStart": "2026-01-16",
+    "activityEnd": "2026-01-16",
+    "applyCount": 85,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=855&height=574&x=71&y=234&encSvrFileNm=dd6f14b6123457fd0ccc00a0cd4aca1f2189d783d378977761a669f8ae23b67c5820d475bdc342f97ff496cd5b50c46683f7cad924d067607eaf8b21f8ea9d2d&thumbW=1000&thumbH=1000",
+    "tags": [
+      "#AI",
+      "#역량",
+      "#경력개발센터",
+      "#생성형AI",
+      "#AI자소서작성",
+      "#취업준비",
+      "#AI취업준비"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 온라인 교육",
+        "startDate": "2026-01-16",
+        "endDate": "2026-01-16",
+        "startTime": "14:00",
+        "endTime": "15:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001470",
+    "majorTypes": [
+      "경력개발센터",
+      "공모전/경진대회"
+    ],
+    "title": "대학원생 비교과 프로그램 체험수기 공모전",
+    "status": "모집중",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2026-01-02",
+    "applyEnd": "2026-01-15",
+    "applyCount": 12,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=506&height=340&x=47&y=0&encSvrFileNm=bad80e0cb67fa002f81d9a333bc3ac6a709c77f1848c48ffcbd3226755fd41e4110d2fe4ea68e846bd62033dbb6bd00e38ad02b3fa03e2cf8889d103bc6afac9&thumbW=596&thumbH=340",
+    "tags": [
+      "#비교과프로그램",
+      "#체험수기",
+      "#공모전",
+      "#대학원생"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001469",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "[회차별 정원 30명] 생성형 AI를 활용한 실무 자동화·문제해결 워크숍",
+    "status": "마감임박",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-31",
+    "applyEnd": "2026-01-18",
+    "activityStart": "2026-01-22",
+    "activityEnd": "2026-01-23",
+    "applyCount": 2,
+    "capacity": 1,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=841&height=564&x=88&y=85&encSvrFileNm=d6a16e96b34c4e8ea78fcb679591ade5492af22adc4eb46baba3a105a59ce4654343cbb2f0e28a07b85de8ed9bfaac8bf4db23c4820e443e548b09b654e3571a&thumbW=999&thumbH=650",
+    "tags": [
+      "#생성형AI",
+      "#디지털",
+      "#자동화",
+      "#문제해결",
+      "#역량강화",
+      "#ChatGPT",
+      "#학부생",
+      "#대학원생"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "롯데국제교육관(152-1동) 406호 전산실",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-23",
+        "startTime": "10:30",
+        "endTime": "17:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001466",
+    "majorTypes": [
+      "경력개발센터",
+      "기타"
+    ],
+    "title": "기업탐방 국가정보원",
+    "status": "마감임박",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-02",
+    "applyEnd": "2026-01-14",
+    "activityStart": "2026-01-19",
+    "activityEnd": "2026-01-19",
+    "applyCount": 99,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=27&y=0&encSvrFileNm=1b4484fccc3543772cefbda94d6e54078092b4e1022653c81ea83410f21192406485ebd6b68b045795b4433563f4e186d67e3c016d7305413ac4a03d0501a3df&thumbW=700&thumbH=990",
+    "tags": [
+      "#기업탐방",
+      "#경력개발센터",
+      "#현직자",
+      "#취업",
+      "#진로"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "삼성역 인근",
+        "startDate": "2026-01-19",
+        "endDate": "2026-01-19",
+        "startTime": "10:00",
+        "endTime": "13:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001450",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "The Importance of Brevity",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-28",
+    "activityStart": "2026-01-29",
+    "activityEnd": "2026-01-29",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=41&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be56e994ae4811bd810a20d8b68c8a3b4e15c19542ea2ea436d07c406c03cb7c7698f3f20bf05110bf222e82de0ba84377d&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-29",
+        "endDate": "2026-01-29",
+        "startTime": "10:30",
+        "endTime": "12:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001449",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Ten Tips for Effective Presentations",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-27",
+    "activityStart": "2026-01-27",
+    "activityEnd": "2026-01-27",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=40&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5944053f8563f57b72d1f5d43731db36ab0499b13383f5ae7d514e70dc0682097b289022f1fea29042decf38ad215f0dc&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-27",
+        "endDate": "2026-01-27",
+        "startTime": "10:30",
+        "endTime": "12:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001448",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "English vs Korean pronunciation: theory and practice",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-21",
+    "activityStart": "2026-01-22",
+    "activityEnd": "2026-01-22",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=39&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5cb271d86ea41c57528f4f9dc259b68bed7f1f7926fbfb94ff397951d6db990e623b9336a9e584661ab7a63bc23dc7b4d&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-22",
+        "startTime": "12:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001447",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Rhetoric, Emphasis, and Rapport in Communication",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-20",
+    "activityStart": "2026-01-21",
+    "activityEnd": "2026-01-21",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=43&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5ed5223cb8229b210d0dacdc29ca31e2984d14d7ba9f5f021bd5d376caa080055d6ffa32ab5a40e07cf945beda61e6a65&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-21",
+        "endDate": "2026-01-21",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001446",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "효과적인 영어 논문 제목 및 초록 작성법",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-19",
+    "activityStart": "2026-01-20",
+    "activityEnd": "2026-01-20",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=42&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be55db171ef632c770cb477d4b530c6ffe0b06834ed985da802a3f8b5628338642c6bc4621e1e6aecd8c9619ef10b06ffbd&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-20",
+        "endDate": "2026-01-20",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001445",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Function and tone in email writing",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-13",
+    "activityStart": "2026-01-15",
+    "activityEnd": "2026-01-15",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=44&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be59760a1ffa28e1b9bee667514e349a6b5bafe51655002ae849f0d866bfc7e45f50b3b99c34c87c2ba78c80b35154d807c&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-15",
+        "endDate": "2026-01-15",
+        "startTime": "12:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001444",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Crafting Introductions for Essays",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-13",
+    "activityStart": "2026-01-14",
+    "activityEnd": "2026-01-14",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=40&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be515cef2879a8b3a446cb843b2a213d01e521fb2c6d26306fc7b5feb30a66422108a52c938344f778cd5cc809534b1b5bc&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-14",
+        "endDate": "2026-01-14",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001421",
+    "majorTypes": [
+      "인권센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "비폭력대화 워크숍(대학원생 역량강화)-연건캠퍼스 대학원생 대상",
+    "status": "모집중",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-16",
+    "activityStart": "2026-01-22",
+    "activityEnd": "2026-01-23",
+    "applyCount": 3,
+    "capacity": 16,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=652&height=437&x=0&y=0&encSvrFileNm=7f5f8b9a0c3fc3ac19e484f19836aa742c9538017b4d5c03a2176cef47f75efebfc6608bd18d7a8d219961fa947258768ec0802328108ac0731e567e27a6bba0&thumbW=652&thumbH=928",
+    "tags": [
+      "#비폭력대화워크숍"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "치의학대학원 교육동(연건캠퍼스 22동) 5층",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-22",
+        "startTime": "14:00",
+        "endTime": "18:00"
+      },
+      {
+        "round": 2,
+        "location": "치의학대학원 교육동(연건캠퍼스 22동) 5층",
+        "startDate": "2026-01-23",
+        "endDate": "2026-01-23",
+        "startTime": "14:00",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001343",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "과학 논문 작성법: ABCD writing skills",
+    "status": "마감임박",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-14",
+    "activityStart": "2026-01-21",
+    "activityEnd": "2026-01-22",
+    "applyCount": 118,
+    "capacity": 150,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/01_3.jpg",
+    "tags": [
+      "#대학원생",
+      "#영어논문"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "zoom을 활용한 비대면 강의",
+        "startDate": "2026-01-21",
+        "endDate": "2026-01-21",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      },
+      {
+        "round": 2,
+        "location": "zoom을 활용한 비대면 강의",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-22",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001112",
+    "majorTypes": [
+      "교수학습개발센터",
+      "학습/진로상담"
+    ],
+    "title": "'어서와, 학부대학 학습상담실은 처음이지?' 프로그램",
+    "status": "모집중",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-09-17",
+    "applyEnd": "2026-02-27",
+    "activityStart": "2025-09-17",
+    "activityEnd": "2026-02-27",
+    "applyCount": 78,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/studycounsel/02_4.jpg",
+    "tags": [
+      "#학습상담",
+      "#학습전략검사",
+      "#학습상담실"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-",
+        "startDate": "2025-09-17",
+        "endDate": "2026-02-27",
+        "startTime": "00:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001474",
+    "majorTypes": [
+      "경력개발센터",
+      "학습/진로상담"
+    ],
+    "title": "대학원생 진로불안 집단상담: 불안과 함께, 진로를 그리다",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-02",
+    "applyEnd": "2026-01-12",
+    "activityStart": "2026-01-14",
+    "activityEnd": "2026-01-15",
+    "applyCount": 11,
+    "capacity": 10,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=632&height=425&x=14&y=0&encSvrFileNm=dd6f14b6123457fd0ccc00a0cd4aca1f03080f84859e2ca0fe50d0b02c7376abf61e82bd316a56aba154da9b61a8d57a37ea86b41d4eb94f2f01d46c1e329d32&thumbW=647&thumbH=425",
+    "tags": [
+      "#진로",
+      "#집단상담",
+      "#",
+      "#진로불안",
+      "#",
+      "#자기탐색",
+      "#"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "서울대학교 롯데국제교육관(152-1동) 2층 경력개발센터 / 207호",
+        "startDate": "2026-01-14",
+        "endDate": "2026-01-15",
+        "startTime": "10:00",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001473",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "[세션별 정원 50명] 대학원생 진로 맞춤형 전문성 개발 프로그램 '겨울방학 대학원생 대학교원 임용 준비 프로그램 '",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-05",
+    "applyEnd": "2026-01-09",
+    "activityStart": "2026-01-21",
+    "activityEnd": "2026-01-23",
+    "applyCount": 325,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=650&height=437&x=189&y=0&encSvrFileNm=dd6f14b6123457fd0ccc00a0cd4aca1fea95b92cd8090b14927e4d76dda1f7080592243f68a96817660413bc5fa38b2b07f1c78a3e7b327be80988e67376bf27&thumbW=998&thumbH=437",
+    "tags": [
+      "#대학원",
+      "#대학교원",
+      "#임용",
+      "#전문성",
+      "#대학원생",
+      "#진로"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-",
+        "startDate": "2026-01-21",
+        "endDate": "2026-01-23",
+        "startTime": "00:00",
+        "endTime": "00:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001472",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "STRONG 직업흥미검사를 활용한 커리어 로드맵 워크숍: 흥미로부터 진로의 힌트를 찾다",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-31",
+    "applyEnd": "2026-01-08",
+    "activityStart": "2026-01-13",
+    "activityEnd": "2026-01-13",
+    "applyCount": 27,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=530&height=356&x=78&y=0&encSvrFileNm=bad80e0cb67fa002f81d9a333bc3ac6a451422d802147606095c07bf387b0b044712e7357e11cbad46aaaf3c62cd2628f5338bc39d504f36b6fc15ddca981dcd&thumbW=666&thumbH=356",
+    "tags": [
+      "#직업흥미검사",
+      "#",
+      "#strong검사",
+      "#",
+      "#진로검사",
+      "#",
+      "#진로로드맵",
+      "#",
+      "#진로워크숍",
+      "#"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "서울대학교 경력개발센터 152-1동 207호",
+        "startDate": "2026-01-13",
+        "endDate": "2026-01-13",
+        "startTime": "00:00",
+        "endTime": "00:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001465",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "취업역량강화특강 [외국계 면접(STAR 기법)]",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-31",
+    "applyEnd": "2026-01-09",
+    "activityStart": "2026-01-14",
+    "activityEnd": "2026-01-14",
+    "applyCount": 93,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=30&y=0&encSvrFileNm=1b4484fccc3543772cefbda94d6e54075a3def3d0dbc06dbc1c120d8ef6ded90e4f176396c921760aa584150c2cc4ae5ff47e337130014dda42ee86639855960&thumbW=707&thumbH=1000",
+    "tags": [
+      "#취업",
+      "#역량",
+      "#강화",
+      "#역량강화",
+      "#특강"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "서울대학교 롯데국제교육관(152-1동)",
+        "startDate": "2026-01-14",
+        "endDate": "2026-01-14",
+        "startTime": "17:00",
+        "endTime": "19:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001464",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/통계(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 8,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001463",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/영어(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 7,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001462",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/글쓰기와 말하기(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 9,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001459",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/컴퓨팅(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 8,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001458",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/물리(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 5,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001457",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/논리적 사고(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 7,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001455",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/생명과학(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 3,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001454",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/수학(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 8,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001453",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/화학(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 3,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001452",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/예술적 및 디자인적 사고(비대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 0,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001443",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Business and Academic Idioms for Speaking and Writing",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-08",
+    "activityStart": "2026-01-09",
+    "activityEnd": "2026-01-09",
+    "applyCount": 57,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=44&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be57098d3a5cea21e127d31f758452dc2138255c5e904f5c329fd3e7a751ebba1d0016de7d06b7104a2257433deab82e780&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-09",
+        "endDate": "2026-01-09",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001442",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Strategies for Improving Academic Style in Writing",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-08",
+    "activityStart": "2026-01-09",
+    "activityEnd": "2026-01-09",
+    "applyCount": 60,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=42&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5f2d6b32fadfc432089557a3503377d217831609cb6e6771d6cb55e63e92c58d16b67502d462b9b8c7c1d0d8e886b7dd5&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-09",
+        "endDate": "2026-01-09",
+        "startTime": "10:00",
+        "endTime": "12:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001441",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Have + PP\" - What actually IS the present perfect",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-07",
+    "activityStart": "2026-01-08",
+    "activityEnd": "2026-01-08",
+    "applyCount": 55,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=41&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5655cb7808ab96a517eb80d615153ea73d68c5bfe8db543f0ef1ee3df4b2b02fc495d00139d24f1983be8acf2c22f38a0&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-08",
+        "endDate": "2026-01-08",
+        "startTime": "12:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001440",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Improving Academic Vocabulary",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-06",
+    "activityStart": "2026-01-07",
+    "activityEnd": "2026-01-07",
+    "applyCount": 61,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=42&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be59d307a4958a0254afbd9b769c48d8d660da66a785d0b149463f10b06394d809cd6362ac0f5b18c7f2aeb13cfe5961b7d&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-07",
+        "endDate": "2026-01-07",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001439",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "[정원 25명] 대학원생 업무 역량 향상을 위한 경영전략 시뮬레이션 워크숍",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-29",
+    "applyEnd": "2026-01-05",
+    "activityStart": "2026-01-09",
+    "activityEnd": "2026-01-09",
+    "applyCount": 53,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=587&height=394&x=0&y=25&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5f2246146774daee342a65988bdcc9087afdf9da40c7337d9387c19b4c770e1c1958330843bdb7e38f7c15a57e5dee7dd&thumbW=587&thumbH=428",
+    "tags": [
+      "#대학원",
+      "#리더십",
+      "#경영전략",
+      "#시뮬레이션"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "롯데국제교육관 208호",
+        "startDate": "2026-01-09",
+        "endDate": "2026-01-09",
+        "startTime": "09:00",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001438",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Describing Data from Charts and Graphs",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-04",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 50,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=41&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be533bdb50b15f3d8e8db27319bc01b364dd78327c3fecc1444534d934cdae3d44013366c917ff6868ac1fb4fed5f9a0f75&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001437",
+    "majorTypes": [
+      "대학생활문화원",
+      "교육(특강/세미나)"
+    ],
+    "title": "번아웃프리 프로그램(2025학년도 겨울학기)",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-26",
+    "applyEnd": "2025-12-31",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-02-24",
+    "applyCount": 34,
+    "capacity": 15,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=854&height=573&x=109&y=51&encSvrFileNm=b5931191a8f3b0abba19a83cb731de6454eb4544e6b5034301fe13d968e32453278faf93794fd76462c034f7ca05842159c01d248acca430c52ae91ee24f8840&thumbW=999&thumbH=671",
+    "tags": [
+      "#대생원",
+      "#번아웃",
+      "#소진",
+      "#명상"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 2,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-01-13",
+        "endDate": "2026-01-13",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 3,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-01-20",
+        "endDate": "2026-01-20",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 4,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-01-27",
+        "endDate": "2026-01-27",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 5,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-02-03",
+        "endDate": "2026-02-03",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 6,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-02-10",
+        "endDate": "2026-02-10",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      },
+      {
+        "round": 7,
+        "location": "63동(학생회관) 5층(대학생활문화원)",
+        "startDate": "2026-02-24",
+        "endDate": "2026-02-24",
+        "startTime": "18:30",
+        "endTime": "20:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001436",
+    "majorTypes": [
+      "대학생활문화원",
+      "교육(특강/세미나)"
+    ],
+    "title": "알렉산더테크닉(비대면) 2026년 1-2월",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-25",
+    "applyEnd": "2026-01-02",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-02-10",
+    "applyCount": 58,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=1000&height=671&x=0&y=153&encSvrFileNm=b5931191a8f3b0abba19a83cb731de64617b044eebbcefda1b9782ac6e61def8f462a17fe57de6e91082c8976556f74c337108a030bc2f8654974b13ebf2f946&thumbW=1000&thumbH=1000",
+    "tags": [
+      "#건강",
+      "#스트레스",
+      "#긴장",
+      "#이완",
+      "#호흡"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "Zoom",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 2,
+        "location": "Zoom",
+        "startDate": "2026-01-13",
+        "endDate": "2026-01-13",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 3,
+        "location": "Zoom",
+        "startDate": "2026-01-20",
+        "endDate": "2026-01-20",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 4,
+        "location": "Zoom",
+        "startDate": "2026-01-27",
+        "endDate": "2026-01-27",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 5,
+        "location": "Zoom",
+        "startDate": "2026-02-03",
+        "endDate": "2026-02-03",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 6,
+        "location": "Zoom",
+        "startDate": "2026-02-10",
+        "endDate": "2026-02-10",
+        "startTime": "21:00",
+        "endTime": "22:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001435",
+    "majorTypes": [
+      "대학생활문화원",
+      "교육(특강/세미나)"
+    ],
+    "title": "알렉산더테크닉(대면) 2026년 1-2월",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-25",
+    "applyEnd": "2026-01-02",
+    "activityStart": "2026-01-08",
+    "activityEnd": "2026-02-12",
+    "applyCount": 27,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=1000&height=671&x=0&y=153&encSvrFileNm=b5931191a8f3b0abba19a83cb731de6430e95005a50a8454da0800ce30cbb91b32b96ba7523003c1ba73cb8c37a9a462712111fcf4574bdfe7d39190c1d55bcc&thumbW=1000&thumbH=1000",
+    "tags": [
+      "#건강",
+      "#스트레스",
+      "#긴장",
+      "#이완",
+      "#호흡"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-01-08",
+        "endDate": "2026-01-08",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "round": 2,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-01-15",
+        "endDate": "2026-01-15",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "round": 3,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-01-22",
+        "endDate": "2026-01-22",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "round": 4,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-01-29",
+        "endDate": "2026-01-29",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "round": 5,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-02-05",
+        "endDate": "2026-02-05",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      },
+      {
+        "round": 6,
+        "location": "63동(학생회관) 5층 대학생활문화원",
+        "startDate": "2026-02-12",
+        "endDate": "2026-02-12",
+        "startTime": "11:00",
+        "endTime": "12:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001434",
+    "majorTypes": [
+      "국제협력본부",
+      "현장학습/인턴"
+    ],
+    "title": "2026년 상반기 WFP 펠로우십, IFAD & UNICEF 인턴십(~12/31)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2025-12-31",
+    "activityStart": "2026-03-01",
+    "activityEnd": "2026-10-01",
+    "applyCount": 3,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=323&height=217&x=27&y=-1&encSvrFileNm=3b0198f05cc93130792dec4600b7bf6f8d7de3843a2ce339e5214bd1c799e983272267f894aae71032924b03365277d0422d5c9580d507109288ebf160e76426&thumbW=813&thumbH=217",
+    "tags": [
+      "#인턴십",
+      "#UNICEF",
+      "#IFAD",
+      "#WFP"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-",
+        "startDate": "2026-03-01",
+        "endDate": "2026-10-01",
+        "startTime": "00:00",
+        "endTime": "00:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001433",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/예술적 및 디자인적 사고(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 4,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001432",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/화학(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 1,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001431",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/수학(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 7,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001430",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/생명과학(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 1,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001429",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/논리적 사고(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 6,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001428",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/물리(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 3,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001426",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/컴퓨팅(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 3,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001425",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/영어(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 4,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001424",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/통계(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2025-12-29",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 3,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001423",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/글쓰기와 말하기(대면)(추가신청)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-24",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 3,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001420",
+    "majorTypes": [
+      "아동가족학과",
+      "교육(특강/세미나)"
+    ],
+    "title": "2025 아동가족학과 Master 특강",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-06",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 19,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=422&height=284&x=110&y=0&encSvrFileNm=7f5f8b9a0c3fc3ac19e484f19836aa74e9988da8572e2479b2cd9d6138db3b68a481f283200dfd92cabf5dcfdb636a4b5c51fac931beeb761a0b25250b52a76c&thumbW=645&thumbH=284",
+    "tags": [
+      "#노인",
+      "#치매",
+      "#돌봄",
+      "#프로그램",
+      "#부양자",
+      "#개입"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "222동 B102호 최병오홀",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "13:00",
+        "endTime": "15:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001419",
+    "majorTypes": [
+      "글로벌사회공헌단",
+      "교육(특강/세미나)"
+    ],
+    "title": "[글로벌사회공헌단] 사회공헌아카데미: 세상을 바꾸는 가슴, 따뜻한 나눔(온라인 강연 안내)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-19",
+    "applyEnd": "2025-12-20",
+    "activityStart": "2025-12-22",
+    "activityEnd": "2025-12-23",
+    "applyCount": 0,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=1000&height=671&x=0&y=68&encSvrFileNm=206ce06af9ada7172e4280204b034c5c8969e9b32264e801d327eb4f7f511c256db2b0ddb18f54d4a9924e6ff78db228d83a7747f2201909933daa3e58fc56cb&thumbW=1000&thumbH=1000",
+    "tags": [
+      "#사회공헌",
+      "#아카데미",
+      "#강연",
+      "#비대면",
+      "#사회공헌",
+      "#아카데미",
+      "#강연",
+      "#비대면",
+      "#사회혁신",
+      "#체인지메이커",
+      "#대면"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "대면 강좌 / 서울대 153동(우정글로벌사회공헌센터) 210호",
+        "startDate": "2025-12-22",
+        "endDate": "2025-12-22",
+        "startTime": "16:00",
+        "endTime": "18:00"
+      },
+      {
+        "round": 2,
+        "location": "비대면 강좌(Zoom 활용)",
+        "startDate": "2025-12-23",
+        "endDate": "2025-12-23",
+        "startTime": "16:00",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001418",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "[세션별 정원 10명] 대학원 선배와 함께하는 온라인 동문 멘토링",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-02",
+    "activityStart": "2026-01-14",
+    "activityEnd": "2026-01-16",
+    "applyCount": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=594&height=398&x=0&y=0&encSvrFileNm=206ce06af9ada7172e4280204b034c5c3599baffbd5999265e487e91cc2ef97690eb638e6be8e8f1185f6a6cc4f8c781183ea539fffd86012fb9cbb1b2959b86&thumbW=594&thumbH=461",
+    "tags": [
+      "#동문",
+      "#네트워크",
+      "#소그룹",
+      "#멘토링",
+      "#진로탐색",
+      "#대학원생"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "롯데국제교육관(152-1동) 208호",
+        "startDate": "2026-01-14",
+        "endDate": "2026-01-16",
+        "startTime": "13:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001417",
+    "majorTypes": [
+      "생명윤리위원회",
+      "교육(특강/세미나)"
+    ],
+    "title": "2025년도 제6차 찾아가는 연구자 교육 (IRB)",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-18",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2025-12-26",
+    "activityEnd": "2025-12-26",
+    "applyCount": 84,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=306&height=206&x=15&y=0&encSvrFileNm=cf5c2415484eab3f1b078adb8e936ccebf4175cf20a4f078cfbe96a21be2ae6957238e6e4b6955ce0f7c5ab55f4b858a21dd5aa3c432c48a4a1b8e2dee8895bc&thumbW=322&thumbH=206",
+    "tags": [
+      "#2025년도제3차찾아가는연구자교육IRB"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-",
+        "startDate": "2025-12-26",
+        "endDate": "2025-12-26",
+        "startTime": "14:00",
+        "endTime": "16:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001416",
+    "majorTypes": [
+      "글쓰기지원센터",
+      "학습/진로상담"
+    ],
+    "title": "2025년 겨울방학 글쓰기 능력향상 프로그램",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-18",
+    "applyEnd": "2025-12-28",
+    "activityStart": "2025-12-31",
+    "activityEnd": "2026-02-27",
+    "applyCount": 125,
+    "capacity": 80,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/studycounsel/02_9.png",
+    "tags": [
+      "#글쓰기능력"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "서울대학교",
+        "startDate": "2025-12-31",
+        "endDate": "2026-02-27",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001415",
+    "majorTypes": [
+      "대학생활문화원",
+      "사회공헌(봉사)"
+    ],
+    "title": "이웃사랑 2025학년도 수기 공모전",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-02",
+    "applyEnd": "2026-01-06",
+    "activityStart": "2025-12-19",
+    "activityEnd": "2026-01-16",
+    "applyCount": 9,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=999&height=670&x=0&y=27&encSvrFileNm=cf5c2415484eab3f1b078adb8e936cce6d3862adb7aba1f76b53f620013fb91991022d8c09e13d76cb824ba0a762f780f44f66fdce1fdb9ac07c450c13027338&thumbW=999&thumbH=728",
+    "tags": [
+      "#봉사활동"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "온라인",
+        "startDate": "2025-12-19",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "18:00"
+      },
+      {
+        "round": 2,
+        "location": "서울대학교 대학생활문화원",
+        "startDate": "2026-01-16",
+        "endDate": "2026-01-16",
+        "startTime": "11:00",
+        "endTime": "13:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001413",
+    "majorTypes": [
+      "글쓰기지원센터",
+      "학습/진로상담"
+    ],
+    "title": "2025년 겨울방학 외국인 글쓰기지도 프로그램",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-17",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-02-27",
+    "applyCount": 26,
+    "capacity": 40,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/studycounsel/02_8.png",
+    "tags": [
+      "#외국인",
+      "#재외국민",
+      "#한국어",
+      "#글쓰기"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "글쓰기 상담실",
+        "startDate": "2026-01-05",
+        "endDate": "2026-02-27",
+        "startTime": "09:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001412",
+    "majorTypes": [
+      "경력개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "[정원25명] 대학원생 진로 맞춤형 영어역량 강화 프로그램(12기)",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-18",
+    "applyEnd": "2025-12-22",
+    "activityStart": "2025-12-29",
+    "activityEnd": "2026-01-29",
+    "applyCount": 79,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=524&height=352&x=34&y=0&encSvrFileNm=03b857161ab018695a11254265c7646d4e5d5fd25dc789acf3b7d0616709097d2c24e7e85011948bc01215f03161bc3ca0596e4b4378c59d52ebda7d4f68f7dc&thumbW=590&thumbH=352",
+    "tags": [
+      "#대학원생",
+      "#BK21",
+      "#영어역량강화"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "-",
+        "startDate": "2025-12-29",
+        "endDate": "2026-01-29",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001411",
+    "majorTypes": [
+      "첨단융합학부",
+      "교육(특강/세미나)"
+    ],
+    "title": "[첨단융합학부] SNUTI on site 비대칭적인 인간이 대칭적인 세상에서 적응하는 방법",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-01",
+    "applyEnd": "2026-01-12",
+    "activityStart": "2026-01-12",
+    "activityEnd": "2026-01-12",
+    "applyCount": 44,
+    "capacity": 40,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=1000&height=671&x=0&y=105&encSvrFileNm=a583bb5bfe98790701aa06d0f34b95fc6c2b4cf3a5ec89988bbe4bc1d0336ffbd550fb248db385d20eed4dcf3c28295c18148b8af3166abef785e2e681a77165&thumbW=1000&thumbH=1000",
+    "tags": [
+      "#첨단융합",
+      "#라운지",
+      "#운동",
+      "#워크숍",
+      "#문제해결역량",
+      "#창의적사고역량",
+      "#소통및협업역량"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "추후공지",
+        "startDate": "2026-01-12",
+        "endDate": "2026-01-12",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001410",
+    "majorTypes": [
+      "대학생활문화원",
+      "학습/진로상담"
+    ],
+    "title": "[선착순 추가 모집] 대인관계 향상 집단상담 프로그램 (겨울학기)",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-18",
+    "activityStart": "2025-12-22",
+    "activityEnd": "2026-02-04",
+    "applyCount": 5,
+    "capacity": 6,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=700&height=470&x=0&y=0&encSvrFileNm=03b857161ab018695a11254265c7646d2aefa523b8033ba8edb8eb19999fe741ae7e9461e1a4ff9cc1b3bbf43e77f1e4d36253c37e74c6f7e9cdf5a3c31b4de0&thumbW=700&thumbH=470",
+    "tags": [
+      "#대인관계",
+      "#인간관계",
+      "#친구",
+      "#네트워킹",
+      "#상담"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "대학생활문화원",
+        "startDate": "2025-12-22",
+        "endDate": "2025-12-24",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 2,
+        "location": "대학생활문화원",
+        "startDate": "2025-12-29",
+        "endDate": "2025-12-31",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 3,
+        "location": "대학생활문화원",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-07",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 4,
+        "location": "대학생활문화원",
+        "startDate": "2026-01-12",
+        "endDate": "2026-01-14",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 5,
+        "location": "대학생활문화원",
+        "startDate": "2026-01-19",
+        "endDate": "2026-01-21",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 6,
+        "location": "대학생활문화원",
+        "startDate": "2026-01-26",
+        "endDate": "2026-01-28",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      },
+      {
+        "round": 7,
+        "location": "대학생활문화원",
+        "startDate": "2026-02-02",
+        "endDate": "2026-02-04",
+        "startTime": "00:00",
+        "endTime": "22:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001407",
+    "majorTypes": [
+      "학부대학",
+      "교육(특강/세미나)"
+    ],
+    "title": "Better Business Emails",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-22",
+    "applyEnd": "2026-01-04",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 42,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=492&height=331&x=46&y=0&encSvrFileNm=d9f927c289c1018290a2af990a7a5be5bd2ba7896ced2692200aab8407ec55beaedee0b9082772446072349653e3db6db137230fd3fbe6fad0c287c0df3c19ef&thumbW=588&thumbH=331",
+    "tags": [
+      "#영어글쓰기",
+      "#논문",
+      "#영어"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "10:00",
+        "endTime": "12:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001406",
+    "majorTypes": [
+      "학생지원과",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 새내기대학 (수시, 글로벌전형 신입생)",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2026-01-06",
+    "applyEnd": "2026-01-08",
+    "activityStart": "2026-02-02",
+    "activityEnd": "2026-02-12",
+    "applyCount": 1900,
+    "capacity": 1800,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=841&height=564&x=78&y=6&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15bd55b4b5ad6933998ddd1994c479d65e6e8a3fd867c164f6b2e40519f260676806317b1076446edc32c23eecb6f740c8&thumbW=999&thumbH=571",
+    "tags": [
+      "#새대",
+      "#OT",
+      "#신입생"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "71동 종합체육관",
+        "startDate": "2026-02-02",
+        "endDate": "2026-02-12",
+        "startTime": "09:30",
+        "endTime": "18:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001405",
+    "majorTypes": [
+      "글쓰기지원센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "우수리포트공모대회 연계 특강 <좋은 리포트 쓰기>",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-10",
+    "applyEnd": "2025-12-21",
+    "activityStart": "2025-12-22",
+    "activityEnd": "2025-12-22",
+    "applyCount": 31,
+    "capacity": 200,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_4.jpg",
+    "tags": [
+      "#우수리포트공모대회",
+      "#리포트",
+      "#학부생"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "비대면 ZOOM",
+        "startDate": "2025-12-22",
+        "endDate": "2025-12-22",
+        "startTime": "14:00",
+        "endTime": "15:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001404",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영006",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 17,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=130&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d158fd1257e53c70d91365c893d7292676a66ee2b01fb9dc22341a740863b209ac0c6134ef01ffbcff69887ebabc419a886&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001403",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영005",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 1,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=139&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15b2f369eafa36e6fb084f6cf5ed958a4225f7453c3bc5c7dab01d8c140787588c03c02b7150b0e1dfe754477a1c058c81&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001402",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영004",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 11,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=138&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d157baaaa316f48b0579356f3384792b737a57cbc7b5b7de326134ec11b465bc8cc88c0b4e3f04b56d1584d10f573b885a5&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001401",
+    "majorTypes": [
+      "전공설계지원센터",
+      "현장학습/인턴"
+    ],
+    "title": "CES 2026 디브리핑 라이브 세미나(매일경제) 참가 지원",
+    "status": "모집마감",
+    "operationMode": "온라인",
+    "applyStart": "2025-12-10",
+    "applyEnd": "2026-01-12",
+    "activityStart": "2026-01-13",
+    "activityEnd": "2026-01-13",
+    "applyCount": 12,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=640&height=429&x=19&y=20&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d152ffd71a5f39b3c2de97ffa83dfaca55bd65210586f4ebcf9f1390161d3ef8f28eb1beba39311c3efe610546d43e23460&thumbW=670&thumbH=464",
+    "tags": [
+      "#전공설계",
+      "#진로탐색",
+      "#컨퍼런스",
+      "#포럼",
+      "#참가비지원",
+      "#학부생지원"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "온라인",
+        "startDate": "2026-01-13",
+        "endDate": "2026-01-13",
+        "startTime": "09:00",
+        "endTime": "12:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001400",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/예디001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 16,
+    "capacity": 30,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=118&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15a1e94c2d772b95b1236b5d1bd67b5e977a72e021539e20862106a83e41a88ffd7e9bcddfa0344a72712a712733230a81&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001399",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글006",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 20,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=140&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1515b366f9b688aa4b2c14115975b67dfca4837a54c80d57e576f91ec5db6e82551d484c54207ee4121c82a6b8494846b9&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001398",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글005",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 19,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=135&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15ea4fddf67978803d21bbe4fc4c8d177cb22cdf3dd5a2cf98e49553d578adf233cae8a8b1cf7abce5ada8d42672e67525&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001397",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글004",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 9,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=137&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1529a951fb73c9a2f24d49a56d28e11331404ef87d7e2d0a0f1bd839448ad49eef1848d7f86499d9398fb21c6132e9bde8&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001396",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글003",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 20,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=139&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d153547eaf449736b51fc63cf1305cd4e0b3ff8bb5247af34eddbe62056dd51d468cf0764f1854012fc1f6ef1aee0775734&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001395",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 17,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=131&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15b12a2a4190549a36b90eab3adb711dce19d5556a3ab15f6b385290ca4b38ba927de451f6bdba05ea39f7ae9c07758edd&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001394",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/글001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 20,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=143&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15f19564f0ef128967c00d42a2468975cebb76f15598b35876e9740a209c7a867a5c693cb0b6707bc4ec427b0fcf5623a7&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001393",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/논002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 37,
+    "capacity": 180,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=122&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15d10ae21d5f3957fdb14afd8f7ee915644235a78339cd739bd6449ac600ea713f8851e9774b16078ca1d91ac65be2b052&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001392",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/논001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 21,
+    "capacity": 180,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=123&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15b219575a24377bccfd65a5587d368cef91b4a88b5e4be349c4cfb2e24c822bccb0f198558c16236a95af176a33410b34&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001391",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영003",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 5,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=137&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d158e5e6a48582f6180cf1eae5bc9ec46f22b291bfd3379335f697d30b0c18324d10a2e3f8eb5349e12bda178ceab67a4cb&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001390",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 20,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=140&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d151e014d060756c7199e7deb68b226c2eda2e8f8e11bc1ef7b4ff646b4db7aa8e6bac2347ebffc69eca7e5bcbd5599225f&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001389",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/영001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 19,
+    "capacity": 20,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=133&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1520bed54381e3a60608cd58268849b0ea59bfd2699664747bf9ba56fa04c0954c1ca0f875f652e4e18fe94c9bf412d568&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001388",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴006",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2025-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 9,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15fa99aefb5a5381f7ebb4b0177102a127a7b04d39b88623532355ad127a511e8aa59759674b71d817deea54c8a6dfd6ec&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2025-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001387",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴005",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 14,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15e8e27d53bd1f7181efe55977f01a42210d5d30845a7e23a9c49a7dc71ecd59b338c7c5d0dd24de6d2d05ee03e93a4dc5&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001386",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴004",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 16,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1586d2ba2f3733b5b21eb5c7d9a680000b18f76640c987111b442a4bd9abf8f1cf5104cae81f45dbf268ea5d7573038dd6&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001385",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴003",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 10,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15069353fa67ef0f59170ea6c1e5a9a4adc96789cb81d9eb992ac11447c5ef25088ad4c04fcefadc65f746c7facb2c6dd1&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001384",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 20,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d157a876065670fb096249df8dca95437b07409fc5dff5c1ad6f6a193e1a432bd1b98280a793d231cffa26ddd806d227a21&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001383",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/컴001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 35,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=161&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d156a44a4a0bb766273186378f0350c3a67c64e14137f71345dd6e24cc630ff75cbdab8201fa62cd2d589f0a03a765495da&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001382",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/생001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 33,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=127&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1594dfa8d47dea032851af79e7742101b59e3aa8e22b9e82048738e8fbe6c6eea17f869547bb79a37158dd836b5e33019c&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001381",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/화002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 12,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=130&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15ee09b4908ef0f5bb0427c0c7ee212b9a57e7c044a2e74a49186ccc36709ba4bc5afe95786e60f2606046585e882d45b8&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001380",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/화001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 28,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=129&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15d2d7f7f9273948aef3989234748e74b021342a5cd75695e28ff03c2c0192f3808ebe6d12a0baa2e6e1015783b92e8695&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001378",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/물001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 48,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=129&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15698e3ad06c0cb7f871a612a0ae4c24628471d8710cc8bb0f9be7c890f437490e7c5944fd191a258f20f344826e879333&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001377",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/통004",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 9,
+    "capacity": 25,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=123&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15d02dc61646fed0786113b0ea8a284b884eacef8ce6e3ad8609cc363f6d94d6944e4a4b3d6a3f87cb7d5ebeed12265362&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001376",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/통003",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 13,
+    "capacity": 25,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=130&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15a6bfc0e7b5530a46f39eec1745977e436db17e01bc186476e2fdfa31b187d52cc4c1d47ca13f49a63f6c9b5dabe6c445&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001375",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/통002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 25,
+    "capacity": 25,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=134&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d157206c7d8ec194339433ca6af8b993116d06277e7453232a24f389e67347ae3c13cff38dc38a8cdc43ba6469b92b3f8e1&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001374",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/통001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 24,
+    "capacity": 25,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=131&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1595e29f07e1cfd3011aed3ba05e624777a2343f4c9bb77f98c6551800bc9b1cd2a992acc2cc7792736825b23daf36ec2c&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001373",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/수002",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2026-01-01",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 31,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=128&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d1566de5bf6d4e469fc7d8f67ecc211f0425163aa4a69968791f5f9cb7c30428dc6ea47c6ed92c4064cd18528effd13c299&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001372",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/(수시)조교세션/수001",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-02",
+    "activityEnd": "2026-01-30",
+    "applyCount": 47,
+    "capacity": 60,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=837&height=562&x=131&y=0&encSvrFileNm=7bfe6e7b933e7d4904221189ab008d15debf198c1e64e289994aa69f3458bf0abcdcba4624d4094cf53fe1c6aa3c888618001b247547cfb19cd697f1ae48a579&thumbW=999&thumbH=562",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "eTL(비대면 교육)",
+        "startDate": "2026-01-02",
+        "endDate": "2026-01-30",
+        "startTime": "00:00",
+        "endTime": "23:59"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001371",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/예술적 및 디자인적 사고(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 30,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001370",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/예술적 및 디자인적 사고(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 63,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001369",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/화학(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 28,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001368",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/화학(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 115,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001367",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/수학(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 37,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001366",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/수학(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 136,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001365",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/생명과학(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 33,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001364",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/생명과학(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 90,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001363",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/논리적 사고(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 46,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001362",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/논리적 사고(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-06",
+    "activityEnd": "2026-01-06",
+    "applyCount": 136,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-06",
+        "endDate": "2026-01-06",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001361",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/물리(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 27,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001360",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/물리(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 104,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "15:40",
+        "endTime": "16:40"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001359",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/컴퓨팅(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 47,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001358",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/컴퓨팅(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 128,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "14:20",
+        "endTime": "15:20"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001357",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/영어(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 47,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001356",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/영어(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 139,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "13:00",
+        "endTime": "14:00"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001355",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/통계(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 49,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001354",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/통계(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 135,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "10:50",
+        "endTime": "11:50"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001353",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/글쓰기와 말하기(대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 59,
+    "capacity": 100,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001352",
+    "majorTypes": [
+      "교수학습개발센터",
+      "교육(특강/세미나)"
+    ],
+    "title": "2026학년도 예비대학/인트로 특강/글쓰기와 말하기(비대면)",
+    "status": "모집마감",
+    "operationMode": "온오프라인 병행",
+    "applyStart": "2025-12-15",
+    "applyEnd": "2025-12-23",
+    "activityStart": "2026-01-05",
+    "activityEnd": "2026-01-05",
+    "applyCount": 141,
+    "imageUrl": "https://extra.snu.ac.kr/common/1user/common/css/images/pgm/edu/02_10.png",
+    "tags": [
+      "#신입생",
+      "#입학전교육",
+      "#예비대학"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "학부대학 61동 320호/ 비대면 중계",
+        "startDate": "2026-01-05",
+        "endDate": "2026-01-05",
+        "startTime": "09:30",
+        "endTime": "10:30"
+      }
+    ]
+  },
+  {
+    "dataSeq": "PGM012001351",
+    "majorTypes": [
+      "정보화지원과",
+      "교육(특강/세미나)"
+    ],
+    "title": "서울대학교 AWS Cloud First 2.0 오프라인 세미나",
+    "status": "모집마감",
+    "operationMode": "오프라인",
+    "applyStart": "2025-12-09",
+    "applyEnd": "2025-12-17",
+    "activityStart": "2025-12-19",
+    "activityEnd": "2025-12-19",
+    "applyCount": 38,
+    "capacity": 50,
+    "imageUrl": "https://extra.snu.ac.kr/comm/cmfile/openCrop.do?width=700&height=470&x=0&y=0&encSvrFileNm=4c683641cf3e9aae73f612a0a243f7fe888284d918393a0b224026c99d1ab1045267cb072e757da228ecc4963d2bb8f38daf9c6f0212f5a0dde07f0551a953ab&thumbW=700&thumbH=470",
+    "tags": [
+      "#클라우드",
+      "#AWS",
+      "#연구",
+      "#기초",
+      "#중급"
+    ],
+    "detailSessions": [
+      {
+        "round": 1,
+        "location": "정보화본부(102동) 202호, 203호",
+        "startDate": "2025-12-19",
+        "endDate": "2025-12-19",
+        "startTime": "14:00",
+        "endTime": "17:00"
+      }
+    ]
+  }
+]
