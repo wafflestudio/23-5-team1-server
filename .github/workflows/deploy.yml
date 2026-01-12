@@ -43,6 +43,13 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           port: 22
+
+          # SSH 연결 타임아웃(짧게 OK)
+          timeout: 2m
+
+          # 원격 스크립트 실행 타임아웃(다운로드 느리면 크게)
+          command_timeout: 40m
+
           script: |
             set -euo pipefail
 
@@ -65,7 +72,7 @@ jobs:
               docker compose version
             fi
 
-            # (중요) heredoc는 반드시 EOF가 '맨 앞(공백 없이)'에서 닫혀야 함
+            # compose 파일 생성 (EOF 줄은 그대로 둬야 함)
             cat > docker-compose.prod.yml <<'EOF'
             services:
               app:
@@ -91,12 +98,13 @@ jobs:
                 restart: always
             EOF
 
-            # DOCKER_USERNAME 치환
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
             sed -i "s|\${DOCKER_USERNAME}|${DOCKER_USERNAME}|g" docker-compose.prod.yml
 
-            # 기존 컨테이너 꼬임 방지 (v1 KeyError 재발도 같이 방지)
+            # 기존 컨테이너 꼬임 방지
             docker rm -f campus-server 2>/dev/null || true
 
-            docker compose -f docker-compose.prod.yml pull
+            # ✅ app만 pull (db는 매번 안 받음)
+            docker compose -f docker-compose.prod.yml pull app
+
             docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
