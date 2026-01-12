@@ -42,13 +42,20 @@ jobs:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
+          script_stop: true
           script: |
-            # 도커 로그인
+            set -euo pipefail
+
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-            
-            # 기존 docker-compose 파일이 있다면 직접 내용을 덮어씀
+
+            # docker compose(v2) 없으면 설치 (Ubuntu/Debian 계열 가정)
+            if ! docker compose version >/dev/null 2>&1; then
+              sudo apt-get update
+              sudo apt-get install -y docker-compose-plugin
+            fi
+
+            # docker-compose 파일 덮어쓰기
             cat <<EOF > docker-compose.prod.yml
-            version: '3.8'
             services:
               app:
                 image: ${{ secrets.DOCKER_USERNAME }}/campus-calendar-server:latest
@@ -76,11 +83,10 @@ jobs:
                 restart: always
             EOF
 
-            # 최신 이미지 받기
-            docker-compose -f docker-compose.prod.yml pull
-            
-            # 컨테이너 재실행
-            docker-compose -f docker-compose.prod.yml up -d
-            
-            # 사용하지 않는 이미지 정리
+            # (중요) 기존 app 컨테이너가 꼬여 있으면 recreate에서 또 터질 수 있어서 제거
+            docker rm -f campus-server 2>/dev/null || true
+
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans --force-recreate
+
             docker image prune -f
