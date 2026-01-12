@@ -43,14 +43,14 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
           port: 22
-          timeout: 2m
+          timeout: 30s
           command_timeout: 40m
           script: |
             set -euo pipefail
 
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-            # docker compose(v2) 없으면 직접 설치 (apt 필요 없음)
+            # docker compose(v2) 없으면 직접 설치 (apt 없이)
             if ! docker compose version >/dev/null 2>&1; then
               ARCH="$(uname -m)"
               case "$ARCH" in
@@ -67,16 +67,31 @@ jobs:
               docker compose version
             fi
 
-            # compose 파일 생성 (EOF 줄은 그대로, 공백 없이 닫힘)
-            cat > docker-compose.prod.yml <<'EOF'
+            # ✅ 원래 compose가 있던 경로로 이동
+            cd hangsha
+
+            # ✅ (중요) 예전 프로젝트명이 붙은 레거시 컨테이너가 남아있으면 이름 충돌남
+            docker rm -f campus-server 2>/dev/null || true
+            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
+
+            # ✅ 원래 되던 방식 그대로: compose 파일을 덮어쓰기
+            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
+            cat > docker-compose.prod.yml <<EOF
+            version: '3.8'
+
             services:
               app:
                 image: ${DOCKER_USERNAME}/campus-calendar-server:latest
                 container_name: campus-server
                 ports:
                   - "8080:8080"
+                environment:
+                  SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+                  SPRING_DATASOURCE_USERNAME: user
+                  SPRING_DATASOURCE_PASSWORD: password
                 depends_on:
-                  - db
+                  db:
+                    condition: service_healthy
                 restart: always
 
               db:
@@ -91,19 +106,19 @@ jobs:
                   - ./db_data:/var/lib/mysql
                 command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
                 restart: always
+                healthcheck:
+                  test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+                  interval: 10s
+                  timeout: 5s
+                  retries: 5
             EOF
 
-            export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
-            sed -i "s|\${DOCKER_USERNAME}|${DOCKER_USERNAME}|g" docker-compose.prod.yml
-
-            # ✅ 과거 compose 프로젝트명이 붙은 '..._campus-server' 컨테이너가 남아있어서 충돌남
-            # - campus-server(현재 이름) 제거
-            docker rm -f campus-server 2>/dev/null || true
-            # - *_campus-server(레거시 이름) 전부 제거
-            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
-
-            # ✅ app만 pull (db는 매번 안 받음)
+            # ✅ app만 pull (db는 굳이 매번 안 받음)
             docker compose -f docker-compose.prod.yml pull app
 
-            # ✅ db 건드리지 말고 app만 올리기(이름 충돌/재생성 리스크 최소화)
+            # ✅ db는 건드리지 말고 app만 재기동 (nginx가 보는 campus-server 이름 유지)
             docker compose -f docker-compose.prod.yml up -d --no-deps app
+
+            # (선택) 상태 출력
+            docker compose -f docker-compose.prod.yml ps
+            curl -sS -D- http://127.0.0.1:8080/api/v1/health || true
