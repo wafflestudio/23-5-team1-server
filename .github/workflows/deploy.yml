@@ -67,18 +67,14 @@ jobs:
               docker compose version
             fi
 
-            # ✅ 원래 compose가 있던 경로로 이동
-            cd hangsha
-
             # ✅ (중요) 예전 프로젝트명이 붙은 레거시 컨테이너가 남아있으면 이름 충돌남
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
-            # ✅ 원래 되던 방식 그대로: compose 파일을 덮어쓰기
+            # ✅ 원래 되던 방식 그대로: compose 파일을 현재 위치에 덮어쓰기
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
             cat > docker-compose.prod.yml <<EOF
             version: '3.8'
-
             services:
               app:
                 image: ${DOCKER_USERNAME}/campus-calendar-server:latest
@@ -116,9 +112,9 @@ jobs:
             # ✅ app만 pull (db는 굳이 매번 안 받음)
             docker compose -f docker-compose.prod.yml pull app
 
-            # ✅ db는 건드리지 말고 app만 재기동 (nginx가 보는 campus-server 이름 유지)
+            # ✅ db는 건드리지 말고 app만 재기동
             docker compose -f docker-compose.prod.yml up -d --no-deps app
 
-            # (선택) 상태 출력
+            # 상태 출력(도메인 죽었을 때 원인 판별용)
             docker compose -f docker-compose.prod.yml ps
             curl -sS -D- http://127.0.0.1:8080/api/v1/health || true
