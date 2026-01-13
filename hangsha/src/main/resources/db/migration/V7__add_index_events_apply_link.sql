@@ -1,1 +1,0 @@
-CREATE INDEX idx_events_apply_link ON events (apply_link);
