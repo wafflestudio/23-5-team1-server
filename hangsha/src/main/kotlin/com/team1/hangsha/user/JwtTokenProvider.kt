@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.util.Date
+import java.util.UUID
 
 
 @Component
@@ -22,10 +23,9 @@ class JwtTokenProvider(
 
     private val key = Keys.hmacShaKeyFor(secretKey.toByteArray())
 
-    fun createAccessToken(userId: Long, email: String? = null): String {
+    fun createAccessToken(userId: Long): String {
         return createToken(
             userId = userId,
-            email = email,
             expirationMs = accessExpirationMs,
             type = "ACCESS",
         )
@@ -34,7 +34,6 @@ class JwtTokenProvider(
     fun createRefreshToken(userId: Long): String {
         return createToken(
             userId = userId,
-            email = null,
             expirationMs = refreshExpirationMs,
             type = "REFRESH",
         )
@@ -42,19 +41,19 @@ class JwtTokenProvider(
 
     private fun createToken(
         userId: Long,
-        email: String?,
         expirationMs: Long,
         type: String
     ): String {
         val now = Date()
         val expiry = Date(now.time + expirationMs)
 
+        val jti = UUID.randomUUID().toString()
+
         return Jwts.builder()
             .setSubject(userId.toString())
+            .setId(jti)
+            .claim("jti", jti)
             .claim("type", type)
-            .apply {
-                if (email != null) claim("email", email)
-            }
             .setIssuedAt(now)
             .setExpiration(expiry)
             .signWith(key, SignatureAlgorithm.HS256)
@@ -86,6 +85,26 @@ class JwtTokenProvider(
             // type 체크 (ACCESS 토큰만 인증용 허용)
             val type = claims["type"] as? String
             if (type != "ACCESS") {
+                return false
+            }
+
+            return true
+        } catch (e: Exception) {
+            return false
+        }
+    }
+
+    fun validateRefreshToken(token: String): Boolean {
+        try {
+            val claims = Jwts
+                .parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .body
+
+            val type = claims["type"] as? String
+            if (type != "REFRESH") {
                 return false
             }
 

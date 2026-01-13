@@ -20,4 +20,18 @@ enum class ErrorCode(
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다"),
     USER_EMAIL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 사용 중인 이메일입니다"),
 
+    // Password policy
+    PASSWORD_TOO_SHORT(
+        HttpStatus.BAD_REQUEST,
+        "비밀번호는 8자 이상이어야 합니다"
+    ),
+    PASSWORD_WEAK(
+        HttpStatus.BAD_REQUEST,
+        "비밀번호는 영문, 숫자, 특수문자를 모두 포함해야 합니다"
+    ),
+    PASSWORD_CONTAINS_WHITESPACE(
+        HttpStatus.BAD_REQUEST,
+        "비밀번호에 공백을 사용할 수 없습니다"
+    ),
+
 }

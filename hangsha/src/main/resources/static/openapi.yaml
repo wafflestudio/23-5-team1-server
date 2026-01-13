@@ -48,7 +48,6 @@ components:
       properties:
         email: { type: string, format: email }
         password: { type: string, minLength: 8 }
-        username: { type: string, nullable: true }
 
     RegisterResponse:
       type: object
@@ -81,9 +80,6 @@ components:
         idToken:
           type: string
           description: "provider에서 받은 idToken 또는 accessToken"
-        username:
-          type: string
-          nullable: true
         email:
           type: string
           format: email

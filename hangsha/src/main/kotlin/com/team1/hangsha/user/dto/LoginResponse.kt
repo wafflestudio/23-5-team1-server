@@ -1,4 +1,6 @@
 package com.team1.hangsha.user.dto
 
-class LoginResponse {
-}
+data class LoginResponse(
+    val accessToken: String,
+    val refreshToken: String,
+)
