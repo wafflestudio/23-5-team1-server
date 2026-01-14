@@ -48,6 +48,7 @@ components:
       properties:
         email: { type: string, format: email }
         password: { type: string, minLength: 8 }
+        username: { type: string, nullable: true }
 
     RegisterResponse:
       type: object
@@ -80,6 +81,9 @@ components:
         idToken:
           type: string
           description: "provider에서 받은 idToken 또는 accessToken"
+        username:
+          type: string
+          nullable: true
         email:
           type: string
           format: email
@@ -704,16 +708,32 @@ paths:
           required: true
           schema: { type: string, format: date }
 
-        # filtering (optional) - 프로그램 유형/모집현황/주체기관
+        # filtering (optional) - 프로그램 유형/모집현황/주체기관 
+        # 복수 카테고리 필터링: &statusId=3&statusId=4 와 같은 방식으로 동작
         - in: query
           name: statusId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
         - in: query
           name: eventTypeId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
         - in: query
           name: orgId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
 
       responses:
         "200":
@@ -746,16 +766,32 @@ paths:
           name: size
           schema: { type: integer, default: 20 }
 
-        # filtering (optional) - 프로그램 유형/모집현황/주체기관
+        # filtering (optional) - 프로그램 유형/모집현황/주체기관 
+        # 복수 카테고리 필터링: &statusId=3&statusId=4 와 같은 방식으로 동작
         - in: query
           name: statusId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
         - in: query
           name: eventTypeId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
         - in: query
           name: orgId
-          schema: { type: integer, format: int64, nullable: true }
+          required: false
+          schema:
+            type: array
+            items: { type: integer, format: int64 }
+          style: form
+          explode: true
 
       responses:
         "200":
