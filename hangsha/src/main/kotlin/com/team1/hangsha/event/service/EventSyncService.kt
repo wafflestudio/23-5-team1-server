@@ -1,13 +1,17 @@
 package com.team1.hangsha.event.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.team1.hangsha.category.model.Category
 import com.team1.hangsha.category.repository.CategoryGroupRepository
 import com.team1.hangsha.category.repository.CategoryRepository
+import com.team1.hangsha.common.error.DomainException
+import com.team1.hangsha.common.error.ErrorCode
 import com.team1.hangsha.event.model.Event
 import com.team1.hangsha.event.repository.EventRepository
 import com.team1.hangsha.event.dto.core.CrawledDetailSession
 import com.team1.hangsha.event.dto.core.CrawledProgramEvent
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.nio.file.Files
@@ -42,6 +46,7 @@ class EventSyncService(
 
         val statusGroupId = requireGroupId("모집현황")
         val typeGroupId = requireGroupId("프로그램 유형")
+        val orgGroupId = requireGroupId("주체기관")
 
         // 혹시 몰라서, sync 결과 추적을 위한 변수들
         var upserted = 0
@@ -51,6 +56,7 @@ class EventSyncService(
             val applyLink = "https://extra.snu.ac.kr/ptfol/pgm/view.do?dataSeq=${e.dataSeq}"
 
             val orgName = e.majorTypes.getOrNull(0)?.trim()?.takeIf { it.isNotBlank() }
+            val orgId = orgName?.let { getOrCreateCategoryId(orgGroupId, it) }
             val typeName = e.majorTypes.getOrNull(1)?.trim()?.takeIf { it.isNotBlank() }
 
             val statusId = e.status?.trim()?.takeIf { it.isNotBlank() }?.let { findCategoryId(statusGroupId, it) }
@@ -73,8 +79,7 @@ class EventSyncService(
 
                 statusId = statusId,
                 eventTypeId = eventTypeId,
-                orgId = null,                 // ✅ org seed 없으니 일단 NULL
-                // @TODO: 기관 ID 없으면 여기서 등록해야 할수도..?
+                orgId = orgId,
                 applyStart = applyStart,
                 applyEnd = applyEnd,
                 eventStart = eventStart,
@@ -96,8 +101,16 @@ class EventSyncService(
         return SyncResult(total = events.size, upserted = upserted, skipped = skipped)
     }
 
-    private fun requireGroupId(name: String): Long =
-        categoryGroupRepository.findByName(name)?.id ?: error("Missing category_group: $name")
+    private fun requireGroupId(name: String): Long {
+        val group = categoryGroupRepository.findByName(name)
+            ?: throw DomainException(ErrorCode.CATEGORY_GROUP_NOT_FOUND)
+
+        return group.id
+            ?: throw DomainException(
+                ErrorCode.INTERNAL_ERROR,
+                "CategoryGroup.id is null (unexpected). name=$name"
+            )
+    }
 
     private fun findCategoryId(groupId: Long, name: String): Long? =
         categoryRepository.findByGroupIdAndName(groupId, name)?.id
@@ -138,4 +151,26 @@ class EventSyncService(
 
     private fun dateEnd(ymd: String): LocalDateTime =
         LocalDate.parse(ymd).atTime(23, 59, 59)
+
+    private fun getOrCreateCategoryId(groupId: Long, rawName: String): Long {
+        val name = rawName.trim()
+        categoryRepository.findByGroupIdAndName(groupId, name)?.id?.let { return it }
+
+        val nextSortOrder = runCatching { categoryRepository.findMaxSortOrderByGroupId(groupId) + 1 }
+            .getOrDefault(1)
+
+        return try {
+            val saved = categoryRepository.save(
+                Category(
+                    groupId = groupId,
+                    name = name,
+                    sortOrder = nextSortOrder
+                )
+            )
+            saved.id ?: throw DomainException(ErrorCode.CATEGORY_CREATE_FAILED)
+        } catch (e: DuplicateKeyException) {
+            // 동시에 누가 먼저 insert 했을 수 있음 → 재조회
+            categoryRepository.findByGroupIdAndName(groupId, name)?.id ?: throw e
+        }
+    }
 }
