@@ -19,6 +19,7 @@ import java.nio.file.Path
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.Instant
 
 @Service
 class EventSyncService(
@@ -90,7 +91,9 @@ class EventSyncService(
 
                 organization = orgName,        // ✅ org는 문자열로만 저장
                 location = location,
-                applyLink = applyLink
+                applyLink = applyLink,
+
+                createdAt = existing?.createdAt ?: Instant.now(),
             )
 
             // 값이 같아도 save() → DB updated_at 갱신
