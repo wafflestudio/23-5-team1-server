@@ -650,17 +650,6 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ListInterestCategoryResponse' }
-    post:
-      tags: [Preference]
-      summary: 관심 카테고리 추가 (우선순위 포함)
-      security: [{ bearerAuth: [] }]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/AddInterestCategoryRequest' }
-      responses:
-        "201": { description: Created }
 
     put:
       tags: [ Preference ]
@@ -684,22 +673,6 @@ paths:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
 
   /users/me/interest-categories/{categoryId}:
-    patch:
-      tags: [Preference]
-      summary: 관심 카테고리 우선순위 수정
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: categoryId
-          required: true
-          schema: { type: integer, format: int64 }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateInterestCategoryRequest' }
-      responses:
-        "200": { description: OK }
     delete:
       tags: [Preference]
       summary: 관심 카테고리 삭제
