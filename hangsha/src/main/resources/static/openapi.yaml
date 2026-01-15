@@ -152,15 +152,25 @@ components:
               keyword: { type: string }
               createdAt: { type: string, format: date-time }
 
-    AddInterestCategoryRequest:
+    ReplaceAllInterestCategoriesRequest:
       type: object
-      required: [categoryId, priority]
+      required: [ items ]
       properties:
-        categoryId: { type: integer, format: int64 }
-        priority:
-          type: integer
-          minimum: 1
-          description: "유저가 설정한 관심 카테고리 우선순위 (1이 가장 높음)"
+        items:
+          type: array
+          minItems: 0
+          description: "유저의 관심 카테고리 전체 목록을 이 배열로 교체합니다."
+          items:
+            type: object
+            required: [ categoryId, priority ]
+            properties:
+              categoryId: { type: integer, format: int64 }
+              priority:
+                type: integer
+                minimum: 1
+                description: "1이 가장 높음. 권장: 1..N 연속, 중복 없음"
+
+
 
     UpdateInterestCategoryRequest:
       type: object
@@ -644,35 +654,29 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ListInterestCategoryResponse' }
-    post:
-      tags: [Preference]
-      summary: 관심 카테고리 추가 (우선순위 포함)
-      security: [{ bearerAuth: [] }]
+
+    put:
+      tags: [ Preference ]
+      summary: 관심 카테고리 전체 교체(배치 저장)
+      description: |
+        유저의 관심 카테고리 구성을 요청 바디의 items로 "전체 교체"합니다.
+        - items가 빈 배열이면 관심 카테고리를 모두 삭제합니다.
+        - 권장 규칙: priority는 1..N 연속 + 중복 없음 (서버에서 검증)
+      security: [ { bearerAuth: [ ] } ]
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/AddInterestCategoryRequest' }
+            schema: { $ref: '#/components/schemas/ReplaceAllInterestCategoriesRequest' }
       responses:
-        "201": { description: Created }
+        "204": { description: No Content }
+        "400":
+          description: Bad Request (중복 categoryId/priority, priority 규칙 위반 등)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
   /users/me/interest-categories/{categoryId}:
-    patch:
-      tags: [Preference]
-      summary: 관심 카테고리 우선순위 수정
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: categoryId
-          required: true
-          schema: { type: integer, format: int64 }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateInterestCategoryRequest' }
-      responses:
-        "200": { description: OK }
     delete:
       tags: [Preference]
       summary: 관심 카테고리 삭제
