@@ -65,6 +65,38 @@ jobs:
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
             docker network connect --alias db "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
 
+            # =========================
+            # Flyway V7 failure hotfix
+            # - drop idx_events_apply_link if exists
+            # - delete flyway_schema_history version=7 rows
+            # =========================
+            echo "=== flyway V7 hotfix: drop index(if exists) + delete history(version=7) ==="
+            docker run --rm --network "$NET" mysql:8.0 \
+              mysql -h db -u"user" -p"password" campus_db <<'SQL'
+            -- 1) idx_events_apply_link 있으면 DROP
+            SET @has_idx := (
+              SELECT COUNT(*)
+              FROM information_schema.statistics
+              WHERE table_schema = DATABASE()
+                AND table_name = 'events'
+                AND index_name = 'idx_events_apply_link'
+            );
+
+            SET @drop_sql := IF(@has_idx > 0, 'DROP INDEX idx_events_apply_link ON events', 'SELECT 1');
+            PREPARE stmt FROM @drop_sql;
+            EXECUTE stmt;
+            DEALLOCATE PREPARE stmt;
+
+            -- 2) flyway_schema_history의 V7 기록 삭제 (성공/실패 상관없이 싹)
+            DELETE FROM flyway_schema_history WHERE version = '7';
+
+            -- 확인 로그
+            SELECT installed_rank, version, description, script, success
+            FROM flyway_schema_history
+            ORDER BY installed_rank DESC
+            LIMIT 10;
+            SQL
+
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
@@ -114,7 +146,6 @@ jobs:
             echo "=== host curl ==="
             curl -sS -D- http://127.0.0.1:8080/api/v1/health || true
 
-            # 최종: 120초 기다렸다가 다시 확인
             echo "=== wait 120s then curl ==="
             sleep 120
             docker logs --tail 400 campus-server || true
