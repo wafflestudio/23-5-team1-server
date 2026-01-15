@@ -1,0 +1,82 @@
+package com.team1.hangsha.event.repository
+
+import com.team1.hangsha.event.model.Event
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
+import java.sql.ResultSet
+import java.sql.Timestamp
+import java.time.LocalDateTime
+
+@Repository
+class EventQueryRepository(
+    private val jdbc: NamedParameterJdbcTemplate,
+) {
+    fun findInRange(
+        fromStart: LocalDateTime,
+        toEndExclusive: LocalDateTime,
+        statusIds: List<Long>?,
+        eventTypeIds: List<Long>?,
+        orgIds: List<Long>?,
+    ): List<Event> {
+        val sql = buildString {
+            append(
+                """
+                SELECT *
+                FROM events
+                WHERE COALESCE(event_start, apply_start) >= :fromStart
+                  AND COALESCE(event_start, apply_start) < :toEndExclusive
+                """.trimIndent()
+            )
+
+            if (!statusIds.isNullOrEmpty()) append("\n  AND status_id IN (:statusIds)")
+            if (!eventTypeIds.isNullOrEmpty()) append("\n  AND event_type_id IN (:eventTypeIds)")
+            if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
+
+            append("\nORDER BY COALESCE(event_start, apply_start) ASC, id ASC")
+        }
+
+        val params = mutableMapOf<String, Any>(
+            "fromStart" to Timestamp.valueOf(fromStart),
+            "toEndExclusive" to Timestamp.valueOf(toEndExclusive),
+        )
+        if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
+        if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
+        if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
+
+        return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
+    }
+}
+
+private fun ResultSet.getLocalDateTimeOrNull(column: String): LocalDateTime? =
+    getTimestamp(column)?.toLocalDateTime()
+
+private fun ResultSet.getInstantOrNull(column: String): java.time.Instant? =
+    getTimestamp(column)?.toInstant()
+
+private fun ResultSet.toEvent(): Event {
+    return Event(
+        id = getLong("id").let { if (wasNull()) null else it },
+        title = getString("title"),
+        imageUrl = getString("image_url"),
+        operationMode = getString("operation_mode"),
+
+        statusId = getLong("status_id").let { if (wasNull()) null else it },
+        eventTypeId = getLong("event_type_id").let { if (wasNull()) null else it },
+        orgId = getLong("org_id").let { if (wasNull()) null else it },
+
+        applyStart = getLocalDateTimeOrNull("apply_start"),
+        applyEnd = getLocalDateTimeOrNull("apply_end"),
+        eventStart = getLocalDateTimeOrNull("event_start"),
+        eventEnd = getLocalDateTimeOrNull("event_end"),
+
+        capacity = getInt("capacity").let { if (wasNull()) null else it },
+        applyCount = getInt("apply_count"),
+
+        organization = getString("organization"),
+        location = getString("location"),
+        applyLink = getString("apply_link"),
+
+        createdAt = getInstantOrNull("created_at"),
+        updatedAt = getInstantOrNull("updated_at"),
+    )
+}

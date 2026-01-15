@@ -1,4 +1,6 @@
 package com.team1.hangsha.tag.dto.core
 
-class TagDto {
-}
+data class TagDto(
+    val id: Long,
+    val name: String,
+)

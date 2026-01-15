@@ -34,6 +34,9 @@ enum class ErrorCode(
         "비밀번호에 공백을 사용할 수 없습니다"
     ),
 
+    // Events
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "이벤트를 찾을 수 없습니다"),
+
     // Preference
     PREFERENCE_INTEREST_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "관심 카테고리를 찾을 수 없습니다"),
     PREFERENCE_CATEGORY_NOT_FOUND(HttpStatus.BAD_REQUEST, "카테고리가 존재하지 않습니다"),
