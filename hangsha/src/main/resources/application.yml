@@ -8,6 +8,11 @@ spring:
     password: password
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  #flyway:
+  #  enabled: true
+  #  baseline-on-migrate: true # 기존 데이터가 있어도 마이그레이션 실행
+  #  locations: classpath:db.migration
+
   jpa:
     hibernate:
       ddl-auto: update # 배포 시엔 validate or none
