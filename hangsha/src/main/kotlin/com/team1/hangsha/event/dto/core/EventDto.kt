@@ -25,9 +25,11 @@ data class EventDto(
     val location: String? = null,
     val applyLink: String? = null,
 
+    val tags: List<String>? = null,
+    val mainContentHtml: String? = null,
+
     // @TODO: personalization (지금은 미구현 → null 유지)
     val isInterested: Boolean? = null,
     val matchedInterestPriority: Int? = null,
     val isBookmarked: Boolean? = null,
-    val tags: List<TagDto>? = null,
 )

@@ -28,10 +28,11 @@ data class DetailEventResponse(
     val location: String? = null,
     val applyLink: String? = null,
 
+    val tags: List<String>? = null,
+
     val isInterested: Boolean? = null,
     val matchedInterestPriority: Int? = null,
     val isBookmarked: Boolean? = null,
-    val tags: List<TagDto>? = null,
 
     val detail: String? = null,
 )

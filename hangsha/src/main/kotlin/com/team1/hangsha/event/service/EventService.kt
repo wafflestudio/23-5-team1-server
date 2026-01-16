@@ -86,7 +86,7 @@ private fun Event.toDto(): EventDto = EventDto(
     isInterested = null,
     matchedInterestPriority = null,
     isBookmarked = null,
-    tags = null,
+    tags = tags,
 )
 
 private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
@@ -109,7 +109,7 @@ private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
     isInterested = null,
     matchedInterestPriority = null,
     isBookmarked = null,
-    tags = null,
+    tags = tags,
     // 현재 events 테이블에 detail 컬럼이 없어서 null
-    detail = null,
+    detail = mainContentHtml,
 )
