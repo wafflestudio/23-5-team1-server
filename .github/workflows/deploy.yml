@@ -149,6 +149,7 @@ jobs:
             fi
 
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
+            docker network disconnect "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
             docker network connect --alias db "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
 
             # Safety: if NOT resetting, detect old Flyway version 9 applied (common cause of boot failure)
