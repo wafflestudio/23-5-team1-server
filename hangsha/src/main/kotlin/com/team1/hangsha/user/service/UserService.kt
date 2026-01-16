@@ -10,6 +10,7 @@ import com.team1.hangsha.user.model.UserIdentity
 import com.team1.hangsha.user.repository.UserIdentityRepository
 import com.team1.hangsha.user.model.AuthProvider
 import com.team1.hangsha.user.model.AuthTokenPair
+import com.fasterxml.jackson.databind.JsonNode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
 
@@ -95,5 +96,33 @@ class UserService(
         val userId = jwtTokenProvider.getUserId(refreshToken)
 
         return jwtTokenProvider.createAccessToken(userId = userId)
+    }
+
+    fun updateProfile(userId: Long, body: JsonNode) {
+        val hasUsername = body.has("username")
+        val hasProfileImageUrl = body.has("profileImageUrl")
+
+        if (!hasUsername && !hasProfileImageUrl) {
+            throw DomainException(ErrorCode.INVALID_REQUEST)
+        }
+
+        val user = userRepository.findById(userId)
+            .orElseThrow {
+                DomainException(ErrorCode.USER_NOT_FOUND)
+            }
+
+        if (hasUsername) {
+            user.username =
+                if (body.get("username").isNull) null
+                else body.get("username").asText()
+        }
+
+        if (hasProfileImageUrl) {
+            user.profileImageUrl =
+                if (body.get("profileImageUrl").isNull) null
+                else body.get("profileImageUrl").asText()
+        }
+
+        userRepository.save(user)
     }
 }

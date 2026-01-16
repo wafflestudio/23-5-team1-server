@@ -104,6 +104,28 @@ components:
       properties:
         accessToken: { type: string }
 
+    UpdateProfileRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          nullable: true
+          description: |
+            닉네임 변경.
+            - 필드 미포함: 변경 없음
+            - null: 값 비우기(삭제)
+        profileImageUrl:
+          type: string
+          nullable: true
+          description: |
+            프로필 이미지 URL 변경.
+            - 필드 미포함: 변경 없음
+            - null: 값 비우기(삭제)
+      additionalProperties: false
+      description: |
+        내 프로필 PATCH.
+        요청 바디는 username/profileImageUrl 중 하나 이상을 포함해야 함.
+
     # ---------------- Categories ----------------
     CategoryGroupDto:
       type: object
@@ -587,6 +609,38 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/GetMeResponse' }
+
+    patch:
+      tags: [ Users ]
+      summary: 내 프로필 수정 (username / profileImageUrl)
+      description: |
+        - 필드 미포함: 변경 없음
+        - null: 해당 값 비우기(삭제)
+      security: [ { bearerAuth: [ ] } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateProfileRequest' }
+            examples:
+              setUsername:
+                value: { username: "dyang" }
+              clearUsername:
+                value: { username: null }
+              clearProfileImage:
+                value: { profileImageUrl: null }
+      responses:
+        "204": { description: No Content }
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
   # ---------------- Categories ----------------
   /category-groups/with-categories:
