@@ -65,6 +65,11 @@ jobs:
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
             docker network connect --alias db "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
             
+            docker run --rm --network "$NET" flyway/flyway:11 \
+            -url="jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8" \
+            -user="user" -password="password" \
+            repair
+            
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
