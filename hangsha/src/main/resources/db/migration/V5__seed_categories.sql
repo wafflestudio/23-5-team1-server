@@ -18,7 +18,7 @@ SELECT cg.id, '마감임박', 2
 FROM category_groups cg WHERE cg.name = '모집현황';
 
 INSERT INTO categories (group_id, name, sort_order)
-SELECT cg.id, '마감', 3
+SELECT cg.id, '모집마감', 3
 FROM category_groups cg WHERE cg.name = '모집현황';
 
 -- ===============================
