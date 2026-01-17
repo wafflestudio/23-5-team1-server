@@ -125,4 +125,10 @@ class UserService(
 
         userRepository.save(user)
     }
+
+    fun getMe(userId: Long): UserDto {
+        val user = userRepository.findById(userId)
+            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
+        return UserDto(user)
+    }
 }
