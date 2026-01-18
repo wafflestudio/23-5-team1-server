@@ -153,6 +153,23 @@ components:
           type: array
           items: { $ref: '#/components/schemas/CategoryDto' }
 
+    ListCategoryGroupWithCategoriesResponse:
+      type: object
+      required: [ items ]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CategoryResponse' }
+
+    ListOrgCategoriesResponse:
+      type: object
+      required: [ items ]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/CategoryDto' }
+
+
     # ---------------- Preference ----------------
     AddExcludedKeywordRequest:
       type: object
@@ -464,6 +481,14 @@ components:
           type: string
           enum: [SPRING, SUMMER, FALL, WINTER]
 
+    ListTimetablesResponse:
+      type: object
+      required: [ items ]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/TimetableResponse' }
+
     AddCourseRequest:
       type: object
       required: [courseId]
@@ -652,9 +677,7 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/CategoryResponse' }
+              schema: { $ref: '#/components/schemas/ListCategoryGroupWithCategoriesResponse' }
 
   /categories/orgs:
     get:
@@ -669,9 +692,7 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/CategoryDto' }
+              schema: { $ref: '#/components/schemas/ListOrgCategoriesResponse' }
 
   # ---------------- Preference ----------------
   /users/me/excluded-keywords:
@@ -1111,9 +1132,7 @@ paths:
           description: OK
           content:
             application/json:
-              schema:
-                type: array
-                items: { $ref: '#/components/schemas/TimetableResponse' }
+              schema: { $ref: '#/components/schemas/ListTimetablesResponse' }
 
     post:
       tags: [Timetables]
