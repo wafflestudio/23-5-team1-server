@@ -1,4 +1,4 @@
-package com.team1.hangsha.timetable.dto
+package com.team1.hangsha.course.dto.core
 
 import com.team1.hangsha.common.enums.DayOfWeek
 

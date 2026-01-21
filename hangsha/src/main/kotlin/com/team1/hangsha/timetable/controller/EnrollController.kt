@@ -10,6 +10,7 @@ import com.team1.hangsha.timetable.service.EnrollService
 import com.team1.hangsha.user.LoggedInUser
 import com.team1.hangsha.user.model.User
 import io.swagger.v3.oas.annotations.Parameter
+import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -45,7 +46,7 @@ class EnrollController(
     fun createCustomCourseAndEnroll(
         @Parameter(hidden = true) @LoggedInUser user: User,
         @PathVariable timetableId: Long,
-        @RequestBody req: CreateCustomCourseRequest,
+        @Valid @RequestBody req: CreateCustomCourseRequest,
     ): ResponseEntity<EnrollResponse> {
         val res = enrollService.createCustomCourseAndEnroll(user.id!!, timetableId, req)
         return ResponseEntity.status(HttpStatus.CREATED).body(res)

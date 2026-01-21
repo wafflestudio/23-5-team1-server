@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import com.team1.hangsha.common.enums.Semester
+import com.team1.hangsha.course.dto.core.CourseTimeSlotDto
 
 data class CreateCustomCourseRequest(
     @field:NotNull

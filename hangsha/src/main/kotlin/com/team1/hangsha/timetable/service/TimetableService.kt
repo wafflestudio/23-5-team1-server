@@ -86,9 +86,6 @@ class TimetableService(
     @Transactional
     fun deleteTimetable(userId: Long, timetableId: Long) {
         getOwnedTimetable(userId, timetableId) // 여기서 NOT_FOUND 처리 끝
-
-        enrollRepository.deleteAllByTimetableId(timetableId)
-
         timetableRepository.deleteById(timetableId) // 그냥 PK로 삭제
     }
 

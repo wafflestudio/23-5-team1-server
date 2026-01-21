@@ -1,8 +1,9 @@
-package com.team1.hangsha.timetable.repository.row
+package com.team1.hangsha.timetable.model
 
-import com.team1.hangsha.timetable.dto.CourseDto
-import com.team1.hangsha.timetable.dto.CourseTimeSlotDto
-import com.team1.hangsha.timetable.model.CourseTimeSlot
+import com.team1.hangsha.course.dto.core.CourseDto
+import com.team1.hangsha.course.dto.core.CourseTimeSlotDto
+import com.team1.hangsha.course.model.CourseTimeSlot
+import com.team1.hangsha.timetable.repository.row.EnrollWithCourseRow
 
 fun EnrollWithCourseRow.toCourseDto(slots: List<CourseTimeSlot>): CourseDto =
     CourseDto(

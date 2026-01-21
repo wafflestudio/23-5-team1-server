@@ -1,6 +1,6 @@
-package com.team1.hangsha.timetable.repository
+package com.team1.hangsha.course.repository
 
-import com.team1.hangsha.timetable.model.Course
+import com.team1.hangsha.course.model.Course
 import org.springframework.data.repository.CrudRepository
 
 interface CourseRepository : CrudRepository<Course, Long> {

@@ -9,6 +9,7 @@ import com.team1.hangsha.timetable.service.TimetableService
 import com.team1.hangsha.user.LoggedInUser
 import com.team1.hangsha.user.model.User
 import io.swagger.v3.oas.annotations.Parameter
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -37,7 +38,7 @@ class TimetableController(
     @PostMapping
     fun createTimetable(
         @Parameter(hidden = true) @LoggedInUser user: User,
-        @RequestBody req: CreateTimetableRequest,
+        @Valid @RequestBody req: CreateTimetableRequest,
     ): ResponseEntity<TimetableResponse> {
         val res = timetableService.createTimetable(user.id!!, req)
         return ResponseEntity.status(201).body(res)
@@ -48,7 +49,7 @@ class TimetableController(
     fun updateTimetable(
         @Parameter(hidden = true) @LoggedInUser user: User,
         @PathVariable timetableId: Long,
-        @RequestBody req: UpdateTimetableRequest,
+        @Valid @RequestBody req: UpdateTimetableRequest,
     ): ResponseEntity<TimetableResponse> {
         val res = timetableService.updateTimetable(user.id!!, timetableId, req)
         return ResponseEntity.ok(res)

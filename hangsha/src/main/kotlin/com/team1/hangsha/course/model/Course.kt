@@ -1,4 +1,4 @@
-package com.team1.hangsha.timetable.model
+package com.team1.hangsha.course.model
 
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id

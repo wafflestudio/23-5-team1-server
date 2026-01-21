@@ -1,6 +1,7 @@
 package com.team1.hangsha.timetable.dto
 
 import jakarta.validation.Valid
+import com.team1.hangsha.course.dto.core.CourseTimeSlotDto
 
 data class UpdateCustomCourseRequest(
     val courseTitle: String? = null,

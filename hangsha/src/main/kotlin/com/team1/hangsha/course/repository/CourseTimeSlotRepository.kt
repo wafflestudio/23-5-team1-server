@@ -1,6 +1,6 @@
-package com.team1.hangsha.timetable.repository
+package com.team1.hangsha.course.repository
 
-import com.team1.hangsha.timetable.model.CourseTimeSlot
+import com.team1.hangsha.course.model.CourseTimeSlot
 import org.springframework.data.jdbc.repository.query.Query
 import org.springframework.data.repository.CrudRepository
 

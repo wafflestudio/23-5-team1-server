@@ -1,7 +1,7 @@
-package com.team1.hangsha.timetable.model
+package com.team1.hangsha.course.model
 
-import com.team1.hangsha.timetable.dto.CourseDto
-import com.team1.hangsha.timetable.dto.CourseTimeSlotDto
+import com.team1.hangsha.course.dto.core.CourseDto
+import com.team1.hangsha.course.dto.core.CourseTimeSlotDto
 
 fun Course.toCourseDto(slots: List<CourseTimeSlot>): CourseDto =
     CourseDto(

@@ -2,14 +2,15 @@ package com.team1.hangsha.timetable.service
 
 import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.common.error.ErrorCode
-import com.team1.hangsha.timetable.dto.*
-import com.team1.hangsha.timetable.model.Course
 import com.team1.hangsha.common.enums.CourseSource
-import com.team1.hangsha.timetable.model.CourseTimeSlot
+import com.team1.hangsha.course.model.Course
+import com.team1.hangsha.course.model.CourseTimeSlot
+import com.team1.hangsha.course.repository.*
+import com.team1.hangsha.course.model.toCourseDto
+import com.team1.hangsha.timetable.dto.*
 import com.team1.hangsha.timetable.model.Enroll
 import com.team1.hangsha.timetable.repository.*
 import com.team1.hangsha.timetable.model.toCourseDto
-import com.team1.hangsha.timetable.repository.row.toCourseDto
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import com.fasterxml.jackson.databind.JsonNode
@@ -170,7 +171,6 @@ class EnrollService(
             throw DomainException(ErrorCode.COURSE_NOT_EDITABLE)
         }
 
-        // ✅ 1) JsonNode로 "필드 존재 여부" + "명시적 null" 판단
         val hasCourseTitle = body.has("courseTitle")
         val hasTimeSlots = body.has("timeSlots")
         val hasCourseNumber = body.has("courseNumber")
@@ -182,7 +182,6 @@ class EnrollService(
             throw DomainException(ErrorCode.ENROLL_PATCH_EMPTY)
         }
 
-        // ✅ 2) DTO로 값 파싱 (null 포함 가능)
         val req = try {
             objectMapper.treeToValue(body, UpdateCustomCourseRequest::class.java)
         } catch (e: Exception) {

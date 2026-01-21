@@ -51,39 +51,39 @@ components:
         - CRAWLED: 학교/외부에서 크롤링한 강의 (수정 불가)
         - CUSTOM: 유저가 직접 생성한 강의 (수정 가능)
 
-      DayOfWeek:
-        type: string
-        enum:
-          - MON
-          - TUE
-          - WED
-          - THU
-          - FRI
-          - SAT
-          - SUN
-        description: |
-          요일
-          - MON: 월요일
-          - TUE: 화요일
-          - WED: 수요일
-          - THU: 목요일
-          - FRI: 금요일
-          - SAT: 토요일
-          - SUN: 일요일
+    DayOfWeek:
+      type: string
+      enum:
+        - MON
+        - TUE
+        - WED
+        - THU
+        - FRI
+        - SAT
+        - SUN
+      description: |
+        요일
+        - MON: 월요일
+        - TUE: 화요일
+        - WED: 수요일
+        - THU: 목요일
+        - FRI: 금요일
+        - SAT: 토요일
+        - SUN: 일요일
 
-      Semester:
-        type: string
-        enum:
-          - SPRING
-          - SUMMER
-          - FALL
-          - WINTER
-        description: |
-          학기 구분
-          - SPRING: 봄학기
-          - SUMMER: 여름학기 (계절)
-          - FALL: 가을학기
-          - WINTER: 겨울학기 (계절)
+    Semester:
+      type: string
+      enum:
+        - SPRING
+        - SUMMER
+        - FALL
+        - WINTER
+      description: |
+        학기 구분
+        - SPRING: 봄학기
+        - SUMMER: 여름학기 (계절)
+        - FALL: 가을학기
+        - WINTER: 겨울학기 (계절)
 
     # ---------------- Auth / User DTOs ----------------
     RegisterRequest:
@@ -610,18 +610,14 @@ components:
           type: integer
 
         semester:
-          type: string
-          enum: [ SPRING, SUMMER, FALL, WINTER ]
+          $ref: '#/components/schemas/Semester'
 
         courseTitle:
           type: string
 
         source:
-          type: string
-          enum: [ CRAWLED, CUSTOM ]
-          description: |
-            CRAWLED: 크롤링 강의 (수정 불가)
-            CUSTOM: 유저 커스텀 강의 (수정 가능)
+          $ref: '#/components/schemas/CourseSource'
+
 
         timeSlots:
           type: array
@@ -650,8 +646,7 @@ components:
       required: [ dayOfWeek, startAt, endAt ]
       properties:
         dayOfWeek:
-          type: string
-          enum: [ MON, TUE, WED, THU, FRI, SAT, SUN ]
+          $ref: '#/components/schemas/DayOfWeek'
 
         startAt:
           type: integer
