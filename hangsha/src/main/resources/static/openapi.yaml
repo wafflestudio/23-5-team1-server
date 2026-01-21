@@ -41,6 +41,50 @@ components:
         size: { type: integer, minimum: 1, example: 20 }
         total: { type: integer, minimum: 0, example: 123 }
 
+    CourseSource:
+      type: string
+      enum:
+        - CRAWLED
+        - CUSTOM
+      description: |
+        강의 출처 타입
+        - CRAWLED: 학교/외부에서 크롤링한 강의 (수정 불가)
+        - CUSTOM: 유저가 직접 생성한 강의 (수정 가능)
+
+      DayOfWeek:
+        type: string
+        enum:
+          - MON
+          - TUE
+          - WED
+          - THU
+          - FRI
+          - SAT
+          - SUN
+        description: |
+          요일
+          - MON: 월요일
+          - TUE: 화요일
+          - WED: 수요일
+          - THU: 목요일
+          - FRI: 금요일
+          - SAT: 토요일
+          - SUN: 일요일
+
+      Semester:
+        type: string
+        enum:
+          - SPRING
+          - SUMMER
+          - FALL
+          - WINTER
+        description: |
+          학기 구분
+          - SPRING: 봄학기
+          - SUMMER: 여름학기 (계절)
+          - FALL: 가을학기
+          - WINTER: 겨울학기 (계절)
+
     # ---------------- Auth / User DTOs ----------------
     RegisterRequest:
       type: object
@@ -489,19 +533,19 @@ components:
           type: array
           items: { $ref: '#/components/schemas/TimetableResponse' }
 
-    ListTimetableCoursesResponse:
+    ListEnrollsResponse:
       type: object
       required: [ items ]
       properties:
         items:
           type: array
-          items: { $ref: '#/components/schemas/TimetableCourseResponse' }
+          items: { $ref: '#/components/schemas/EnrollResponse' }
 
-    TimetableCourseResponse:
+    EnrollResponse:
       type: object
-      required: [ timetableCourseId, course ]
+      required: [ enrollId, course ]
       properties:
-        timetableCourseId: { type: integer, format: int64 }
+        enrollId: { type: integer, format: int64 }
         course: { $ref: '#/components/schemas/CourseDto' }
 
     CreateCustomCourseRequest:
@@ -538,10 +582,9 @@ components:
           description: |
             시간 슬롯 목록.
             - 미포함: 변경 없음
-            - 빈 배열/null: 허용하지 않음
+            - 빈 배열/null: 허용하지 않음 (서버 정책상 400 INVALID_REQUEST)
             - 최소 1개 이상 필요
 
-        # optional
         courseNumber: { type: string, nullable: true }
         lectureNumber: { type: string, nullable: true }
         credit: { type: integer, nullable: true }
@@ -550,8 +593,10 @@ components:
       description: |
         커스텀 강의 수정.
         - 필드 미포함: 변경 없음
-        - null: 값 비우기(삭제)
-        - courseTitle, timeSlots 는 null 불가, null 전달 시 INVALID_REQUEST 
+        - null: 값 비우기(삭제) 의도
+        - 단, courseTitle/timeSlots 는 "스키마상 nullable=true" 이지만 **서버 정책상 null 불가**이며,
+          null 전달 시 400 (INVALID_REQUEST) 로 처리됩니다.
+        - timeSlots 는 빈 배열도 금지(최소 1개 이상) → 400 (INVALID_REQUEST)
 
     CourseDto:
       type: object
@@ -638,9 +683,9 @@ components:
 
     AddCourseResponse:
       type: object
-      required: [ timetableCourseId ]
+      required: [ enrollId ]
       properties:
-        timetableCourseId: { type: integer, format: int64 }
+        enrollId: { type: integer, format: int64 }
 
 paths:
   # ---------------- Auth ----------------
@@ -1223,9 +1268,9 @@ paths:
   # ---------------- Timetables ----------------
   /timetables:
     get:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 내 시간표 목록
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: query
           name: year
@@ -1234,18 +1279,23 @@ paths:
           name: semester
           schema:
             type: string
-            enum: [SPRING, SUMMER, FALL, WINTER]
+            enum: [ SPRING, SUMMER, FALL, WINTER ]
       responses:
         "200":
           description: OK
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ListTimetablesResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
     post:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표 생성
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       requestBody:
         required: true
         content:
@@ -1257,12 +1307,22 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/TimetableResponse' }
+        "400":
+          description: Bad Request (name blank 등)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
   /timetables/{timetableId}:
     patch:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표 이름 수정
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
@@ -1279,11 +1339,26 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/TimetableResponse' }
+        "400":
+          description: Bad Request (name blank 등)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "404":
+          description: Not Found (시간표 없음/권한 없음 포함)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
     delete:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표 삭제
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
@@ -1291,12 +1366,48 @@ paths:
           schema: { type: integer, format: int64 }
       responses:
         "204": { description: No Content }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "404":
+          description: Not Found (시간표 없음/권한 없음 포함)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /timetables/{timetableId}/courses:
+  /timetables/{timetableId}/enrolls:
+    get:
+      tags: [ Timetables ]
+      summary: 시간표 강의 목록 조회
+      security: [ { bearerAuth: [ ] } ]
+      parameters:
+        - in: path
+          name: timetableId
+          required: true
+          schema: { type: integer, format: int64 }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ListEnrollsResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "404":
+          description: Not Found (시간표 없음/권한 없음 포함)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+
     post:
-      tags: [Timetables]
-      summary: 시간표에 강의 추가
-      security: [{ bearerAuth: [] }]
+      tags: [ Timetables ]
+      summary: 시간표에 크롤링 강의 추가
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
@@ -1313,24 +1424,28 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/AddCourseResponse' }
-
-    get:
-      tags: [Timetables]
-      summary: 시간표 강의 목록 조회
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: timetableId
-          required: true
-          schema: { type: integer, format: int64 }
-      responses:
-        "200":
-          description: OK
+        "400":
+          description: Bad Request (CRAWLED 강의만 허용, 요청 형식 오류 등)
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ListTimetableCoursesResponse' }
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "404":
+          description: Not Found (시간표 없음/권한 없음, courseId에 해당하는 강의 없음)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+        "409":
+          description: Conflict (이미 시간표에 추가된 강의)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /timetables/{timetableId}/courses/custom:
+  /timetables/{timetableId}/enrolls/custom:
     post:
       tags: [ Timetables ]
       summary: 시간표에 커스텀 강의 생성 + 추가
@@ -1369,7 +1484,7 @@ paths:
           description: Created
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/TimetableCourseResponse' }
+              schema: { $ref: '#/components/schemas/EnrollResponse' }
         "400":
           description: Bad Request (필수값 누락/형식 오류, timeSlots 빈 배열/NULL, courseTitle NULL 등)
           content:
@@ -1386,18 +1501,18 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /timetables/{timetableId}/courses/{timetableCourseId}:
+  /timetables/{timetableId}/enrolls/{enrollId}:
     get:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표 강의 단건 조회
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
           required: true
           schema: { type: integer, format: int64 }
         - in: path
-          name: timetableCourseId
+          name: enrollId
           required: true
           schema: { type: integer, format: int64 }
       responses:
@@ -1405,20 +1520,20 @@ paths:
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/TimetableCourseResponse' }
+              schema: { $ref: '#/components/schemas/EnrollResponse' }
         "401":
           description: Unauthorized
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
         "404":
-          description: Not Found (해당 timetableCourse 없음/권한 없음 포함)
+          description: Not Found (해당 Enroll 없음/권한 없음 포함)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
 
     patch:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표의 커스텀 강의 수정
       description: |
         시간표에 포함된 강의 중 source=CUSTOM 인 경우에만 수정 가능합니다.
@@ -1428,14 +1543,14 @@ paths:
         - 단, courseTitle/timeSlots는 null로 비우기(삭제) 금지 → 400 INVALID_REQUEST
         - timeSlots는 빈 배열도 금지(최소 1개 이상) → 400 INVALID_REQUEST
         - source=CRAWLED 강의는 수정 불가 → 403
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
           required: true
           schema: { type: integer, format: int64 }
         - in: path
-          name: timetableCourseId
+          name: enrollId
           required: true
           schema: { type: integer, format: int64 }
       requestBody:
@@ -1457,13 +1572,13 @@ paths:
               invalidClearTimeSlots:
                 value: { timeSlots: null }
               invalidEmptyTimeSlots:
-                value: { timeSlots: [] }
+                value: { timeSlots: [ ] }
       responses:
         "200":
           description: OK (수정된 결과 반환)
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/TimetableCourseResponse' }
+              schema: { $ref: '#/components/schemas/EnrollResponse' }
         "400":
           description: Bad Request (요청 바디가 비어있음/검증 실패/courseTitle|null/timeSlots|null/빈 배열 등)
           content:
@@ -1480,25 +1595,26 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
         "404":
-          description: Not Found (해당 timetableCourse 없음/권한 없음 포함)
+          description: Not Found (해당 enroll 없음/권한 없음 포함)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
     delete:
-      tags: [Timetables]
+      tags: [ Timetables ]
       summary: 시간표에서 강의 제거
-      security: [{ bearerAuth: [] }]
+      security: [ { bearerAuth: [ ] } ]
       parameters:
         - in: path
           name: timetableId
           required: true
           schema: { type: integer, format: int64 }
         - in: path
-          name: timetableCourseId
+          name: enrollId
           required: true
           schema: { type: integer, format: int64 }
       responses:
         "204": { description: No Content }
+        "404": { description: Not found}
 
   # ---------------- Courses ----------------
   /courses/search:

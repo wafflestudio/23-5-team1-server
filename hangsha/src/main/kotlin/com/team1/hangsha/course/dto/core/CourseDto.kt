@@ -1,4 +1,19 @@
-package com.team1.hangsha.course.dto.core
+package com.team1.hangsha.timetable.dto
 
-class CourseDto {
-}
+import com.team1.hangsha.common.enums.Semester
+import com.team1.hangsha.common.enums.CourseSource
+
+data class CourseDto(
+    val id: Long,
+    val year: Int,
+    val semester: Semester,
+    val courseTitle: String,
+    val source: CourseSource,
+    val timeSlots: List<CourseTimeSlotDto>,
+
+    // optional / nullable
+    val courseNumber: String? = null,
+    val lectureNumber: String? = null,
+    val credit: Int? = null,
+    val instructor: String? = null,
+)
