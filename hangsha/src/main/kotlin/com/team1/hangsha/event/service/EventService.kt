@@ -76,34 +76,13 @@ class EventService(
         eventTypeIds: List<Long>?,
         orgIds: List<Long>?,
     ): DayEventResponse {
-        val safePage = max(1, page)
-        val safeSize = max(1, size)
-        val offset = (safePage - 1) * safeSize
-
-        val fromStart = date.atStartOfDay()
-        val toEndExclusive = date.plusDays(1).atStartOfDay()
-
-        val total = eventQueryRepository.countInRange(
-            fromStart = fromStart,
-            toEndExclusive = toEndExclusive,
-            statusIds = statusIds,
-            eventTypeIds = eventTypeIds,
-            orgIds = orgIds,
-        )
-
-        val items = eventQueryRepository.findInRangePaged(
-            fromStart = fromStart,
-            toEndExclusive = toEndExclusive,
-            statusIds = statusIds,
-            eventTypeIds = eventTypeIds,
-            orgIds = orgIds,
-            offset = offset,
-            limit = safeSize,
-        ).map { it.toDto() }
+        val total = eventQueryRepository.countOnDay(date, statusIds, eventTypeIds, orgIds)
+        val items = eventQueryRepository.findOnDayPaged(date, statusIds, eventTypeIds, orgIds, page, size)
+            .map { it.toDto() }
 
         return DayEventResponse(
-            page = safePage,
-            size = safeSize,
+            page = max(1, page),
+            size = max(1, size),
             total = total,
             date = date,
             items = items,

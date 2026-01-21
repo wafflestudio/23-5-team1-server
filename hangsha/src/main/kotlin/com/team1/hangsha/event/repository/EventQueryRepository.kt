@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 import java.sql.ResultSet
 import java.sql.Timestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.math.max
 
@@ -47,21 +48,26 @@ class EventQueryRepository(
         return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
     }
 
-    fun countInRange(
-        fromStart: LocalDateTime,
-        toEndExclusive: LocalDateTime,
+    fun countOnDay(
+        date: LocalDate,
         statusIds: List<Long>?,
         eventTypeIds: List<Long>?,
         orgIds: List<Long>?,
     ): Int {
+        val dayStart = date.atStartOfDay()
+        val dayEndExclusive = date.plusDays(1).atStartOfDay()
+
         val sql = buildString {
             append(
                 """
-                SELECT COUNT(*)
-                FROM events
-                WHERE COALESCE(event_start, apply_start) >= :fromStart
-                  AND COALESCE(event_start, apply_start) < :toEndExclusive
-                """.trimIndent()
+            SELECT COUNT(*)
+            FROM events
+            WHERE (
+              (event_start IS NOT NULL AND event_start < :dayEnd AND event_end >= :dayStart)
+              OR
+              (event_start IS NULL AND apply_start < :dayEnd AND apply_end >= :dayStart)
+            )
+            """.trimIndent()
             )
             if (!statusIds.isNullOrEmpty()) append("\n  AND status_id IN (:statusIds)")
             if (!eventTypeIds.isNullOrEmpty()) append("\n  AND event_type_id IN (:eventTypeIds)")
@@ -69,8 +75,8 @@ class EventQueryRepository(
         }
 
         val params = mutableMapOf<String, Any>(
-            "fromStart" to Timestamp.valueOf(fromStart),
-            "toEndExclusive" to Timestamp.valueOf(toEndExclusive),
+            "dayStart" to Timestamp.valueOf(dayStart),
+            "dayEnd" to Timestamp.valueOf(dayEndExclusive),
         )
         if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
@@ -79,38 +85,46 @@ class EventQueryRepository(
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
 
-    fun findInRangePaged(
-        fromStart: LocalDateTime,
-        toEndExclusive: LocalDateTime,
+    fun findOnDayPaged(
+        date: LocalDate,
         statusIds: List<Long>?,
         eventTypeIds: List<Long>?,
         orgIds: List<Long>?,
-        offset: Int,
-        limit: Int,
+        page: Int,
+        size: Int,
     ): List<Event> {
+        val safePage = max(1, page)
+        val safeSize = max(1, size)
+        val offset = (safePage - 1) * safeSize
+
+        val dayStart = date.atStartOfDay()
+        val dayEndExclusive = date.plusDays(1).atStartOfDay()
+
         val sql = buildString {
             append(
                 """
-                SELECT *
-                FROM events
-                WHERE COALESCE(event_start, apply_start) >= :fromStart
-                  AND COALESCE(event_start, apply_start) < :toEndExclusive
-                """.trimIndent()
+            SELECT *
+            FROM events
+            WHERE (
+              (event_start IS NOT NULL AND event_start < :dayEnd AND event_end >= :dayStart)
+              OR
+              (event_start IS NULL AND apply_start < :dayEnd AND apply_end >= :dayStart)
             )
-
+            """.trimIndent()
+            )
             if (!statusIds.isNullOrEmpty()) append("\n  AND status_id IN (:statusIds)")
             if (!eventTypeIds.isNullOrEmpty()) append("\n  AND event_type_id IN (:eventTypeIds)")
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
 
-            append("\nORDER BY COALESCE(event_start, apply_start) ASC, id ASC")
+            append("\nORDER BY COALESCE(event_start, apply_start) DESC, id DESC")
             append("\nLIMIT :limit OFFSET :offset")
         }
 
         val params = mutableMapOf<String, Any>(
-            "fromStart" to Timestamp.valueOf(fromStart),
-            "toEndExclusive" to Timestamp.valueOf(toEndExclusive),
-            "limit" to max(0, limit),
-            "offset" to max(0, offset),
+            "dayStart" to Timestamp.valueOf(dayStart),
+            "dayEnd" to Timestamp.valueOf(dayEndExclusive),
+            "limit" to safeSize,
+            "offset" to offset,
         )
         if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
