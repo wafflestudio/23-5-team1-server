@@ -46,4 +46,8 @@ enum class ErrorCode(
     CATEGORY_GROUP_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리 그룹을 찾을 수 없습니다"),
     CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "카테고리를 찾을 수 없습니다"),
     CATEGORY_CREATE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "카테고리 생성에 실패했습니다"),
+
+    // Tag (여기 추가!)
+    TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "태그를 찾을 수 없습니다"),
+    TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 태그 이름입니다");
 }

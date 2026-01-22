@@ -1,4 +1,6 @@
 package com.team1.hangsha.memo.dto
 
-class UpdateMemoRequest {
-}
+data class UpdateMemoRequest(
+    val content: String,
+    val tagNames: List<String>
+)

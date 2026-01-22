@@ -1,4 +1,8 @@
 package com.team1.hangsha.memo.repository
 
-interface MemoRepository {
+import com.team1.hangsha.memo.model.Memo
+import org.springframework.data.repository.CrudRepository
+
+interface MemoRepository : CrudRepository<Memo, Long> {
+    fun findAllByUserIdOrderByCreatedAtDesc(userId: Long): List<Memo>
 }

@@ -39,7 +39,7 @@ class JwtTokenProvider(
         )
     }
 
-    private fun createToken(
+    fun createToken(
         userId: Long,
         expirationMs: Long,
         type: String

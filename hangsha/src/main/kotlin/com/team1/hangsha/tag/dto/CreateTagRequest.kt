@@ -1,4 +1,5 @@
 package com.team1.hangsha.tag.dto
 
-class CreateTagRequest {
-}
+data class CreateTagRequest(
+    val name: String
+)
