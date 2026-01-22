@@ -3,6 +3,7 @@ package com.team1.hangsha.config
 import com.team1.hangsha.user.JwtAuthenticationFilter
 import com.team1.hangsha.user.handler.OAuth2SuccessHandler
 import com.team1.hangsha.user.service.CustomOAuth2UserService
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -18,6 +19,13 @@ class SecurityConfig(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val oAuth2SuccessHandler: OAuth2SuccessHandler
 ) {
+    @Bean
+    fun jwtFilterRegistration(jwtAuthenticationFilter: JwtAuthenticationFilter)
+            : FilterRegistrationBean<JwtAuthenticationFilter> {
+        return FilterRegistrationBean(jwtAuthenticationFilter).apply {
+            isEnabled = false
+        }
+    }
 
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
@@ -34,18 +42,21 @@ class SecurityConfig(
 
             .authorizeHttpRequests { auth ->
                 auth
-                    // ▼▼▼ 이 부분을 추가/확인해주세요 ▼▼▼
+                    // public path
                     .requestMatchers(
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
-                        "/swagger-ui.html",
-                        "/api-docs/**"
+                        "/api-docs/**",
+                        "/api/v1/auth/**",
+                        "/openapi.yaml/**",
+                        "/api/v1/health",
+                        "/api/v1/events/**",
+                        "/api/v1/category-groups/**",
+                        "/api/v1/categories/**",
+                        "/admin/events/sync", // @TODO: 자동 크롤링 시 삭제 필요
                     ).permitAll()
-
-                    .requestMatchers("/api/v1/auth/**").permitAll() // 로그인/회원가입 등
                     .anyRequest().authenticated()
             }
-
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
 
             .oauth2Login { oauth2 ->
