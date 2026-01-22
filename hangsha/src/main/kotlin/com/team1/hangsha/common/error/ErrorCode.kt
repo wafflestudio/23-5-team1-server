@@ -40,7 +40,7 @@ enum class ErrorCode(
 
     // Tag
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "태그를 찾을 수 없습니다"),
-    TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 태그 이름입니다");
+    TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 태그 이름입니다"),
 
     // Timetable / Enroll / Course
     TIMETABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "시간표를 찾을 수 없습니다"),
