@@ -1,4 +1,8 @@
 package com.team1.hangsha.timetable.dto
 
-class AddCourseRequest {
-}
+import jakarta.validation.constraints.NotNull
+
+data class AddCourseRequest(
+    @field:NotNull
+    val courseId: Long
+)

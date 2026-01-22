@@ -1,6 +1,8 @@
 package com.team1.hangsha.event.controller
 
 import com.team1.hangsha.event.dto.response.Calendar.MonthEventResponse
+import com.team1.hangsha.event.dto.response.Calendar.DayEventResponse
+import com.team1.hangsha.event.dto.response.TitleSearchEventResponse
 import com.team1.hangsha.event.dto.response.DetailEventResponse
 import com.team1.hangsha.event.service.EventService
 import org.springframework.format.annotation.DateTimeFormat
@@ -39,4 +41,34 @@ class EventController(
         @PathVariable eventId: Long,
     ): DetailEventResponse =
         eventService.getEventDetail(eventId)
+
+    @GetMapping("/day")
+    fun day(
+        @RequestParam("date") @DateTimeFormat(iso = ISO.DATE) date: LocalDate,
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @RequestParam("size", defaultValue = "20") size: Int,
+        @RequestParam("statusId", required = false) statusIds: List<Long>?,
+        @RequestParam("eventTypeId", required = false) eventTypeIds: List<Long>?,
+        @RequestParam("orgId", required = false) orgIds: List<Long>?,
+    ): DayEventResponse =
+        eventService.getDayEvents(
+            date = date,
+            page = page,
+            size = size,
+            statusIds = statusIds,
+            eventTypeIds = eventTypeIds,
+            orgIds = orgIds,
+        )
+
+    @GetMapping("/search/title")
+    fun searchTitle(
+        @RequestParam("query") query: String,
+        @RequestParam("page", defaultValue = "1") page: Int,
+        @RequestParam("size", defaultValue = "20") size: Int,
+    ): TitleSearchEventResponse =
+        eventService.searchTitle(
+            query = query,
+            page = page,
+            size = size,
+        )
 }

@@ -21,6 +21,7 @@ data class ProgramEvent(
     val capacity: Int? = null,
 
     val imageUrl: String? = null,
+    val mainContentHtml: String? = null,
 
     val tags: List<String> = emptyList(),
 

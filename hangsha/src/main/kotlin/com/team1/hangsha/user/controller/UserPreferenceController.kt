@@ -5,6 +5,7 @@ import com.team1.hangsha.user.model.User
 import com.team1.hangsha.user.service.UserPreferenceService
 import com.team1.hangsha.user.dto.Preference.ListInterestCategoryResponse
 import com.team1.hangsha.user.dto.Preference.ReplaceAllInterestCategoriesRequest
+import io.swagger.v3.oas.annotations.Parameter
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -23,7 +24,7 @@ class UserPreferenceController (
 ) {
     @GetMapping("/interest-categories")
     fun listInterestCategory(
-        @LoggedInUser user: User,
+        @Parameter(hidden = true) @LoggedInUser user: User,
         ): ResponseEntity<ListInterestCategoryResponse> {
 
         val items = userPreferenceService.listInterestCategory(user.id!!)
@@ -32,7 +33,7 @@ class UserPreferenceController (
 
     @PutMapping("/interest-categories")
     fun replaceAllInterestCategories(
-        @LoggedInUser user: User,
+        @Parameter(hidden = true) @LoggedInUser user: User,
         @Valid  @RequestBody req: ReplaceAllInterestCategoriesRequest,
     ): ResponseEntity<Void> {
         userPreferenceService.replaceAllInterestCategories(user.id!!, req)
@@ -41,7 +42,7 @@ class UserPreferenceController (
 
     @DeleteMapping("/interest-categories/{categoryId}")
     fun deleteInterestCategory(
-        @LoggedInUser user: User,
+        @Parameter(hidden = true) @LoggedInUser user: User,
         @PathVariable categoryId: Long
     ): ResponseEntity<Void> {
         userPreferenceService.delete(user.id!!, categoryId)

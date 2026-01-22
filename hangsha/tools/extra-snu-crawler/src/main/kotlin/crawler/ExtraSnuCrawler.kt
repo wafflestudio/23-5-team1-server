@@ -101,9 +101,10 @@ class ExtraSnuCrawler(
 
             val html = fetchDetailPageByPlaywright(dataSeq) ?: return@map e
             val sessions = parseDetailSessions(html)
+            val mainHtml = parseMainContentHtml(html)
 
             if (delayMsBetweenDetails > 0) Thread.sleep(delayMsBetweenDetails)
-            e.copy(detailSessions = sessions)
+            e.copy(detailSessions = sessions, mainContentHtml = mainHtml)
         }
     }
 
@@ -322,6 +323,42 @@ class ExtraSnuCrawler(
             .map { it.toImmutable() }
             .sortedBy { it.round ?: Int.MAX_VALUE }
             .filter { it.location != null || it.startDate != null || it.startTime != null }
+    }
+
+    /**
+     * ✅ "프로그램 주요내용" 섹션의 td_box HTML을 "그대로" 저장하되,
+     * - img, a 태그는 제거
+     *
+     * 반환값은 td_box의 innerHTML.
+     * 없으면 null.
+     */
+    private fun parseMainContentHtml(html: String): String? {
+        val doc = Jsoup.parse(html, baseUrl)
+
+        // cont_box 중에서 cont_tit == "프로그램 주요내용" 인 박스 찾기
+        val box = doc.select("div.cont_box")
+            .firstOrNull {
+                it.selectFirst("p.cont_tit")?.text()?.normalize() == "프로그램 주요내용"
+            } ?: return null
+
+        val tdBox = box.selectFirst("div.td_box") ?: return null
+
+        // img, a 제거
+        tdBox.select("img").remove()
+        tdBox.select("a").remove()
+
+        // 혹시 script/style 섞이면 제거 (안전)
+        tdBox.select("script, style").remove()
+
+        // 빈 p 같은 거 정리(선택)
+        tdBox.select("p").forEach { p ->
+            if (p.text().normalize().isBlank() && p.select("br").isEmpty() && p.childrenSize() == 0) {
+                p.remove()
+            }
+        }
+
+        val out = tdBox.html().trim()
+        return out.ifBlank { null }
     }
 
     private fun tdAfterThContains(tr: Element, label: String): String? {

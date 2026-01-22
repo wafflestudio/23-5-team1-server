@@ -8,4 +8,9 @@ import org.springframework.data.jdbc.repository.config.AbstractJdbcConfiguration
 @Configuration
 @EnableJdbcRepositories(basePackages = ["com.team1.hangsha"])
 @EnableJdbcAuditing
-class DatabaseConfig : AbstractJdbcConfiguration()
+class DatabaseConfig : AbstractJdbcConfiguration() {
+    override fun userConverters(): MutableList<Any> = mutableListOf(
+        StringListToJsonConverter(),
+        JsonToStringListConverter(),
+    )
+}

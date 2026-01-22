@@ -58,7 +58,7 @@ class EventSyncService(
 
             val orgName = e.majorTypes.getOrNull(0)?.trim()?.takeIf { it.isNotBlank() }
             val orgId = orgName?.let { getOrCreateCategoryId(orgGroupId, it) }
-            val typeName = e.majorTypes.getOrNull(1)?.trim()?.takeIf { it.isNotBlank() }
+            val typeName = normalizeProgramType(e.majorTypes.getOrNull(1))
 
             val statusId = e.status?.trim()?.takeIf { it.isNotBlank() }?.let { findCategoryId(statusGroupId, it) }
             val eventTypeId = typeName?.let { findCategoryId(typeGroupId, it) }
@@ -71,6 +71,13 @@ class EventSyncService(
 
             // 중복 여부 판정: 신청 링크
             val existing = eventRepository.findByApplyLink(applyLink)
+
+            val cleanedTags = e.tags
+                .asSequence()
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
+                .distinct()
+                .toList()
 
             val model = Event(
                 id = existing?.id,
@@ -89,9 +96,12 @@ class EventSyncService(
                 capacity = e.capacity ?: 0,
                 applyCount = e.applyCount ?: 0,
 
-                organization = orgName,        // ✅ org는 문자열로만 저장
+                organization = orgName,
                 location = location,
                 applyLink = applyLink,
+
+                tags = if (cleanedTags.isEmpty()) null else objectMapper.writeValueAsString(cleanedTags),
+                mainContentHtml = e.mainContentHtml,
 
                 createdAt = existing?.createdAt ?: Instant.now(),
             )
@@ -174,6 +184,15 @@ class EventSyncService(
         } catch (e: DuplicateKeyException) {
             // 동시에 누가 먼저 insert 했을 수 있음 → 재조회
             categoryRepository.findByGroupIdAndName(groupId, name)?.id ?: throw e
+        }
+    }
+
+    private fun normalizeProgramType(raw: String?): String? {
+        val s = raw?.trim()
+        if (s.isNullOrBlank()) return null
+        return when (s) {
+            "레크리에이션" -> "기타"
+            else -> s
         }
     }
 }

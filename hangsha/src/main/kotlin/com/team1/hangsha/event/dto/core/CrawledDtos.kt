@@ -16,6 +16,7 @@ data class CrawledProgramEvent(
     val capacity: Int? = null,
     val imageUrl: String? = null,
     val tags: List<String> = emptyList(),
+    val mainContentHtml: String? = null,
     val detailSessions: List<CrawledDetailSession> = emptyList(),
 )
 

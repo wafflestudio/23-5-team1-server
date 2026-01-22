@@ -17,6 +17,9 @@ data class Event(
     val imageUrl: String? = null,
     val operationMode: String? = null,
 
+    val tags: String? = null,
+    val mainContentHtml: String? = null,
+
     val statusId: Long? = null,
     val eventTypeId: Long? = null,
     val orgId: Long? = null,
@@ -25,7 +28,6 @@ data class Event(
     val applyEnd: LocalDateTime? = null,
     val eventStart: LocalDateTime? = null,
     val eventEnd: LocalDateTime? = null,
-    // 현재 날짜까지는 제대로 들어오는데 크롤링 완성되기 전까지 default time 어케 설정할지?
 
     val capacity: Int? = null,
     val applyCount: Int = 0,
