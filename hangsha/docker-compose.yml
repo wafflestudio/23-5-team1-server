@@ -7,6 +7,7 @@ services:
     ports:
       - "3307:3306"
     environment:
+      TZ: Asia/Seoul
       MYSQL_DATABASE: campus_db
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user
