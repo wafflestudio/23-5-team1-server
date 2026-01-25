@@ -7,6 +7,7 @@ services:
     ports:
       - "8080:8080"
     environment:
+      TZ: Asia/Seoul
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
@@ -19,6 +20,7 @@ services:
     image: mysql:8.0
     container_name: campus-mysql
     environment:
+      TZ: Asia/Seoul
       MYSQL_DATABASE: campus_db
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: user

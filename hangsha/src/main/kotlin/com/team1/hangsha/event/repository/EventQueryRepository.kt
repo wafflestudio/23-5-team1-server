@@ -23,11 +23,14 @@ class EventQueryRepository(
         val sql = buildString {
             append(
                 """
-                SELECT *
-                FROM events
-                WHERE COALESCE(event_start, apply_start) >= :fromStart
-                  AND COALESCE(event_start, apply_start) < :toEndExclusive
-                """.trimIndent()
+            SELECT *
+            FROM events
+            WHERE (
+              (event_start IS NOT NULL AND event_start < :toEndExclusive AND COALESCE(event_end, event_start) >= :fromStart)
+              OR
+              (event_start IS NULL AND apply_start < :toEndExclusive AND COALESCE(apply_end, apply_start) >= :fromStart)
+            )
+            """.trimIndent()
             )
 
             if (!statusIds.isNullOrEmpty()) append("\n  AND status_id IN (:statusIds)")
@@ -175,6 +178,9 @@ private fun ResultSet.toEvent(): Event {
         title = getString("title"),
         imageUrl = getString("image_url"),
         operationMode = getString("operation_mode"),
+
+        tags = getString("tags"),
+        mainContentHtml = getString("main_content_html"),
 
         statusId = getLong("status_id").let { if (wasNull()) null else it },
         eventTypeId = getLong("event_type_id").let { if (wasNull()) null else it },

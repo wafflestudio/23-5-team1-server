@@ -12,6 +12,7 @@ import com.team1.hangsha.event.repository.EventQueryRepository
 import com.team1.hangsha.event.repository.EventRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.math.max
 
 @Service
@@ -42,15 +43,42 @@ class EventService(
             orgIds = orgIds,
         )
 
-        val grouped = events.groupBy { e ->
-            (e.eventStart ?: e.applyStart ?: fromStart).toLocalDate()
-        }.toSortedMap()
+        // ✅ 날짜별 버킷: "그 날과 겹치면 포함" (day overlap과 동일한 개념)
+        val buckets = linkedMapOf<LocalDate, MutableList<Event>>().apply {
+            var d = from
+            while (!d.isAfter(to)) {
+                this[d] = mutableListOf()
+                d = d.plusDays(1)
+            }
+        }
 
-        val byDate = grouped
+        fun effectiveStart(e: Event): LocalDateTime =
+            e.eventStart ?: e.applyStart ?: fromStart
+
+        fun effectiveEnd(e: Event): LocalDateTime =
+            e.eventEnd ?: e.applyEnd ?: effectiveStart(e)
+
+        for (e in events) {
+            val s = effectiveStart(e).toLocalDate().coerceAtLeast(from)
+            val ee = effectiveEnd(e).toLocalDate().coerceAtMost(to)
+
+            var d = s
+            while (!d.isAfter(ee)) {
+                buckets[d]?.add(e)
+                d = d.plusDays(1)
+            }
+        }
+
+        val byDate = buckets
+            .filterValues { it.isNotEmpty() }
+            .toSortedMap()
             .mapValues { (_, dayEvents) ->
+                val sorted = dayEvents.sortedWith(
+                    compareBy<Event> { effectiveStart(it) }.thenBy { it.id ?: Long.MAX_VALUE }
+                )
                 MonthEventResponse.DayBucket(
-                    total = dayEvents.size,
-                    preview = dayEvents.take(previewSize).map { it.toDto() },
+                    total = sorted.size,
+                    preview = sorted.take(previewSize).map { it.toDto() },
                 )
             }
             .mapKeys { (date, _) -> date.toString() }
@@ -160,6 +188,5 @@ private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
     matchedInterestPriority = null,
     isBookmarked = null,
     tags = tags,
-    // 현재 events 테이블에 detail 컬럼이 없어서 null
     detail = mainContentHtml,
 )
