@@ -67,7 +67,9 @@ jobs:
               DB_CONTAINER="$(docker ps -a --filter 'ancestor=mysql:8.0' --format '{{.Names}}' | head -n1 || true)"
             fi
             if [ -z "$DB_CONTAINER" ]; then
-              echo "ERROR: No DB container found."; docker ps -a; exit 1
+              echo "ERROR: No DB container found."
+              docker ps -a
+              exit 1
             fi
 
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
@@ -113,82 +115,50 @@ jobs:
               exit 1
             fi
 
-            # ---- root mysql runner (no default DB; we will touch all schemas) ----
-            mysql_root_any() {
-              local sql="$1"
+            mysql_root_db_stdin() {
               if [ -z "$ROOT_PASS" ]; then
-                docker run --rm --network "$NET" mysql:8.0 \
-                  mysql -h db -uroot -N -B -e "$sql"
+                docker run --rm --network "$NET" -i mysql:8.0 \
+                  mysql -h db -uroot "${DB_NAME}"
               else
-                docker run --rm --network "$NET" mysql:8.0 \
-                  mysql -h db -uroot -p"$ROOT_PASS" -N -B -e "$sql"
+                docker run --rm --network "$NET" -i mysql:8.0 \
+                  mysql -h db -uroot -p"$ROOT_PASS" "${DB_NAME}"
               fi
             }
 
-            echo "=== [DB] schemas having flyway_schema_history ==="
-            mysql_root_any "
-              SELECT table_schema
-              FROM information_schema.tables
-              WHERE table_name='flyway_schema_history'
-              ORDER BY table_schema;
-            " || true
+            echo "=== [DB] before (v18 or any failed rows) ==="
+            cat <<'SQL' | mysql_root_db_stdin
+            SELECT installed_rank, version, description, success, installed_on
+            FROM flyway_schema_history
+            WHERE TRIM(version)='18' OR success=0
+            ORDER BY installed_rank;
+            SQL
 
-            echo "=== [DB] list failed rows (success=0) or v18 across ALL schemas ==="
-            mysql_root_any "
-              SET SESSION group_concat_max_len=1000000;
-              SELECT GROUP_CONCAT(
-                CONCAT(
-                  'SELECT ''', table_schema, ''' AS schema_name, installed_rank, version, description, success, installed_on ',
-                  'FROM `', table_schema, '`.flyway_schema_history ',
-                  'WHERE success=0 OR TRIM(version)=''18'' ',
-                  'ORDER BY installed_rank;'
-                )
-                SEPARATOR ' '
-              ) INTO @q
-              FROM information_schema.tables
-              WHERE table_name='flyway_schema_history';
+            echo "=== [DB] delete failed v18 rows (success=0) ==="
+            cat <<'SQL' | mysql_root_db_stdin
+            DELETE FROM flyway_schema_history
+            WHERE TRIM(version)='18' AND success=0;
+            SELECT ROW_COUNT() AS deleted_rows;
+            SQL
 
-              PREPARE stmt FROM @q;
-              EXECUTE stmt;
-              DEALLOCATE PREPARE stmt;
-            " || true
+            echo "=== [DB] after (v18 or any failed rows) ==="
+            cat <<'SQL' | mysql_root_db_stdin
+            SELECT installed_rank, version, description, success, installed_on
+            FROM flyway_schema_history
+            WHERE TRIM(version)='18' OR success=0
+            ORDER BY installed_rank;
+            SQL
 
-            echo "=== [DB] DELETE failed v18 rows across ALL schemas (success=0 AND TRIM(version)=18) ==="
-            mysql_root_any "
-              SET SESSION group_concat_max_len=1000000;
-              SELECT GROUP_CONCAT(
-                CONCAT(
-                  'DELETE FROM `', table_schema, '`.flyway_schema_history ',
-                  'WHERE success=0 AND TRIM(version)=''18'';'
-                )
-                SEPARATOR ' '
-              ) INTO @d
-              FROM information_schema.tables
-              WHERE table_name='flyway_schema_history';
-
-              PREPARE stmt FROM @d;
-              EXECUTE stmt;
-              DEALLOCATE PREPARE stmt;
-            " || true
-
-            echo "=== [DB] assert no failed v18 remains across ALL schemas ==="
-            mysql_root_any "
-              SET SESSION group_concat_max_len=1000000;
-              SELECT GROUP_CONCAT(
-                CONCAT(
-                  'SELECT ''', table_schema, ''' AS schema_name, COUNT(*) AS cnt ',
-                  'FROM `', table_schema, '`.flyway_schema_history ',
-                  'WHERE success=0 AND TRIM(version)=''18'';'
-                )
-                SEPARATOR ' '
-              ) INTO @c
-              FROM information_schema.tables
-              WHERE table_name='flyway_schema_history';
-
-              PREPARE stmt FROM @c;
-              EXECUTE stmt;
-              DEALLOCATE PREPARE stmt;
-            " || true
+            echo "=== [DB] assert v18 failed count ==="
+            V18_FAIL_COUNT="$(cat <<'SQL' | mysql_root_db_stdin | tail -n1 | tr -d '\r'
+            SELECT COUNT(*) AS c
+            FROM flyway_schema_history
+            WHERE TRIM(version)='18' AND success=0;
+            SQL
+            )"
+            if [ "${V18_FAIL_COUNT:-0}" != "0" ]; then
+              echo "ERROR: still have failed v18 row(s) in flyway_schema_history."
+              exit 1
+            fi
 
             echo "=== [Flyway] repair (as root, on ${DB_NAME}) ==="
             if [ -z "$ROOT_PASS" ]; then
@@ -200,11 +170,10 @@ jobs:
                 -url="jdbc:mysql://db:3306/${DB_NAME}?serverTimezone=Asia/Seoul" \
                 -user="root" -password="${ROOT_PASS}" repair
             fi
-
             # ============================================================
 
             docker rm -f campus-server 2>/dev/null || true
-            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
+            docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f || true
 
             cat > docker-compose.prod.yml <<EOF
             version: '3.8'
@@ -246,7 +215,7 @@ jobs:
               (ss -lntp || netstat -lntp) 2>/dev/null || true
               env | grep -E "SPRING_|JAVA|SERVER" || true
               (wget -qS -O- http://127.0.0.1:8080/ 2>&1 | head -n 20) || true
-              (wget -qS -O- http://127.0.0.1:8080/api/v1/health 2>&1 | head -n 50) || true
+              (wget -qS -O- http://127.0.0.1:8080/api/v1/health 2>&1 | head -n 80) || true
             ' || true
 
             echo "=== host curl ==="
@@ -255,5 +224,5 @@ jobs:
             echo "=== wait 120s then curl ==="
             sleep 120
             docker logs --tail 400 campus-server || true
-            docker exec campus-server sh -lc 'wget -qS -O- http://127.0.0.1:8080/api/v1/health 2>&1 | head -n 80 || true' || true
+            docker exec campus-server sh -lc 'wget -qS -O- http://127.0.0.1:8080/api/v1/health 2>&1 | head -n 120 || true' || true
             curl -fsS http://127.0.0.1:8080/api/v1/health >/dev/null
