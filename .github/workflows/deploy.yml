@@ -3,12 +3,6 @@ name: Deploy to EC2
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch:
-    inputs:
-      reset_db:
-        description: "DANGER: reset MySQL container + data (true/false)"
-        required: false
-        default: "true"
 
 jobs:
   build-and-deploy:
@@ -53,117 +47,37 @@ jobs:
           command_timeout: 40m
           script: |
             set -euo pipefail
-
             echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
             export DOCKER_USERNAME="${{ secrets.DOCKER_USERNAME }}"
             PROJECT="campus"
             NET="${PROJECT}_default"
 
-            # ==== DB settings (from repo docker-compose/application.yml) ====
+            # ==== DB settings (keep in sync with your DB container) ====
             DB_NAME="campus_db"
             DB_USER="user"
             DB_PASS="password"
-            DB_ROOT_PASS="root"
-            DB_CONTAINER_NAME="campus-mysql"
-            # ===============================================================
+            # ===========================================================
 
             docker network inspect "$NET" >/dev/null 2>&1 || docker network create "$NET"
 
-            # workflow_dispatch input; default false on push
-            RESET_DB=true
-            if [ -z "${RESET_DB:-}" ]; then RESET_DB="false"; fi
-            echo "RESET_DB=$RESET_DB"
-
-            # ===== helper: find DB containers (campus-mysql or *_campus-mysql) =====
-            find_db_containers() {
-              docker ps -a --format '{{.Names}}' | grep -E '(^campus-mysql$|_campus-mysql$)' || true
-            }
-
-            # ===== DANGER: reset DB (container + volumes/bind data) =====
-            if [ "$RESET_DB" = "true" ]; then
-              echo "!!! RESETTING DB (container + data) !!!"
-
-              # Stop app first
-              docker rm -f campus-server 2>/dev/null || true
-              docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
-
-              DBS="$(find_db_containers)"
-              if [ -n "$DBS" ]; then
-                echo "$DBS" | while read -r c; do
-                  [ -z "$c" ] && continue
-                  echo "Resetting DB container: $c"
-
-                  # Remove named volumes + delete bind source for /var/lib/mysql
-                  # 1) named volumes
-                  VOLS="$(docker inspect -f '{{range .Mounts}}{{if and (eq .Type "volume") (eq .Destination "/var/lib/mysql")}}{{.Name}}{{"\n"}}{{end}}{{end}}' "$c" 2>/dev/null || true)"
-                  # 2) bind mount source (host path)
-                  BINDS="$(docker inspect -f '{{range .Mounts}}{{if and (eq .Type "bind") (eq .Destination "/var/lib/mysql")}}{{.Source}}{{"\n"}}{{end}}{{end}}' "$c" 2>/dev/null || true)"
-
-                  docker rm -f "$c" >/dev/null 2>&1 || true
-
-                  echo "$VOLS" | sed '/^\s*$/d' | while read -r v; do
-                    echo "Removing volume: $v"
-                    docker volume rm -f "$v" >/dev/null 2>&1 || true
-                  done
-
-                  echo "$BINDS" | sed '/^\s*$/d' | while read -r p; do
-                    echo "Removing bind data dir: $p"
-                    sudo rm -rf "$p" || true
-                  done
-                done
-              else
-                echo "No existing DB container found. Creating a new one."
-              fi
-
-              # Create fresh MySQL container (matches repo docker-compose settings)
-              docker run -d \
-                --name "$DB_CONTAINER_NAME" \
-                --network "$NET" \
-                --restart always \
-                -e MYSQL_DATABASE="$DB_NAME" \
-                -e MYSQL_ROOT_PASSWORD="$DB_ROOT_PASS" \
-                -e MYSQL_USER="$DB_USER" \
-                -e MYSQL_PASSWORD="$DB_PASS" \
-                mysql:8.0 \
-                --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-
-              # Wait until MySQL is ready (up to 90s)
-              echo "Waiting for MySQL to be ready..."
-              for i in $(seq 1 90); do
-                if docker exec "$DB_CONTAINER_NAME" mysqladmin ping -uroot -p"$DB_ROOT_PASS" --silent 2>/dev/null; then
-                  echo "MySQL is ready."
-                  break
-                fi
-                sleep 1
-              done
-
-              docker network connect --alias db "$NET" "$DB_CONTAINER_NAME" >/dev/null 2>&1 || true
+            # Find DB container (campus-mysql or project-prefixed _campus-mysql)
+            DB_CONTAINER="$(docker ps -a --format '{{.Names}}' | grep -E '(^campus-mysql$|_campus-mysql$)' | head -n1 || true)"
+            if [ -z "$DB_CONTAINER" ]; then
+              DB_CONTAINER="$(docker ps -a --filter 'ancestor=mysql:8.0' --format '{{.Names}}' | head -n1 || true)"
             fi
-            # ===== end reset =====
-
-            # Ensure DB container exists and is connected with alias db
-            DB_CONTAINER="$(find_db_containers | head -n1 || true)"
             if [ -z "$DB_CONTAINER" ]; then
               echo "ERROR: No DB container found."; docker ps -a; exit 1
             fi
 
             docker start "$DB_CONTAINER" >/dev/null 2>&1 || true
+
+            # Ensure hostname "db" is ALWAYS resolvable inside the network
             docker network disconnect "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
             docker network connect --alias db "$NET" "$DB_CONTAINER" >/dev/null 2>&1 || true
 
-            # Safety: if NOT resetting, detect old Flyway version 9 applied (common cause of boot failure)
-            if [ "$RESET_DB" != "true" ]; then
-              echo "Checking Flyway history (non-reset deploy)..."
-              set +e
-              HAS_V9="$(docker exec "$DB_CONTAINER" sh -lc "mysql -u\"$DB_USER\" -p\"$DB_PASS\" -D\"$DB_NAME\" -N -e \"SELECT 1 FROM flyway_schema_history WHERE version='9' LIMIT 1;\" 2>/dev/null" )"
-              set -e
-              if [ "$HAS_V9" = "1" ]; then
-                echo "ERROR: flyway_schema_history has version=9 already applied. This often breaks if V9 migration file is missing in the app image."
-                echo "Run this workflow manually with workflow_dispatch input reset_db=true to wipe DB, or restore the V9 migration file in the repo."
-                exit 1
-              fi
-            fi
+            # (Optional) quick DNS check
+            docker run --rm --network "$NET" busybox nslookup db || true
 
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
