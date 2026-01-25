@@ -160,6 +160,5 @@ private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
     matchedInterestPriority = null,
     isBookmarked = null,
     tags = tags,
-    // 현재 events 테이블에 detail 컬럼이 없어서 null
     detail = mainContentHtml,
 )

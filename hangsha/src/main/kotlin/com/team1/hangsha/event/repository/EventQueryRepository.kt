@@ -176,6 +176,9 @@ private fun ResultSet.toEvent(): Event {
         imageUrl = getString("image_url"),
         operationMode = getString("operation_mode"),
 
+        tags = getString("tags"),
+        mainContentHtml = getString("main_content_html"),
+
         statusId = getLong("status_id").let { if (wasNull()) null else it },
         eventTypeId = getLong("event_type_id").let { if (wasNull()) null else it },
         orgId = getLong("org_id").let { if (wasNull()) null else it },
