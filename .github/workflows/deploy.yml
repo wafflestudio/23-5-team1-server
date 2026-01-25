@@ -79,11 +79,26 @@ jobs:
             # (Optional) quick DNS check
             docker run --rm --network "$NET" busybox nslookup db || true
 
-            # === Flyway repair (fix failed migration state) ===
-            # Run in the same docker network so "db:3306" resolves
+            # === Fix Flyway failed migration V18 (server-side) ===
+            # Show any failed rows for v18
+            docker run --rm --network "$NET" mysql:8.0 \
+              mysql -h db -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" \
+              -e "SELECT installed_rank, version, description, success, installed_on FROM flyway_schema_history WHERE version='18' ORDER BY installed_rank;" || true
+
+            # Delete ONLY the failed history row(s) for v18 (success=0)
+            docker run --rm --network "$NET" mysql:8.0 \
+              mysql -h db -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" \
+              -e "DELETE FROM flyway_schema_history WHERE version='18' AND success=0;" || true
+
+            # Repair (cleans checksums + failed flags if any remain)
             docker run --rm --network "$NET" flyway/flyway:11 \
               -url="jdbc:mysql://db:3306/${DB_NAME}?serverTimezone=Asia/Seoul" \
               -user="${DB_USER}" -password="${DB_PASS}" repair || true
+
+            # Re-check v18 rows after cleanup
+            docker run --rm --network "$NET" mysql:8.0 \
+              mysql -h db -u"${DB_USER}" -p"${DB_PASS}" "${DB_NAME}" \
+              -e "SELECT installed_rank, version, description, success, installed_on FROM flyway_schema_history WHERE version='18' ORDER BY installed_rank;" || true
             # ================================================
 
             docker rm -f campus-server 2>/dev/null || true
