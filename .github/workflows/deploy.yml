@@ -79,6 +79,13 @@ jobs:
             # (Optional) quick DNS check
             docker run --rm --network "$NET" busybox nslookup db || true
 
+            # === Flyway repair (fix failed migration state) ===
+            # Run in the same docker network so "db:3306" resolves
+            docker run --rm --network "$NET" flyway/flyway:11 \
+              -url="jdbc:mysql://db:3306/${DB_NAME}?serverTimezone=Asia/Seoul" \
+              -user="${DB_USER}" -password="${DB_PASS}" repair || true
+            # ================================================
+
             docker rm -f campus-server 2>/dev/null || true
             docker ps -a --filter "name=_campus-server" -q | xargs -r docker rm -f
 
