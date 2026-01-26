@@ -42,8 +42,8 @@ class SecurityConfig(
 
             .authorizeHttpRequests { auth ->
                 auth
-                    // public path
                     .requestMatchers(
+                        "/",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/api-docs/**",
@@ -53,6 +53,7 @@ class SecurityConfig(
                         "/api/v1/events/**",
                         "/api/v1/category-groups/**",
                         "/api/v1/categories/**",
+                        "/login/oauth2/**",
                         "/admin/events/sync", // @TODO: 자동 크롤링 시 삭제 필요
                     ).permitAll()
                     .anyRequest().authenticated()
