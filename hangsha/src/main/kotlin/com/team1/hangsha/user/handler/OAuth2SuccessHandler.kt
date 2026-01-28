@@ -28,15 +28,12 @@ class OAuth2SuccessHandler(
             ?: throw RuntimeException("User not found after OAuth2 login")
 
         val accessToken = jwtTokenProvider.createAccessToken(user.id!!)
-        // 필요하다면 Refresh Token도 생성
-        // val refreshToken = jwtTokenProvider.createRefreshToken(user.id!!)
 
-        // 프론트엔드 주소로 변경(http://localhost:3000/oauth/callback)
-        val targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/")
-            .queryParam("accessToken", accessToken)
-            // .queryParam("refreshToken", refreshToken) // 필요시 주석 해제
+        // 프론트엔드 주소로 변경
+
+        val targetUrl = UriComponentsBuilder.fromUriString("https://d3iy34kj6pk4ke.cloudfront.net/")
+            .fragment("accessToken=$accessToken") // #accessToken=... 형태로 붙음
             .build().toUriString()
-
         redirectStrategy.sendRedirect(request, response, targetUrl)
     }
 }

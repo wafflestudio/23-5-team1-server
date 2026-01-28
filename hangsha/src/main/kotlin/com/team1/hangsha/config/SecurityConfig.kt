@@ -42,13 +42,12 @@ class SecurityConfig(
 
             .authorizeHttpRequests { auth ->
                 auth
-                    // public path
                     .requestMatchers(
+                        "/",
                         // 문서
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/api-docs/**",
-                        "/api/v1/auth/**",
                         "/openapi.yaml/**",
                         "/api/v1/health",
                         // 행사
@@ -59,6 +58,9 @@ class SecurityConfig(
                         // 주최 기관
                         "/api/v1/category-groups/**",
                         "/api/v1/categories/**",
+                        // 로그인
+                        "/api/v1/auth/**",
+                        "/login/oauth2/**",
                         // @TODO: 자동 크롤링 시 삭제 필요
                         "/admin/events/sync",
                     ).permitAll()
