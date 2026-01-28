@@ -44,17 +44,25 @@ class SecurityConfig(
                 auth
                     .requestMatchers(
                         "/",
+                        // 문서
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/api-docs/**",
-                        "/api/v1/auth/**",
                         "/openapi.yaml/**",
                         "/api/v1/health",
-                        "/api/v1/events/**",
+                        // 행사
+                        "/api/v1/events/month",
+                        "/api/v1/events/day",
+                        "/api/v1/events/search/**",
+                        "/api/v1/events/*",
+                        // 주최 기관
                         "/api/v1/category-groups/**",
                         "/api/v1/categories/**",
+                        // 로그인
+                        "/api/v1/auth/**",
                         "/login/oauth2/**",
-                        "/admin/events/sync", // @TODO: 자동 크롤링 시 삭제 필요
+                        // @TODO: 자동 크롤링 시 삭제 필요
+                        "/admin/events/sync",
                     ).permitAll()
                     .anyRequest().authenticated()
             }
