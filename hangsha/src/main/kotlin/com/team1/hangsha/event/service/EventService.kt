@@ -1,5 +1,6 @@
 package com.team1.hangsha.event.service
 
+import com.team1.hangsha.bookmark.repository.BookmarkRepository
 import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.common.error.ErrorCode
 import com.team1.hangsha.event.dto.core.EventDto
@@ -21,6 +22,7 @@ class EventService(
     private val eventRepository: EventRepository,
     private val eventQueryRepository: EventQueryRepository,
     private val userInterestCategoryRepository: UserInterestCategoryRepository,
+    private val bookmarkRepository: BookmarkRepository,
 ) {
 
     fun getMonthEvents(
@@ -77,6 +79,11 @@ class EventService(
         }
 
         val auth = userId != null
+        val bookmarkedIds: Set<Long> =
+            if (auth) bookmarkRepository.findBookmarkedEventIdsIn(
+                userId,
+                events.mapNotNull { it.id }
+            ) else emptySet()
 
         val byDate = buckets
             .filterValues { it.isNotEmpty() }
@@ -89,7 +96,8 @@ class EventService(
                     total = sorted.size,
                     preview = sorted.take(previewSize).map { e ->
                         val matchedPriority = e.matchedInterestPriority(interestPriorityByCategoryId)
-                        e.toDto(auth, matchedPriority)
+                        val isBookmarked = if (auth) bookmarkedIds.contains(requireNotNull(e.id)) else null
+                        e.toDto(auth, matchedPriority, isBookmarked)
                     },
                 )
             }
@@ -108,8 +116,9 @@ class EventService(
 
         val interestPriorityByCategoryId = loadInterestMap(userId)
         val matchedPriority = event.matchedInterestPriority(interestPriorityByCategoryId)
+        val isBookmarked: Boolean? = userId?.let { bookmarkRepository.exists(it, eventId) }
 
-        return event.toDetailResponse(auth = userId != null, matchedPriority = matchedPriority)
+        return event.toDetailResponse(auth = userId != null, matchedPriority = matchedPriority, isBookmarked = isBookmarked)
     }
 
     // 기존 호출부 호환용
@@ -129,10 +138,16 @@ class EventService(
 
         val interestPriorityByCategoryId = loadInterestMap(userId)
         val auth = userId != null
+        val bookmarkedIds: Set<Long> =
+            if (auth) bookmarkRepository.findBookmarkedEventIdsIn(
+                userId,
+                events.mapNotNull { it.id }
+            ) else emptySet()
 
         val items = events.map { e ->
             val matchedPriority = e.matchedInterestPriority(interestPriorityByCategoryId)
-            e.toDto(auth, matchedPriority)
+            val isBookmarked = if (auth) bookmarkedIds.contains(requireNotNull(e.id)) else null
+            e.toDto(auth, matchedPriority, isBookmarked)
         }
 
         return DayEventResponse(
@@ -164,10 +179,16 @@ class EventService(
 
         val interestPriorityByCategoryId = loadInterestMap(userId)
         val auth = userId != null
+        val bookmarkedIds: Set<Long> =
+            if (auth) bookmarkRepository.findBookmarkedEventIdsIn(
+                userId,
+                events.mapNotNull { it.id }
+            ) else emptySet()
 
         val items = events.map { e ->
             val matchedPriority = e.matchedInterestPriority(interestPriorityByCategoryId)
-            e.toDto(auth, matchedPriority)
+            val isBookmarked = if (auth) bookmarkedIds.contains(requireNotNull(e.id)) else null
+            e.toDto(auth, matchedPriority, isBookmarked)
         }
 
         return TitleSearchEventResponse(
@@ -193,7 +214,7 @@ private fun Event.matchedInterestPriority(priorityByCategoryId: Map<Long, Int>):
     return listOfNotNull(p1, p2, p3).minOrNull()
 }
 
-private fun Event.toDto(auth: Boolean, matchedPriority: Int?): EventDto {
+private fun Event.toDto(auth: Boolean, matchedPriority: Int?, isBookmarked: Boolean?): EventDto {
     val isInterested = if (auth) matchedPriority != null else null
     val matched = if (auth) matchedPriority else null
 
@@ -218,11 +239,11 @@ private fun Event.toDto(auth: Boolean, matchedPriority: Int?): EventDto {
         mainContentHtml = mainContentHtml,
         isInterested = isInterested,
         matchedInterestPriority = matched,
-        isBookmarked = null, // 북마크까지 같이 적용하려면 여기만 확장하면 됨
+        isBookmarked = isBookmarked,
     )
 }
 
-private fun Event.toDetailResponse(auth: Boolean, matchedPriority: Int?): DetailEventResponse {
+private fun Event.toDetailResponse(auth: Boolean, matchedPriority: Int?, isBookmarked: Boolean?): DetailEventResponse {
     val isInterested = if (auth) matchedPriority != null else null
     val matched = if (auth) matchedPriority else null
 
@@ -246,7 +267,7 @@ private fun Event.toDetailResponse(auth: Boolean, matchedPriority: Int?): Detail
         tags = tags,
         isInterested = isInterested,
         matchedInterestPriority = matched,
-        isBookmarked = null,
+        isBookmarked = isBookmarked,
         detail = mainContentHtml,
     )
 }

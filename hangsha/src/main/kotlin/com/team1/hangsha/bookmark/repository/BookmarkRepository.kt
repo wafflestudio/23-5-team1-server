@@ -82,6 +82,24 @@ class BookmarkRepository(
 
         jdbc.update(sql.trimIndent(), mapOf("eventId" to eventId))
     }
+
+    fun findBookmarkedEventIdsIn(userId: Long, eventIds: List<Long>): Set<Long> {
+        if (eventIds.isEmpty()) return emptySet()
+
+        val sql = """
+            SELECT b.event_id
+            FROM bookmarks b
+            WHERE b.user_id = :userId
+              AND b.event_id IN (:eventIds)
+        """.trimIndent()
+
+        val params = mapOf(
+            "userId" to userId,
+            "eventIds" to eventIds,
+        )
+
+        return jdbc.query(sql, params) { rs, _ -> rs.getLong("event_id") }.toSet()
+    }
 }
 
 private fun ResultSet.getLocalDateTimeOrNull(column: String): LocalDateTime? =
