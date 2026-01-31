@@ -25,6 +25,7 @@ class EventController(
 
     @GetMapping("/month")
     fun month(
+        @Parameter(hidden = true) @LoggedInUser user: User?,
         @RequestParam("from") @DateTimeFormat(iso = ISO.DATE) from: LocalDate,
         @RequestParam("to") @DateTimeFormat(iso = ISO.DATE) to: LocalDate,
         @RequestParam("statusId", required = false) statusIds: List<Long>?,
@@ -37,6 +38,7 @@ class EventController(
             statusIds = statusIds,
             eventTypeIds = eventTypeIds,
             orgIds = orgIds,
+            userId = user?.id,
         )
 
     @GetMapping("/{eventId}")
@@ -48,6 +50,7 @@ class EventController(
 
     @GetMapping("/day")
     fun day(
+        @Parameter(hidden = true) @LoggedInUser user: User?,
         @RequestParam("date") @DateTimeFormat(iso = ISO.DATE) date: LocalDate,
         @RequestParam("page", defaultValue = "1") page: Int,
         @RequestParam("size", defaultValue = "20") size: Int,
@@ -62,10 +65,12 @@ class EventController(
             statusIds = statusIds,
             eventTypeIds = eventTypeIds,
             orgIds = orgIds,
+            userId = user?.id,
         )
 
     @GetMapping("/search/title")
     fun searchTitle(
+        @Parameter(hidden = true) @LoggedInUser user: User?,
         @RequestParam("query") query: String,
         @RequestParam("page", defaultValue = "1") page: Int,
         @RequestParam("size", defaultValue = "20") size: Int,
@@ -74,5 +79,6 @@ class EventController(
             query = query,
             page = page,
             size = size,
+            userId = user?.id,
         )
 }
