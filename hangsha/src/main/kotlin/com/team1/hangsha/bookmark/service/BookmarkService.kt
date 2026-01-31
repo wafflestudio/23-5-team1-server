@@ -23,10 +23,7 @@ class BookmarkService(
             throw DomainException(ErrorCode.EVENT_NOT_FOUND)
         }
 
-        val inserted = bookmarkRepository.insertIgnore(userId, eventId)
-        if (inserted > 0) {
-            bookmarkRepository.incrementApplyCount(eventId, +1)
-        }
+        bookmarkRepository.insertIgnore(userId, eventId)
     }
 
     @Transactional
@@ -35,10 +32,7 @@ class BookmarkService(
             throw DomainException(ErrorCode.EVENT_NOT_FOUND)
         }
 
-        val deleted = bookmarkRepository.delete(userId, eventId)
-        if (deleted > 0) {
-            bookmarkRepository.incrementApplyCount(eventId, -1)
-        }
+        bookmarkRepository.delete(userId, eventId)
     }
 
     @Transactional(readOnly = true)
