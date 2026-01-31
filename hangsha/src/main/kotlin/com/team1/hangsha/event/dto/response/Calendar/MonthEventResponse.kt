@@ -16,7 +16,6 @@ data class MonthEventResponse(
     )
 
     data class DayBucket(
-        val total: Int,
-        val preview: List<EventDto>,
+        val events: List<EventDto>,
     )
 }

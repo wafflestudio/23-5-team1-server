@@ -32,7 +32,6 @@ class EventService(
         eventTypeIds: List<Long>?,
         orgIds: List<Long>?,
         userId: Long?,
-        previewSize: Int = 3,
     ): MonthEventResponse {
         if (from.isAfter(to)) {
             throw DomainException(ErrorCode.INVALID_REQUEST, "from은 to보다 이후일 수 없습니다")
@@ -93,8 +92,7 @@ class EventService(
                     compareBy<Event> { effectiveStart(it) }.thenBy { it.id ?: Long.MAX_VALUE }
                 )
                 MonthEventResponse.DayBucket(
-                    total = sorted.size,
-                    preview = sorted.take(previewSize).map { e ->
+                    events = sorted.map { e ->
                         val matchedPriority = e.matchedInterestPriority(interestPriorityByCategoryId)
                         val isBookmarked = if (auth) bookmarkedIds.contains(requireNotNull(e.id)) else null
                         e.toDto(auth, matchedPriority, isBookmarked)
@@ -236,7 +234,6 @@ private fun Event.toDto(auth: Boolean, matchedPriority: Int?, isBookmarked: Bool
         location = location,
         applyLink = applyLink,
         tags = tags,
-        mainContentHtml = mainContentHtml,
         isInterested = isInterested,
         matchedInterestPriority = matched,
         isBookmarked = isBookmarked,
