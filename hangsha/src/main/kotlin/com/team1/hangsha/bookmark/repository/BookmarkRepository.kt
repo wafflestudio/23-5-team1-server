@@ -1,4 +1,122 @@
 package com.team1.hangsha.bookmark.repository
 
-interface BookmarkRepository {
+import com.team1.hangsha.event.model.Event
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Repository
+import java.sql.ResultSet
+import java.time.LocalDateTime
+
+@Repository
+class BookmarkRepository(
+    private val jdbc: NamedParameterJdbcTemplate,
+) {
+    /** 이미 있으면 무시(중복 북마크 방지) --> 새로 추가된 경우에만 1 리턴 */
+    fun insertIgnore(userId: Long, eventId: Long): Int {
+        val sql = """
+            INSERT IGNORE INTO bookmarks (user_id, event_id)
+            VALUES (:userId, :eventId)
+        """.trimIndent()
+
+        return jdbc.update(sql, mapOf("userId" to userId, "eventId" to eventId))
+    }
+
+    fun delete(userId: Long, eventId: Long): Int {
+        val sql = """
+            DELETE FROM bookmarks
+            WHERE user_id = :userId AND event_id = :eventId
+        """.trimIndent()
+
+        return jdbc.update(sql, mapOf("userId" to userId, "eventId" to eventId))
+    }
+
+    fun exists(userId: Long, eventId: Long): Boolean {
+        val sql = """
+            SELECT 1
+            FROM bookmarks
+            WHERE user_id = :userId AND event_id = :eventId
+            LIMIT 1
+        """.trimIndent()
+
+        val rows = jdbc.query(sql, mapOf("userId" to userId, "eventId" to eventId)) { _, _ -> 1 }
+        return rows.isNotEmpty()
+    }
+
+    fun countByUserId(userId: Long): Int {
+        val sql = """
+            SELECT COUNT(*)
+            FROM bookmarks
+            WHERE user_id = :userId
+        """.trimIndent()
+
+        return jdbc.queryForObject(sql, mapOf("userId" to userId), Int::class.java) ?: 0
+    }
+
+    fun findBookmarkedEventsPaged(userId: Long, offset: Int, limit: Int): List<Event> {
+        val sql = """
+            SELECT e.*
+            FROM bookmarks b
+            JOIN events e ON e.id = b.event_id
+            WHERE b.user_id = :userId
+            ORDER BY b.created_at DESC, b.id DESC
+            LIMIT :limit OFFSET :offset
+        """.trimIndent()
+
+        val params = mapOf(
+            "userId" to userId,
+            "limit" to kotlin.math.max(0, limit),
+            "offset" to kotlin.math.max(0, offset),
+        )
+
+        return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
+    }
+
+    /** apply_count를 "북마크 수"로 쓰는 현재 설계 유지 */
+    fun incrementApplyCount(eventId: Long, delta: Int) {
+        if (delta == 0) return
+
+        val sql = if (delta > 0) {
+            """UPDATE events SET apply_count = apply_count + 1 WHERE id = :eventId"""
+        } else {
+            """UPDATE events SET apply_count = GREATEST(apply_count - 1, 0) WHERE id = :eventId"""
+        }
+
+        jdbc.update(sql.trimIndent(), mapOf("eventId" to eventId))
+    }
+}
+
+private fun ResultSet.getLocalDateTimeOrNull(column: String): LocalDateTime? =
+    getTimestamp(column)?.toLocalDateTime()
+
+private fun ResultSet.getInstantOrNull(column: String): java.time.Instant? =
+    getTimestamp(column)?.toInstant()
+
+private fun ResultSet.toEvent(): Event {
+    return Event(
+        id = getLong("id").let { if (wasNull()) null else it },
+        title = getString("title"),
+        imageUrl = getString("image_url"),
+        operationMode = getString("operation_mode"),
+
+        tags = getString("tags"),
+        mainContentHtml = getString("main_content_html"),
+
+        statusId = getLong("status_id").let { if (wasNull()) null else it },
+        eventTypeId = getLong("event_type_id").let { if (wasNull()) null else it },
+        orgId = getLong("org_id").let { if (wasNull()) null else it },
+
+        applyStart = getLocalDateTimeOrNull("apply_start"),
+        applyEnd = getLocalDateTimeOrNull("apply_end"),
+        eventStart = getLocalDateTimeOrNull("event_start"),
+        eventEnd = getLocalDateTimeOrNull("event_end"),
+
+        capacity = getInt("capacity").let { if (wasNull()) null else it },
+        applyCount = getInt("apply_count"),
+
+        organization = getString("organization"),
+        location = getString("location"),
+        applyLink = getString("apply_link"),
+
+        createdAt = getInstantOrNull("created_at"),
+        updatedAt = getInstantOrNull("updated_at"),
+    )
 }

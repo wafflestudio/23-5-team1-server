@@ -42,15 +42,20 @@ class SecurityConfig(
 
             .authorizeHttpRequests { auth ->
                 auth
+                    // public path
                     .requestMatchers(
-                        "/",
                         "/swagger-ui/**",
                         "/v3/api-docs/**",
                         "/api-docs/**",
                         "/api/v1/auth/**",
                         "/openapi.yaml/**",
                         "/api/v1/health",
-                        "/api/v1/events/**",
+                        // 행사
+                        "/api/v1/events/month",
+                        "/api/v1/events/day",
+                        "/api/v1/events/search/**",
+                        "/api/v1/events/*",
+                        // 주최 기관
                         "/api/v1/category-groups/**",
                         "/api/v1/categories/**",
                         "/login/oauth2/**",

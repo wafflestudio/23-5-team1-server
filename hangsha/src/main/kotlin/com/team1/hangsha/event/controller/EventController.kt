@@ -5,6 +5,9 @@ import com.team1.hangsha.event.dto.response.Calendar.DayEventResponse
 import com.team1.hangsha.event.dto.response.TitleSearchEventResponse
 import com.team1.hangsha.event.dto.response.DetailEventResponse
 import com.team1.hangsha.event.service.EventService
+import com.team1.hangsha.user.LoggedInUser
+import com.team1.hangsha.user.model.User
+import io.swagger.v3.oas.annotations.Parameter
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.format.annotation.DateTimeFormat.ISO
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,9 +41,10 @@ class EventController(
 
     @GetMapping("/{eventId}")
     fun detail(
+        @Parameter(hidden = true) @LoggedInUser user: User?,
         @PathVariable eventId: Long,
     ): DetailEventResponse =
-        eventService.getEventDetail(eventId)
+        eventService.getEventDetail(eventId, user?.id)
 
     @GetMapping("/day")
     fun day(

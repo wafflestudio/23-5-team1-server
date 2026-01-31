@@ -1,5 +1,6 @@
 package com.team1.hangsha.event.service
 
+import com.team1.hangsha.bookmark.repository.BookmarkRepository
 import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.common.error.ErrorCode
 import com.team1.hangsha.event.dto.core.EventDto
@@ -19,6 +20,7 @@ import kotlin.math.max
 class EventService(
     private val eventRepository: EventRepository,
     private val eventQueryRepository: EventQueryRepository,
+    private val bookmarkRepository: BookmarkRepository,
 ) {
     fun getMonthEvents(
         from: LocalDate,
@@ -43,7 +45,7 @@ class EventService(
             orgIds = orgIds,
         )
 
-        // ✅ 날짜별 버킷: "그 날과 겹치면 포함" (day overlap과 동일한 개념)
+        // 날짜별 버킷: 그 날과 겹치면 포함 (day overlap과 동일한 개념)
         val buckets = linkedMapOf<LocalDate, MutableList<Event>>().apply {
             var d = from
             while (!d.isAfter(to)) {
@@ -89,12 +91,21 @@ class EventService(
         )
     }
 
-    fun getEventDetail(eventId: Long): DetailEventResponse {
+    fun getEventDetail(eventId: Long, userId: Long?): DetailEventResponse {
         val event = eventRepository.findById(eventId).orElseThrow {
             DomainException(ErrorCode.EVENT_NOT_FOUND)
         }
-        return event.toDetailResponse()
+
+        val isBookmarked: Boolean? = userId?.let { uid ->
+            bookmarkRepository.exists(uid, eventId)
+        }
+
+        return event.toDetailResponse(isBookmarked)
     }
+
+    // 기존 코드 호환용
+    fun getEventDetail(eventId: Long): DetailEventResponse =
+        getEventDetail(eventId, null)
 
     fun getDayEvents(
         date: LocalDate,
@@ -167,7 +178,7 @@ private fun Event.toDto(): EventDto = EventDto(
     tags = tags,
 )
 
-private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
+private fun Event.toDetailResponse(isBookmarked: Boolean?): DetailEventResponse = DetailEventResponse(
     id = requireNotNull(id),
     title = title,
     imageUrl = imageUrl,
@@ -186,7 +197,7 @@ private fun Event.toDetailResponse(): DetailEventResponse = DetailEventResponse(
     applyLink = applyLink,
     isInterested = null,
     matchedInterestPriority = null,
-    isBookmarked = null,
+    isBookmarked = isBookmarked,
     tags = tags,
     detail = mainContentHtml,
 )
