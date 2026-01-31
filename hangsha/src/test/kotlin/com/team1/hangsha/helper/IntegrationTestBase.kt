@@ -1,7 +1,6 @@
 package com.team1.hangsha.helper
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.team1.hangsha.helper.DataGenerator
 import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
@@ -18,7 +17,7 @@ import org.springframework.test.web.servlet.MockMvc
         "jwt.refresh-expiration-ms=1209600000",
     ],
 )
-abstract class ApiIntegrationTestBase {
+abstract class IntegrationTestBase {
 
     @Autowired lateinit var mockMvc: MockMvc
     @Autowired lateinit var objectMapper: ObjectMapper

@@ -1,13 +1,13 @@
-package com.team1.hangsha.api.timetable
+package com.team1.hangsha
 
-import com.team1.hangsha.helper.ApiIntegrationTestBase
+import com.team1.hangsha.helper.IntegrationTestBase
 import com.team1.hangsha.common.enums.Semester
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 
-class TimetableIntegrationTest : ApiIntegrationTestBase() {
+class TimetableIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `GET timetables - 인증 없으면 401`() {
