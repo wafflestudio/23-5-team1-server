@@ -1,5 +1,6 @@
 package com.team1.hangsha.user.dto.Preference
 
+import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotNull
@@ -8,6 +9,7 @@ data class ReplaceAllInterestCategoriesRequest(
     @field:Valid
     val items: List<Item>
 ) {
+    @Schema(name = "InterestCategoryPriorityItem")
     data class Item(
         @field:NotNull
         val categoryId: Long,
