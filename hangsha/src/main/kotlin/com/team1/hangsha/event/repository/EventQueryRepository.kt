@@ -24,12 +24,12 @@ class EventQueryRepository(
         val sql = buildString {
             append(
                 """
-            SELECT *
-            FROM events
+            SELECT e.*
+            FROM e.events
             WHERE (
-              (event_start IS NOT NULL AND event_start < :toEndExclusive AND COALESCE(event_end, event_start) >= :fromStart)
+              (e.event_start IS NOT NULL AND e.event_start < :toEndExclusive AND COALESCE(e.event_end, e.event_start) >= :fromStart)
               OR
-              (event_start IS NULL AND apply_start < :toEndExclusive AND COALESCE(apply_end, apply_start) >= :fromStart)
+              (e.event_start IS NULL AND e.apply_start < :toEndExclusive AND COALESCE(e.apply_end, e.apply_start) >= :fromStart)
             )
             """.trimIndent()
             )
@@ -40,7 +40,7 @@ class EventQueryRepository(
 
             appendExcludedKeywordsFilter(userId)
 
-            append("\nORDER BY COALESCE(event_start, apply_start) ASC, id ASC")
+            append("\nORDER BY COALESCE(e.event_start, e.apply_start) ASC, e.id ASC")
         }
 
         val params = mutableMapOf<String, Any>(
@@ -50,6 +50,7 @@ class EventQueryRepository(
         if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
+        if (userId != null) params["userId"] = userId
 
         return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
     }
@@ -68,11 +69,11 @@ class EventQueryRepository(
             append(
                 """
             SELECT COUNT(*)
-            FROM events
+            FROM events e
             WHERE (
-              (event_start IS NOT NULL AND event_start < :dayEnd AND event_end >= :dayStart)
+              (e.event_start IS NOT NULL AND e.event_start < :dayEnd AND e.event_end >= :dayStart)
               OR
-              (event_start IS NULL AND apply_start < :dayEnd AND apply_end >= :dayStart)
+              (e.event_start IS NULL AND e.apply_start < :dayEnd AND e.apply_end >= :dayStart)
             )
             """.trimIndent()
             )
@@ -90,6 +91,7 @@ class EventQueryRepository(
         if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
+        if (userId != null) params["userId"] = userId
 
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
@@ -113,12 +115,12 @@ class EventQueryRepository(
         val sql = buildString {
             append(
                 """
-            SELECT *
-            FROM events
+            SELECT e.*
+            FROM events e
             WHERE (
-              (event_start IS NOT NULL AND event_start < :dayEnd AND event_end >= :dayStart)
+              (e.event_start IS NOT NULL AND e.event_start < :dayEnd AND e.event_end >= :dayStart)
               OR
-              (event_start IS NULL AND apply_start < :dayEnd AND apply_end >= :dayStart)
+              (e.event_start IS NULL AND e.apply_start < :dayEnd AND e.apply_end >= :dayStart)
             )
             """.trimIndent()
             )
@@ -128,7 +130,7 @@ class EventQueryRepository(
 
             appendExcludedKeywordsFilter(userId)
 
-            append("\nORDER BY COALESCE(event_start, apply_start) DESC, id DESC")
+            append("\nORDER BY COALESCE(e.event_start, e.apply_start) DESC, e.id DESC")
             append("\nLIMIT :limit OFFSET :offset")
         }
 
@@ -141,6 +143,7 @@ class EventQueryRepository(
         if (!statusIds.isNullOrEmpty()) params["statusIds"] = statusIds
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
+        if (userId != null) params["userId"] = userId
 
         return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
     }
@@ -158,7 +161,10 @@ class EventQueryRepository(
             appendExcludedKeywordsFilter(userId)
         }
 
-        val params = mapOf("q" to "%$query%")
+        val params = mutableMapOf<String, Any>(
+            "q" to "%$query%"
+        )
+        if (userId != null) params["userId"] = userId
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
 
