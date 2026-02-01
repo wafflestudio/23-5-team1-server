@@ -10,6 +10,7 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import org.springframework.beans.factory.annotation.Autowired
+import com.fasterxml.jackson.core.type.TypeReference
 
 class UserPreferenceIntegrationTest : IntegrationTestBase() {
 
@@ -17,7 +18,6 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
     @Autowired lateinit var userExcludedKeywordRepository: UserExcludedKeywordRepository
 
     private fun replaceAllBody(vararg pairs: Pair<Long, Int>): String {
-        // { "items": [ { "categoryId": 1, "priority": 1 }, ... ] }
         val body = mapOf(
             "items" to pairs.map { (categoryId, priority) ->
                 mapOf("categoryId" to categoryId, "priority" to priority)
@@ -26,9 +26,39 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
         return toJson(body)
     }
 
+    data class ListExcludedKeywordResponse(
+        val items: List<Item>
+    ) {
+        data class Item(
+            val id: Long,
+            val keyword: String,
+            val createdAt: String,
+        )
+    }
+
+    private fun list(token: String): ListExcludedKeywordResponse {
+        val res = mockMvc.perform(
+            get("/api/v1/users/me/excluded-keywords")
+                .header("Authorization", bearer(token))
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+            .andReturn()
+
+        return objectMapper.readValue(
+            res.response.contentAsString,
+            object : TypeReference<ListExcludedKeywordResponse>() {}
+        )
+    }
+
+    // -----------------------------
+    // Interest Categories
+    // -----------------------------
+
     @Test
-    fun `PUT replaces all and GET returns ordered list`() {
-        val (_, token) = dataGenerator.generateUserWithAccessToken()
+    fun `PUT interest categories 전체 교체하면 DB도 교체되고 GET은 priority 순으로 내려준다`() {
+        val (user, token) = dataGenerator.generateUserWithAccessToken()
+        val userId = requireNotNull(user.id)
 
         val group = dataGenerator.generateCategoryGroup(name = "group", sortOrder = 1)
         val c1 = dataGenerator.generateCategory(group = group, name = "c1", sortOrder = 1)
@@ -41,7 +71,7 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
         val id3 = c3.id!!
         val id4 = c4.id!!
 
-        // PUT: 전체 교체 (priority 1..N 연속)
+        // PUT: 전체 교체
         mockMvc.perform(
             put("/api/v1/users/me/interest-categories")
                 .header("Authorization", bearer(token))
@@ -57,7 +87,12 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
         )
             .andExpect(status().isNoContent)
 
-        // GET: 우선순위 정렬/DTO 포함 확인
+        val dbRows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+        assertEquals(4, dbRows.size)
+        assertEquals(listOf(1, 2, 3, 4), dbRows.map { it.priority })
+        assertEquals(listOf(id3, id1, id4, id2), dbRows.map { it.categoryId })
+
+        // GET: priority 정렬/DTO 포함 확인
         val getResult = mockMvc.perform(
             get("/api/v1/users/me/interest-categories")
                 .header("Authorization", bearer(token))
@@ -70,14 +105,12 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
             .andExpect(jsonPath("$.items[1].priority").value(2))
             .andExpect(jsonPath("$.items[2].priority").value(3))
             .andExpect(jsonPath("$.items[3].priority").value(4))
-            // category dto 들어오는지
             .andExpect(jsonPath("$.items[0].category.id").isNumber)
             .andExpect(jsonPath("$.items[0].category.groupId").isNumber)
             .andExpect(jsonPath("$.items[0].category.name").isString)
             .andExpect(jsonPath("$.items[0].category.sortOrder").isNumber)
             .andReturn()
 
-        // 1순위가 id3인지
         val root = objectMapper.readTree(getResult.response.contentAsString)
         val priorities = root["items"].map { it["priority"].asInt() }
         assertEquals(listOf(1, 2, 3, 4), priorities)
@@ -87,8 +120,9 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `DELETE removes one category and GET reflects it`() {
-        val (_, token) = dataGenerator.generateUserWithAccessToken()
+    fun `DELETE interest categories 한 개 삭제하면 DB에서도 삭제되고 GET 결과에서도 사라진다`() {
+        val (user, token) = dataGenerator.generateUserWithAccessToken()
+        val userId = requireNotNull(user.id)
 
         val group = dataGenerator.generateCategoryGroup(name = "group", sortOrder = 1)
         val c1 = dataGenerator.generateCategory(group = group, name = "c1", sortOrder = 1)
@@ -106,12 +140,23 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
         )
             .andExpect(status().isNoContent)
 
+        // DB 검증: 2개 존재
+        run {
+            val rows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+            assertEquals(2, rows.size)
+            assertEquals(setOf(id1, id2), rows.map { it.categoryId }.toSet())
+        }
+
         // id1 삭제
         mockMvc.perform(
             delete("/api/v1/users/me/interest-categories/$id1")
                 .header("Authorization", bearer(token))
         )
             .andExpect(status().isNoContent)
+
+        val afterRows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+        assertEquals(1, afterRows.size)
+        assertEquals(id2, afterRows.single().categoryId)
 
         // GET 결과는 id2만 남아야 함
         mockMvc.perform(
@@ -121,12 +166,12 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.items.length()").value(1))
             .andExpect(jsonPath("$.items[0].category.id").value(id2))
-            .andExpect(jsonPath("$.items[0].priority").value(1)) // 삭제 후 재정렬/당김 스펙이면 1이 되겠지? (스펙에 맞게 조정)
     }
 
     @Test
-    fun `PUT rejects duplicate categoryId`() {
-        val (_, token) = dataGenerator.generateUserWithAccessToken()
+    fun `PUT interest categories categoryId 중복이면 400이고 DB에 저장되지 않는다`() {
+        val (user, token) = dataGenerator.generateUserWithAccessToken()
+        val userId = requireNotNull(user.id)
 
         val group = dataGenerator.generateCategoryGroup(name = "group", sortOrder = 1)
         val c1 = dataGenerator.generateCategory(group = group, name = "c1", sortOrder = 1)
@@ -142,11 +187,15 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
                 .content(replaceAllBody(id1 to 1, id1 to 2, id2 to 3))
         )
             .andExpect(status().isBadRequest)
+
+        val rows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+        assertTrue(rows.isEmpty())
     }
 
     @Test
-    fun `PUT rejects non-continuous priority`() {
-        val (_, token) = dataGenerator.generateUserWithAccessToken()
+    fun `PUT interest categories priority가 연속이 아니면 400이고 DB에 저장되지 않는다`() {
+        val (user, token) = dataGenerator.generateUserWithAccessToken()
+        val userId = requireNotNull(user.id)
 
         val group = dataGenerator.generateCategoryGroup(name = "group", sortOrder = 1)
         val c1 = dataGenerator.generateCategory(group = group, name = "c1", sortOrder = 1)
@@ -159,14 +208,18 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
             put("/api/v1/users/me/interest-categories")
                 .header("Authorization", bearer(token))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(replaceAllBody(id1 to 1, id2 to 3)) // gap: 2가 없음
+                .content(replaceAllBody(id1 to 1, id2 to 3))
         )
             .andExpect(status().isBadRequest)
+
+        val rows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+        assertTrue(rows.isEmpty())
     }
 
     @Test
-    fun `PUT rejects non-existing categoryId`() {
-        val (_, token) = dataGenerator.generateUserWithAccessToken()
+    fun `PUT interest categories 존재하지 않는 categoryId면 400이고 DB에 저장되지 않는다`() {
+        val (user, token) = dataGenerator.generateUserWithAccessToken()
+        val userId = requireNotNull(user.id)
 
         val nonExistingCategoryId = 9_999_999_999L
 
@@ -177,13 +230,18 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
                 .content(replaceAllBody(nonExistingCategoryId to 1))
         )
             .andExpect(status().isBadRequest)
+
+        val rows = userInterestCategoryRepository.findAllWithCategoryByUserId(userId)
+        assertTrue(rows.isEmpty())
     }
 
     @Test
-    fun `unauthorized when no token`() {
+    fun `Interest Categories API는 토큰 없으면 401이고 DB 변화가 없다`() {
+        // GET
         mockMvc.perform(get("/api/v1/users/me/interest-categories"))
             .andExpect(status().isUnauthorized)
 
+        // PUT
         mockMvc.perform(
             put("/api/v1/users/me/interest-categories")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -191,25 +249,14 @@ class UserPreferenceIntegrationTest : IntegrationTestBase() {
         )
             .andExpect(status().isUnauthorized)
 
+        // DELETE
         mockMvc.perform(delete("/api/v1/users/me/interest-categories/1"))
             .andExpect(status().isUnauthorized)
     }
 
-    data class ListExcludedKeywordResponse(val items: List<Item>) {
-        data class Item(val id: Long, val keyword: String, val createdAt: String)
-    }
-
-    private fun list(token: String): ListExcludedKeywordResponse {
-        val res = mockMvc.perform(
-            get("/api/v1/users/me/excluded-keywords")
-                .header("Authorization", bearer(token))
-        )
-            .andExpect(status().isOk)
-            .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andReturn()
-
-        return objectMapper.readValue(res.response.contentAsString, ListExcludedKeywordResponse::class.java)
-    }
+    // -----------------------------
+    // Excluded Keywords
+    // -----------------------------
 
     @Test
     fun `GET excluded-keywords - 처음엔 빈 배열`() {
