@@ -150,6 +150,7 @@ components:
 
     UpdateProfileRequest:
       type: object
+      additionalProperties: false
       properties:
         username:
           type: string
@@ -158,14 +159,17 @@ components:
             닉네임 변경.
             - 필드 미포함: 변경 없음
             - null: 값 비우기(삭제)
+            - ""(빈 문자열): 서버는 빈 문자열도 값으로 저장합니다(현재 코드 기준).
         profileImageUrl:
           type: string
           nullable: true
+          format: uri
+          pattern: '^https?://.*'   # http/https만 허용
           description: |
             프로필 이미지 URL 변경.
             - 필드 미포함: 변경 없음
             - null: 값 비우기(삭제)
-      additionalProperties: false
+            - ""(빈 문자열): 서버에서 null로 처리(삭제)
       description: |
         내 프로필 PATCH.
         요청 바디는 username/profileImageUrl 중 하나 이상을 포함해야 함.
@@ -815,6 +819,9 @@ paths:
         "204": { description: No Content }
         "400":
           description: Bad Request
+            - username/profileImageUrl 둘 다 없음
+            - profileImageUrl이 유효한 http/https URL이 아님
+            - username이 금칙어/예약어에 해당함 (USERNAME_NOT_ALLOWED)
           content:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }

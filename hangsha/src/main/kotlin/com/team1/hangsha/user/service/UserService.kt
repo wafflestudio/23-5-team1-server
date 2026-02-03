@@ -13,6 +13,7 @@ import com.team1.hangsha.user.model.AuthTokenPair
 import com.fasterxml.jackson.databind.JsonNode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
+import java.net.URI
 
 @Service
 class UserService(
@@ -112,18 +113,54 @@ class UserService(
             }
 
         if (hasUsername) {
-            user.username =
+            val newUsername =
                 if (body.get("username").isNull) null
                 else body.get("username").asText()
+
+            validateUsernameOrThrow(newUsername)
+
+            user.username = newUsername
         }
 
         if (hasProfileImageUrl) {
             user.profileImageUrl =
                 if (body.get("profileImageUrl").isNull) null
-                else body.get("profileImageUrl").asText()
+                else normalizeUrlOrNull(body.get("profileImageUrl").asText())
         }
 
         userRepository.save(user)
+    }
+
+    private fun validateUsernameOrThrow(username: String?) {
+        val s = username?.trim() ?: return  // null = 삭제 → 허용
+
+        if (s.isBlank()) {
+            throw DomainException(
+                ErrorCode.INVALID_REQUEST,
+                "username은 빈 문자열일 수 없습니다"
+            )
+        }
+
+        if (s.length > 50) {
+            throw DomainException(
+                ErrorCode.INVALID_REQUEST,
+                "username은 50자를 초과할 수 없습니다"
+            )
+        }
+    }
+
+    private fun normalizeUrlOrNull(raw: String?): String? {
+        val s = raw?.trim().orEmpty()
+        if (s.isBlank()) return null
+
+        return try {
+            val uri = URI(s)
+            val scheme = uri.scheme?.lowercase()
+            if (scheme != "http" && scheme != "https") throw IllegalArgumentException("invalid scheme")
+            uri.toString()
+        } catch (e: Exception) {
+            throw DomainException(ErrorCode.INVALID_REQUEST, "profileImageUrl이 유효한 URL이 아닙니다")
+        }
     }
 
     fun getMe(userId: Long): UserDto {

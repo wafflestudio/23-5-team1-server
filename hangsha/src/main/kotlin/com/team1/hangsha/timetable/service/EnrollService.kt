@@ -5,6 +5,7 @@ import com.team1.hangsha.common.error.ErrorCode
 import com.team1.hangsha.common.enums.CourseSource
 import com.team1.hangsha.course.model.Course
 import com.team1.hangsha.course.model.CourseTimeSlot
+import com.team1.hangsha.course.dto.core.CourseTimeSlotDto
 import com.team1.hangsha.course.repository.*
 import com.team1.hangsha.course.model.toCourseDto
 import com.team1.hangsha.timetable.dto.*
@@ -81,6 +82,12 @@ class EnrollService(
         if (req.year != timetable.year || req.semester != timetable.semester) {
             throw DomainException(ErrorCode.TIMETABLE_TERM_MISMATCH)
         }
+
+        assertNoTimeConflict(
+            timetableId = timetable.id!!,
+            newSlots = req.timeSlots,
+            excludeCourseId = null,
+        )
 
 
         val course = courseRepository.save(
@@ -200,6 +207,11 @@ class EnrollService(
             if (body.get("timeSlots").isNull) throw DomainException(ErrorCode.TIME_SLOTS_CANNOT_BE_NULL)
             val slots = req.timeSlots ?: throw DomainException(ErrorCode.TIME_SLOTS_REQUIRED)
             if (slots.isEmpty()) throw DomainException(ErrorCode.TIME_SLOTS_CANNOT_BE_EMPTY)
+            assertNoTimeConflict(
+                timetableId = timetableId,
+                newSlots = slots,
+                excludeCourseId = course.id!!,
+            )
 
             courseTimeSlotRepository.deleteAllByCourseId(course.id!!)
             courseTimeSlotRepository.saveAll(
@@ -240,7 +252,6 @@ class EnrollService(
         if (affected == 0) {
             throw DomainException(ErrorCode.ENROLL_NOT_FOUND)
         }
-        // CUSTOM 강의 고아 정리 정책은 추후 결정
     }
 
     // ----------------- helpers -----------------
@@ -251,4 +262,39 @@ class EnrollService(
         }.also { tt ->
             if (tt.userId != userId) throw DomainException(ErrorCode.TIMETABLE_NOT_FOUND)
         }
+
+    private fun overlaps(aStart: Int, aEnd: Int, bStart: Int, bEnd: Int): Boolean {
+        // [start, end) 반열린구간: 끝이 맞닿는 건 겹침 아님
+        return aStart < bEnd && bStart < aEnd
+    }
+
+    private fun assertNoTimeConflict(
+        timetableId: Long,
+        newSlots: List<CourseTimeSlotDto>,
+        excludeCourseId: Long? = null, // update 시 자기 자신 course는 제외
+    ) {
+        if (newSlots.isEmpty()) return
+
+        val rows = enrollRepository.findAllWithCourseByTimetableId(timetableId)
+        val existingCourseIds = rows.map { it.courseId }
+            .distinct()
+            .filter { it != excludeCourseId }
+
+        if (existingCourseIds.isEmpty()) return
+
+        val existingSlots = courseTimeSlotRepository
+            .findAllByCourseIdsOrderByCourseIdAscDayOfWeekAscStartAtAsc(existingCourseIds)
+
+        // day별로 묶어서 비교 비용 줄이기
+        val existingByDay = existingSlots.groupBy { it.dayOfWeek }
+
+        for (ns in newSlots) {
+            val daySlots = existingByDay[ns.dayOfWeek].orEmpty()
+            for (es in daySlots) {
+                if (overlaps(ns.startAt, ns.endAt, es.startAt, es.endAt)) {
+                    throw DomainException(ErrorCode.ENROLL_TIME_CONFLICT)
+                }
+            }
+        }
+    }
 }
