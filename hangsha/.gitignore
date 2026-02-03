@@ -16,8 +16,6 @@ build/
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-.idea/dataSources.xml
-.idea/dataSources.local.xml
 
 ### IntelliJ IDEA ###
 .idea

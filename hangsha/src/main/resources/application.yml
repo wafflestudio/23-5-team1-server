@@ -30,17 +30,13 @@ spring:
             scope:
               - email
               - profile
-            # 배포 이후
-            redirect-uri: "https://hangsha.site/login/callback/google"
-            # 로컬 테스트
-            # redirect-uri: "http://localhost:3000/login/callback/google"
+            redirect-uri: "{baseUrl}/login/oauth2/code/google"
           naver:
             client-id: ${NAVER_CLIENT_ID}
             client-secret: ${NAVER_CLIENT_SECRET}
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            #redirect-uri: "http://localhost:3000/login/callback/naver"
-            redirect-uri: "https://hangsha.site/login/callback/naver"
+            redirect-uri: "{baseUrl}/login/oauth2/code/naver"
             scope:
               - name
               - email
@@ -50,8 +46,7 @@ spring:
             client-secret: ${KAKAO_CLIENT_SECRET}
             client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            # redirect-uri: "http://localhost:3000/login/callback/kakao"
-            redirect-uri: "https://hangsha.site/login/callback/kakao"
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
             scope:
               - profile_nickname
               - account_email

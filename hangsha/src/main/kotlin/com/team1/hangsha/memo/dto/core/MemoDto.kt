@@ -2,9 +2,10 @@ package com.team1.hangsha.memo.dto.core
 
 import java.time.Instant
 
-data class MemoTagResponse(
-    val id: Long,
-    val name: String
+data class CreateMemoRequest(
+    val eventId: Long,
+    val content: String,
+    val tagNames: List<String> = emptyList()
 )
 
 data class MemoResponse(
@@ -13,6 +14,10 @@ data class MemoResponse(
     val eventTitle: String,
     val content: String,
     val tags: List<String>,
-    val createdAt: Instant?,
-    val updatedAt: Instant?
+    val createdAt: Instant?
+)
+
+data class TagResponse(
+    val id: Long,
+    val name: String
 )

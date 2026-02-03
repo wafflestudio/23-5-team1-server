@@ -2,8 +2,6 @@ package com.team1.hangsha.tag.controller
 
 import com.team1.hangsha.tag.dto.*
 import com.team1.hangsha.tag.service.TagService
-import com.team1.hangsha.user.LoggedInUser
-import com.team1.hangsha.user.model.User
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -13,37 +11,33 @@ class TagController(
     private val tagService: TagService
 ) {
 
+    // GET /api/v1/tags
     @GetMapping
-    fun getAllTags(@LoggedInUser user: User): ResponseEntity<ListTagResponse> {
-        val tags = tagService.getAllTags(user.id!!)
+    fun getAllTags(): ResponseEntity<ListTagResponse> {
+        val tags = tagService.getAllTags()
         return ResponseEntity.ok(ListTagResponse(tags))
     }
 
+    // POST /api/v1/tags
     @PostMapping
-    fun createTag(
-        @LoggedInUser user: User,
-        @RequestBody req: CreateTagRequest
-    ): ResponseEntity<CreateTagResponse> {
-        val response = tagService.createTag(user.id!!, req)
+    fun createTag(@RequestBody req: CreateTagRequest): ResponseEntity<CreateTagResponse> {
+        val response = tagService.createTag(req)
         return ResponseEntity.ok(response)
     }
 
+    // PATCH /api/v1/tags/{tagId}
     @PatchMapping("/{tagId}")
     fun updateTag(
-        @LoggedInUser user: User,
         @PathVariable tagId: Long,
         @RequestBody req: UpdateTagRequest
     ): ResponseEntity<UpdateTagResponse> {
-        val response = tagService.updateTag(user.id!!, tagId, req)
+        val response = tagService.updateTag(tagId, req)
         return ResponseEntity.ok(response)
     }
 
     @DeleteMapping("/{tagId}")
-    fun deleteTag(
-        @LoggedInUser user: User,
-        @PathVariable tagId: Long
-    ): ResponseEntity<Unit> {
-        tagService.deleteTag(user.id!!, tagId)
-        return ResponseEntity.noContent().build()
+    fun deleteTag(@PathVariable tagId: Long): ResponseEntity<Unit> {
+        tagService.deleteTag(tagId)
+        return ResponseEntity.noContent().build() // 204 No Content 반환
     }
 }

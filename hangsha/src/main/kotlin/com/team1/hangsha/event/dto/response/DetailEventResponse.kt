@@ -1,5 +1,6 @@
 package com.team1.hangsha.event.dto.response
 
+import com.team1.hangsha.tag.dto.core.TagDto
 import java.time.LocalDateTime
 
 /**
