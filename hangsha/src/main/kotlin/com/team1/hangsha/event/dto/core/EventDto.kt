@@ -1,6 +1,5 @@
 package com.team1.hangsha.event.dto.core
 
-import com.team1.hangsha.tag.dto.core.TagDto
 import java.time.LocalDateTime
 
 data class EventDto(
