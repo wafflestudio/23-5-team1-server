@@ -42,6 +42,9 @@ enum class ErrorCode(
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND, "태그를 찾을 수 없습니다"),
     TAG_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 태그 이름입니다"),
 
+    // Memo
+    MEMO_NOT_FOUND(HttpStatus.NOT_FOUND, "메모를 찾을 수 없습니다"),
+
     // Timetable / Enroll / Course
     TIMETABLE_NOT_FOUND(HttpStatus.NOT_FOUND, "시간표를 찾을 수 없습니다"),
     TIMETABLE_NAME_CANNOT_BE_BLANK(HttpStatus.BAD_REQUEST, "시간표 이름은 비워둘 수 없습니다"),
@@ -50,8 +53,7 @@ enum class ErrorCode(
     ENROLL_NOT_FOUND(HttpStatus.NOT_FOUND, "시간표에 등록된 강의를 찾을 수 없습니다"),
     ENROLL_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 시간표에 추가된 강의입니다"),
     ENROLL_PATCH_EMPTY(HttpStatus.BAD_REQUEST, "수정할 항목이 없습니다"),
-    ENROLL_TIME_CONFLICT(HttpStatus.CONFLICT, "시간표에 이미 겹치는 강의가 있습니다"),
-
+    ENROLL_TIME_CONFLICT(HttpStatus.CONFLICT, "시간이 중복되는 강의입니다."),
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "강의를 찾을 수 없습니다"),
     COURSE_NOT_EDITABLE(HttpStatus.FORBIDDEN, "수정할 수 없는 강의입니다"),
 

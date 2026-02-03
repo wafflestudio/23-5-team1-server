@@ -26,6 +26,7 @@ class MemoService(
         val event = eventRepository.findById(req.eventId)
             .orElseThrow { DomainException(ErrorCode.EVENT_NOT_FOUND) }
 
+        // 태그 처리: 이름으로 유저 태그 조회 -> 없으면 생성
         val tagRefs = resolveTags(userId, req.tagNames)
 
         val memo = memoRepository.save(
@@ -43,15 +44,16 @@ class MemoService(
     @Transactional
     fun updateMemo(userId: Long, memoId: Long, req: UpdateMemoRequest): MemoResponse {
         val memo = memoRepository.findById(memoId)
-            .orElseThrow { DomainException(ErrorCode.MEMO_NOT_FOUND) }
+            .orElseThrow { DomainException(ErrorCode.MEMO_NOT_FOUND) } // MEMO_NOT_FOUND 필요
 
-        // 본인의 메모인지 검증
         if (memo.userId != userId) {
-            throw DomainException(ErrorCode.MEMO_NOT_FOUND)
+            throw DomainException(ErrorCode.MEMO_NOT_FOUND) // 권한 없음 처리
         }
 
+        // 태그 업데이트 (기존 태그 갈아끼우기)
         val newTagRefs = resolveTags(userId, req.tagNames)
 
+        // 메모 내용 및 태그 업데이트
         val updatedMemo = memoRepository.save(
             memo.copy(
                 content = req.content,
@@ -59,6 +61,7 @@ class MemoService(
             )
         )
 
+        // Event Title 조회 (응답용)
         val eventTitle = eventRepository.findById(updatedMemo.eventId)
             .map { it.title }
             .orElse("Unknown Event")
@@ -90,22 +93,20 @@ class MemoService(
         }
     }
 
+    // 특정 메모의 태그만 가져오는 기능 (필요하다면 구현, 현재 Response에 포함됨)
     @Transactional(readOnly = true)
     fun getTagsByMemoId(userId: Long, memoId: Long): List<MemoTagResponse> {
         val memo = memoRepository.findById(memoId)
             .orElseThrow { DomainException(ErrorCode.MEMO_NOT_FOUND) }
 
-        if (memo.userId != userId) throw DomainException(ErrorCode.MEMO_NOT_FOUND)
+        if(memo.userId != userId) throw DomainException(ErrorCode.MEMO_NOT_FOUND)
 
         return memo.tags.mapNotNull { ref ->
-            tagRepository.findById(ref.tagId)
-                .map { MemoTagResponse(it.id!!, it.name) }
-                .orElse(null)
+            tagRepository.findById(ref.tagId).map { MemoTagResponse(it.id!!, it.name) }.orElse(null)
         }
     }
 
-
-    private fun resolveTags(userId: Long, tagNames: List<String>): Set<MemoTagRef> {
+   private fun resolveTags(userId: Long, tagNames: List<String>): Set<MemoTagRef> {
         return tagNames.distinct().map { name ->
             val tag = tagRepository.findByUserIdAndName(userId, name)
                 .orElseGet {
