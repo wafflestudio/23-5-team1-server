@@ -1,7 +1,7 @@
 package com.team1.hangsha.user.handler
 
-import com.team1.hangsha.user.repository.UserRepository
 import com.team1.hangsha.user.JwtTokenProvider
+import com.team1.hangsha.user.repository.UserRepository
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -13,7 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder
 @Component
 class OAuth2SuccessHandler(
     private val jwtTokenProvider: JwtTokenProvider,
-    private val userRepository: UserRepository,
+    private val userRepository: UserRepository
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     override fun onAuthenticationSuccess(

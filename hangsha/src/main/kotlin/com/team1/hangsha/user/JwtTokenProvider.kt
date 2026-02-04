@@ -70,6 +70,9 @@ class JwtTokenProvider(
     fun getUserId(token: String): Long =
         parseClaims(token).subject.toLong()
 
+    fun getTokenType(token: String): String =
+        parseClaims(token)["type"] as String
+
     fun validateAccessToken(token: String): Boolean {
         try {
             val claims = Jwts
@@ -110,7 +113,4 @@ class JwtTokenProvider(
             return false
         }
     }
-
-    fun getJti(token: String): String =
-        parseClaims(token).id
 }
