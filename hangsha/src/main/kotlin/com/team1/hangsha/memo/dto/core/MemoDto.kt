@@ -12,7 +12,7 @@ data class MemoResponse(
     val eventId: Long,
     val eventTitle: String,
     val content: String,
-    val tags: List<String>,
+    val tags: List<MemoTagResponse>,
     val createdAt: Instant?,
     val updatedAt: Instant?
 )

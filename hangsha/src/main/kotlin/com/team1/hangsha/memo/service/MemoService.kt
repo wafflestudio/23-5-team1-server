@@ -170,9 +170,9 @@ class MemoService(
     }
 
     private fun mapToMemoResponse(memo: Memo, eventTitle: String): MemoResponse {
-        val tagNames = memo.tags.mapNotNull { ref ->
+        val tags: List<MemoTagResponse> = memo.tags.mapNotNull { ref ->
             tagRepository.findById(ref.tagId)
-                .map { it.name }
+                .map { tag -> MemoTagResponse(tag.id!!, tag.name) }
                 .orElse(null)
         }
 
@@ -181,7 +181,7 @@ class MemoService(
             eventId = memo.eventId,
             eventTitle = eventTitle,
             content = memo.content,
-            tags = tagNames,
+            tags = tags,
             createdAt = memo.createdAt,
             updatedAt = memo.updatedAt
         )
