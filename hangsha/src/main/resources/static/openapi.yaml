@@ -824,7 +824,36 @@ paths:
         "401":
           description: 이메일 또는 비밀번호 오류
 
-  /auth/refresh:
+  /auth/social:
+    post:
+      tags: [Auth]
+      summary: 소셜 로그인/가입
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SocialRegisterRequest' }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+        "409":
+          description: Conflict (동일 이메일의 LOCAL 계정 존재 → 로컬 로그인 유도)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: 로그아웃
+      security: [{ bearerAuth: [] }]
+      responses:
+        "204": { description: No Content }
+
+  /api/v1/auth/refresh:
     post:
       summary: Access Token 재발급
       description: |
@@ -856,11 +885,12 @@ paths:
             - 만료됨
             - 이미 revoke된 토큰
 
-  /auth/logout:
+  /api/v1/auth/logout:
     post:
       summary: 로그아웃
       description: |
-        refreshToken이 존재하고 유효하면 revoke를 시도하고, refreshToken 쿠키를 삭제한다.
+        현재 refreshToken을 revoke하고
+        refreshToken 쿠키를 즉시 삭제한다.
       tags: [ Auth ]
       parameters:
         - in: cookie

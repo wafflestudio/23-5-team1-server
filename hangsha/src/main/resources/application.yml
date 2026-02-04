@@ -84,10 +84,8 @@ jwt:
 
 auth:
   refresh-cookie:
-    secure: false
+    secure: true
     same-site: Lax
-  oauth2:
-    frontend-callback-url: "http://localhost:3000/oauth/callback"
 
 # Variable for the crawler
 crawler:

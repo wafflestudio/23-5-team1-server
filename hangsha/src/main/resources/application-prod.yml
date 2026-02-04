@@ -1,5 +1,0 @@
-auth:
-  refresh-cookie:
-    secure: true
-  oauth2:
-    frontend-callback-url: "https://hangsha.site/oauth/callback"

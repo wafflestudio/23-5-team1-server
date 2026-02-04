@@ -114,4 +114,22 @@ class JwtTokenProvider(
 
     fun getJti(token: String): String =
         parseClaims(token).id
+
+    fun buildRefreshCookie(token: String, maxAgeSeconds: Long): ResponseCookie =
+        ResponseCookie.from("refreshToken", token)
+            .httpOnly(true)
+            .secure(true)         // prod는 true, 로컬 http 테스트면 false 필요
+            .sameSite("Lax")
+            .path("/api/v1/auth")
+            .maxAge(maxAgeSeconds)
+            .build()
+
+    fun clearRefreshCookie(): ResponseCookie =
+        ResponseCookie.from("refreshToken", "")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Lax")
+            .path("/api/v1/auth")
+            .maxAge(0)
+            .build()
 }

@@ -15,16 +15,10 @@ import org.springframework.beans.factory.annotation.Value
 import com.team1.hangsha.user.AuthCookieSupport
 import com.team1.hangsha.user.model.RefreshToken
 import com.team1.hangsha.user.TokenHasher
-import com.team1.hangsha.user.repository.OAuthLoginCodeRepository
-import com.team1.hangsha.user.model.OAuthLoginCode
-import java.time.Duration
-import java.util.UUID
 import com.fasterxml.jackson.databind.JsonNode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.http.ResponseCookie
-import org.slf4j.LoggerFactory
 import java.net.URI
 import java.time.Instant
 
@@ -34,14 +28,10 @@ class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userIdentityRepository: UserIdentityRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
-    private val oauthLoginCodeRepository: OAuthLoginCodeRepository,
     private val tokenHasher: TokenHasher,
     private val cookieSupport: AuthCookieSupport,
     @Value("\${jwt.refresh-expiration-ms}") private val refreshExpirationMs: Long,
 ) {
-
-    private val log = LoggerFactory.getLogger(UserService::class.java)
-
     fun localRegister(
         email: String,
         password: String,
@@ -151,78 +141,13 @@ class UserService(
     fun logout(refreshToken: String?) {
         if (refreshToken.isNullOrBlank()) return
 
-        val jti = try {
-            jwtTokenProvider.getJti(refreshToken)
-        } catch (e: Exception) {
-            log.debug("logout: invalid refresh token (cannot parse jti). ignore. err={}", e.toString())
-            return
-        }
-
-        try {
+        runCatching {
+            val jti = jwtTokenProvider.getJti(refreshToken)
             val row = refreshTokenRepository.findByJti(jti) ?: return
             if (row.revokedAt == null) {
                 refreshTokenRepository.save(row.copy(revokedAt = Instant.now()))
             }
-        } catch (e: Exception) {
-            log.error("logout: failed to revoke refresh token in DB. jti={}", jti, e)
-            return
         }
-    }
-
-    @Transactional
-    fun issueRefreshCookieAndOAuthCode(userId: Long): Pair<ResponseCookie, String> {
-        // 1) refresh token 발급 + DB 저장 + 쿠키 만들기
-        val refresh = jwtTokenProvider.createRefreshToken(userId)
-        saveRefresh(userId, refresh)
-
-        val refreshCookie = cookieSupport.buildRefreshCookie(
-            token = refresh,
-            maxAgeSeconds = refreshExpirationMs / 1000
-        )
-
-        // 2) one-time code 발급 + DB 저장(해시로)
-        val rawCode = UUID.randomUUID().toString() + UUID.randomUUID().toString().replace("-", "")
-        val expiresAt = Instant.now().plus(Duration.ofMinutes(5)) // 5분 유효 추천
-
-        oauthLoginCodeRepository.save(
-            OAuthLoginCode(
-                userId = userId,
-                codeHash = tokenHasher.hash(rawCode),
-                expiresAt = expiresAt
-            )
-        )
-
-        return refreshCookie to rawCode
-    }
-
-    @Transactional
-    fun exchangeOAuthCodeForAccessToken(code: String): String {
-        if (code.isBlank()) {
-            throw DomainException(ErrorCode.INVALID_REQUEST, "code가 비어있습니다")
-        }
-
-        // 최근 N개 중에서 매칭되는 code 찾기
-        val candidates = oauthLoginCodeRepository.findRecent(limit = 50)
-
-        val matched = candidates.firstOrNull { row ->
-            row.usedAt == null &&
-                    row.expiresAt.isAfter(Instant.now()) &&
-                    tokenHasher.matches(code, row.codeHash)
-        } ?: throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "유효하지 않은 code입니다")
-
-        // one-time 보장
-        val updated = oauthLoginCodeRepository.markUsedIfNotUsed(matched.id!!)
-        if (updated != 1) {
-            throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "이미 사용된 code입니다")
-        }
-
-        return jwtTokenProvider.createAccessToken(matched.userId)
-    }
-
-    fun getMe(userId: Long): UserDto {
-        val user = userRepository.findById(userId)
-            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
-        return UserDto(user)
     }
 
     private fun saveRefresh(userId: Long, refreshToken: String) {
@@ -301,5 +226,11 @@ class UserService(
         } catch (e: Exception) {
             throw DomainException(ErrorCode.INVALID_REQUEST, "profileImageUrl이 유효한 URL이 아닙니다")
         }
+    }
+
+    fun getMe(userId: Long): UserDto {
+        val user = userRepository.findById(userId)
+            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
+        return UserDto(user)
     }
 }
