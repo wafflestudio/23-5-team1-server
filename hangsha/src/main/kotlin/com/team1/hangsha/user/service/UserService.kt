@@ -178,12 +178,6 @@ class UserService(
         }
     }
 
-    fun getMe(userId: Long): UserDto {
-        val user = userRepository.findById(userId)
-            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
-        return UserDto(user)
-    }
-
     private fun saveRefresh(userId: Long, refreshToken: String) {
         val jti = jwtTokenProvider.getJti(refreshToken)
         val expiresAt = jwtTokenProvider.parseClaims(refreshToken).expiration.toInstant()
