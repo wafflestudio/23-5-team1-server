@@ -89,122 +89,14 @@ class UserService(
         )
     }
 
-    @Transactional
-    fun issueAfterSocialLogin(userId: Long): IssuedTokens {
-        val access = jwtTokenProvider.createAccessToken(userId)
-        val refresh = jwtTokenProvider.createRefreshToken(userId)
-
-        saveRefresh(userId, refresh)
-
-        val cookie = cookieSupport.buildRefreshCookie(
-            token = refresh,
-            maxAgeSeconds = refreshExpirationMs / 1000
-        )
-
-        return IssuedTokens(accessToken = access, refreshCookie = cookie)
-    }
-
-    @Transactional
-    fun rotateAndIssueAccessToken(refreshToken: String): IssuedTokens {
+    fun refreshAccessToken(refreshToken: String): String {
         if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
         }
 
         val userId = jwtTokenProvider.getUserId(refreshToken)
 
-        return IssuedTokens(accessToken = newAccess, refreshCookie = cookie)
-    }
-
-    @Transactional
-    fun logout(refreshToken: String?) {
-        if (refreshToken.isNullOrBlank()) return
-
-        val jti = try {
-            jwtTokenProvider.getJti(refreshToken)
-        } catch (e: Exception) {
-            log.debug("logout: invalid refresh token (cannot parse jti). ignore. err={}", e.toString())
-            return
-        }
-
-        try {
-            val row = refreshTokenRepository.findByJti(jti) ?: return
-            if (row.revokedAt == null) {
-                refreshTokenRepository.save(row.copy(revokedAt = Instant.now()))
-            }
-        } catch (e: Exception) {
-            log.error("logout: failed to revoke refresh token in DB. jti={}", jti, e)
-            return
-        }
-    }
-
-    @Transactional
-    fun issueRefreshCookieAndOAuthCode(userId: Long): Pair<ResponseCookie, String> {
-        // 1) refresh token 발급 + DB 저장 + 쿠키 만들기
-        val refresh = jwtTokenProvider.createRefreshToken(userId)
-        saveRefresh(userId, refresh)
-
-        val refreshCookie = cookieSupport.buildRefreshCookie(
-            token = refresh,
-            maxAgeSeconds = refreshExpirationMs / 1000
-        )
-
-        // 2) one-time code 발급 + DB 저장(해시로)
-        val rawCode = UUID.randomUUID().toString() + UUID.randomUUID().toString().replace("-", "")
-        val expiresAt = Instant.now().plus(Duration.ofMinutes(5)) // 5분 유효 추천
-
-        oauthLoginCodeRepository.save(
-            OAuthLoginCode(
-                userId = userId,
-                codeHash = tokenHasher.hash(rawCode),
-                expiresAt = expiresAt
-            )
-        )
-
-        return refreshCookie to rawCode
-    }
-//
-//    @Transactional
-//    fun exchangeOAuthCodeForAccessToken(code: String): String {
-//        if (code.isBlank()) {
-//            throw DomainException(ErrorCode.INVALID_REQUEST, "code가 비어있습니다")
-//        }
-//
-//        // 최근 N개 중에서 매칭되는 code 찾기
-//        val candidates = oauthLoginCodeRepository.findRecent(limit = 50)
-//
-//        val matched = candidates.firstOrNull { row ->
-//            row.usedAt == null &&
-//                    row.expiresAt.isAfter(Instant.now()) &&
-//                    tokenHasher.matches(code, row.codeHash)
-//        } ?: throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "유효하지 않은 code입니다")
-//
-//        // one-time 보장
-//        val updated = oauthLoginCodeRepository.markUsedIfNotUsed(matched.id!!)
-//        if (updated != 1) {
-//            throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "이미 사용된 code입니다")
-//        }
-//
-//        return jwtTokenProvider.createAccessToken(matched.userId)
-//    }
-
-    fun getMe(userId: Long): UserDto {
-        val user = userRepository.findById(userId)
-            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
-        return UserDto(user)
-    }
-
-    private fun saveRefresh(userId: Long, refreshToken: String) {
-        val jti = jwtTokenProvider.getJti(refreshToken)
-        val expiresAt = jwtTokenProvider.parseClaims(refreshToken).expiration.toInstant()
-
-        refreshTokenRepository.save(
-            RefreshToken(
-                userId = userId,
-                jti = jti,
-                tokenHash = tokenHasher.hash(refreshToken),
-                expiresAt = expiresAt,
-            )
-        )
+        return jwtTokenProvider.createAccessToken(userId = userId)
     }
 
     fun updateProfile(userId: Long, body: JsonNode) {

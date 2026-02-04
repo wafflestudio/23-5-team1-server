@@ -115,38 +115,23 @@ components:
         accessToken: { type: string }
         refreshToken: { type: string }
 
-    SocialLoginRequest:
+    SocialRegisterRequest:
       type: object
-      required:
-        - provider
-        - code
+      required: [provider, idToken]
       properties:
         provider:
           type: string
-          description: Social provider
-          enum: [ GOOGLE, KAKAO, NAVER ]
-        code:
+          enum: [LOCAL, GOOGLE, KAKAO, NAVER]
+        idToken:
           type: string
-          description: Authorization code from the provider
-        codeVerifier:
+          description: "provider에서 받은 idToken 또는 accessToken"
+        username:
           type: string
           nullable: true
-          description: PKCE code_verifier (used for Google if PKCE is enabled)
-      additionalProperties: false
-
-    TokenResponse:
-      type: object
-      required:
-        - accessToken
-        - isNewUser
-      properties:
-        accessToken:
+        email:
           type: string
-          description: JWT access token
-        isNewUser:
-          type: boolean
-          description: True if user was created during this login
-      additionalProperties: false
+          format: email
+          nullable: true
 
     GetMeResponse:
       type: object
@@ -866,84 +851,6 @@ paths:
           content:
             application/json:
               schema: { $ref: '#/components/schemas/RefreshResponse' }
-
-  /auth/login/social:
-    post:
-      tags:
-        - Auth
-      summary: Social login (authorization code)
-      description: >
-        Social login using authorization code.  
-        On success, sets refreshToken as HttpOnly cookie via Set-Cookie header and returns accessToken in response body.
-      operationId: socialLogin
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SocialLoginRequest'
-            examples:
-              google:
-                summary: Google login
-                value:
-                  provider: GOOGLE
-                  code: "4/0AbUR2V..."
-                  codeVerifier: "random-pkce-verifier"
-              kakao:
-                summary: Kakao login
-                value:
-                  provider: KAKAO
-                  code: "AbCdEfGhIj..."
-                  codeVerifier: null
-              naver:
-                summary: Naver login
-                value:
-                  provider: NAVER
-                  code: "AAAA.BBBB.CCCC"
-                  codeVerifier: null
-      responses:
-        "200":
-          description: Login success (refreshToken cookie issued)
-          headers:
-            Set-Cookie:
-              description: >
-                HttpOnly refresh token cookie.  
-                Example: refreshToken=...; Path=/api/v1/auth; HttpOnly; Secure; SameSite=Lax
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TokenResponse'
-              examples:
-                existingUser:
-                  summary: Existing user
-                  value:
-                    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    isNewUser: false
-                newUser:
-                  summary: New user
-                  value:
-                    accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-                    isNewUser: true
-        "400":
-          description: Bad request (invalid provider/code, etc.)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "401":
-          description: Unauthorized (social token exchange failed, invalid code, etc.)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-        "500":
-          description: Internal server error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
 
   # ---------------- Users ----------------
   /users/me:

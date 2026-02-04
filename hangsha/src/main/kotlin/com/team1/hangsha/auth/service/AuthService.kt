@@ -3,12 +3,11 @@ package com.team1.hangsha.auth.service
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.team1.hangsha.auth.dto.SocialLoginRequest
 import com.team1.hangsha.auth.dto.TokenResponse
-import com.team1.hangsha.auth.dto.SocialLoginResult
 import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.common.error.ErrorCode
+import com.team1.hangsha.user.JwtTokenProvider
 import com.team1.hangsha.user.model.User
 import com.team1.hangsha.user.repository.UserRepository
-import com.team1.hangsha.user.service.UserService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -22,7 +21,7 @@ import org.springframework.web.client.RestTemplate
 @Service
 class AuthService(
     private val userRepository: UserRepository,
-    private val userService: UserService,
+    private val jwtTokenProvider: JwtTokenProvider,
 
     // application.yml에서 값을 가져옵니다.
     @Value("\${oauth2.google.client-id}") val googleClientId: String,
@@ -40,7 +39,7 @@ class AuthService(
     private val restTemplate = RestTemplate()
 
     @Transactional
-    fun socialLogin(req: SocialLoginRequest): SocialLoginResult {
+    fun socialLogin(req: SocialLoginRequest): TokenResponse {
         // 1. 소셜 프로필 가져오기
         val socialProfile = when (req.provider.uppercase()) {
             "GOOGLE" -> getGoogleProfile(req.code, req.codeVerifier) // codeVerifier 추가된 버전 유지
@@ -68,13 +67,11 @@ class AuthService(
         }
 
         // 3. 우리 서비스 전용 토큰 발급
-        val issued = userService.issueAfterSocialLogin(user!!.id!!)
+        val accessToken = jwtTokenProvider.createAccessToken(user!!.id!!)
+        val refreshToken = jwtTokenProvider.createRefreshToken(user.id!!)
 
-        return SocialLoginResult(
-            accessToken = issued.accessToken,
-            refreshCookie = issued.refreshCookie,
-            isNewUser = isNewUser
-        )
+        // 4. isNewUser 플래그를 포함하여 반환
+        return TokenResponse(accessToken, refreshToken, isNewUser)
     }
 
     // --- Google ---
