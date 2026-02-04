@@ -49,6 +49,7 @@ class SecurityConfig(
                         "/v3/api-docs/**",
                         "/api-docs/**",
                         "/api/v1/auth/**",
+                        "/api/v1/auth/login/social",
                         "/openapi.yaml/**",
                         "/api/v1/health",
                         // 행사
