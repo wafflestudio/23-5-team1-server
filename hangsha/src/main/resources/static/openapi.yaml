@@ -96,9 +96,10 @@ components:
 
     RegisterResponse:
       type: object
-      required: [accessToken]
+      required: [accessToken, refreshToken]
       properties:
         accessToken: { type: string }
+        refreshToken: { type: string }
 
     LoginRequest:
       type: object
@@ -109,9 +110,10 @@ components:
 
     LoginResponse:
       type: object
-      required: [accessToken]
+      required: [accessToken, refreshToken]
       properties:
         accessToken: { type: string }
+        refreshToken: { type: string }
 
     SocialLoginRequest:
       type: object
@@ -507,28 +509,29 @@ components:
     # ---------------- Tags ----------------
     Tag:
       type: object
-      required: [ id, name ]
+      required: [ id, userId, name ]
       properties:
         id:
           type: integer
           format: int64
           example: 1
+        userId:
+          type: integer
+          format: int64
+          example: 2
         name:
           type: string
           example: "shared"
 
     TagDto:
       type: object
-      required: [ id, name ]
+      required: [ id, name]
       properties:
         id:
           type: integer
           format: int64
-          example: 1
         name:
           type: string
-          example: "shared"
-
 
     ListTagResponse:
         type: object
@@ -778,116 +781,91 @@ components:
 
 paths:
   # ---------------- Auth ----------------
-  /api/v1/auth/register:
+  /auth/register:
     post:
-      summary: 로컬 회원가입
-      description: |
-        이메일/비밀번호로 회원가입 후
-        - accessToken은 응답 body로
-        - refreshToken은 HttpOnly Cookie로 발급한다.
-      tags: [ Auth ]
+      tags: [Auth]
+      summary: Local 회원가입
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/RegisterRequest"
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
       responses:
         "200":
-          description: 회원가입 성공
-          headers:
-            Set-Cookie:
-              description: HttpOnly refresh token cookie
-              schema:
-                type: string
-                example: refreshToken=xxx; HttpOnly; Secure; SameSite=Lax
+          description: OK
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/RegisterResponse"
+              schema: { $ref: '#/components/schemas/RegisterResponse' }
+        "409":
+          description: Conflict (이미 가입된 이메일 등)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /api/v1/auth/login:
+  /auth/login:
     post:
-      summary: 로컬 로그인
-      description: |
-        이메일/비밀번호 로그인
-        - accessToken은 body
-        - refreshToken은 HttpOnly Cookie
-      tags: [ Auth ]
+      tags: [Auth]
+      summary: Local 로그인
       requestBody:
         required: true
         content:
           application/json:
-            schema:
-              $ref: "#/components/schemas/LoginRequest"
+            schema: { $ref: '#/components/schemas/LoginRequest' }
       responses:
         "200":
-          description: 로그인 성공
-          headers:
-            Set-Cookie:
-              description: HttpOnly refresh token cookie
-              schema:
-                type: string
+          description: OK
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/LoginResponse"
+              schema: { $ref: '#/components/schemas/LoginResponse' }
         "401":
-          description: 이메일 또는 비밀번호 오류
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /auth/refresh:
+  /auth/social:
     post:
-      summary: Access Token 재발급
-      description: |
-        HttpOnly Cookie에 저장된 refreshToken을 사용해
-        - 새로운 accessToken 발급
-        - refreshToken은 rotation되어 새 쿠키로 교체됨
-      tags: [ Auth ]
-      parameters:
-        - in: cookie
-          name: refreshToken
-          required: true
-          schema:
-            type: string
+      tags: [Auth]
+      summary: 소셜 로그인/가입
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/SocialRegisterRequest' }
       responses:
         "200":
-          description: 재발급 성공
-          headers:
-            Set-Cookie:
-              description: Rotated refresh token cookie
-              schema:
-                type: string
+          description: OK
           content:
             application/json:
-              schema:
-                $ref: "#/components/schemas/RefreshResponse"
-        "401":
-          description: |
-            - refreshToken 없음
-            - 만료됨
-            - 이미 revoke된 토큰
+              schema: { $ref: '#/components/schemas/LoginResponse' }
+        "409":
+          description: Conflict (동일 이메일의 LOCAL 계정 존재 → 로컬 로그인 유도)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorResponse' }
 
   /auth/logout:
     post:
+      tags: [Auth]
       summary: 로그아웃
-      description: |
-        refreshToken이 존재하고 유효하면 revoke를 시도하고, refreshToken 쿠키를 삭제한다.
-      tags: [ Auth ]
-      parameters:
-        - in: cookie
-          name: refreshToken
-          required: false
-          schema:
-            type: string
+      security: [{ bearerAuth: [] }]
       responses:
-        "204":
-          description: 로그아웃 성공
-          headers:
-            Set-Cookie:
-              description: refreshToken 삭제 쿠키
-              schema:
-                type: string
-                example: refreshToken=; Max-Age=0
+        "204": { description: No Content }
+
+  /auth/refresh:
+    post:
+      tags: [Auth]
+      summary: AccessToken 재발급
+      description: |
+        refreshToken을 Authorization 헤더(Bearer)로 전달하여 새 accessToken을 발급합니다.
+        (현재 버전에서는 refreshToken은 재발급되지 않습니다)
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RefreshResponse' }
 
   /auth/login/social:
     post:

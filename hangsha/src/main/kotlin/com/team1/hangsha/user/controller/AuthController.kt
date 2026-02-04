@@ -23,49 +23,64 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/v1/auth")
 class AuthController(
     private val userService: UserService,
-    private val cookieSupport: AuthCookieSupport,
 ) {
     @PostMapping("/register")
-    fun localRegister(@RequestBody req: RegisterRequest): ResponseEntity<RegisterResponse> {
-        userService.localRegister(req.email, req.password)
-        val issued = userService.issueAfterLocalLogin(req.email, req.password)
+    fun register(
+        @RequestBody registerRequest: RegisterRequest,
+    ): ResponseEntity<RegisterResponse> {
+        val userDto = userService.localRegister(
+            email = registerRequest.email,
+            password = registerRequest.password,
+        )
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, issued.refreshCookie.toString())
-            .body(RegisterResponse(accessToken = issued.accessToken))
+        val tokenPair = userService.localLogin(
+            email = registerRequest.email,
+            password = registerRequest.password,
+        )
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(
+                RegisterResponse(
+                    accessToken = tokenPair.accessToken,
+                    refreshToken = tokenPair.refreshToken,
+                )
+            )
     }
 
     @PostMapping("/login")
-    fun localLogin(@RequestBody req: LoginRequest): ResponseEntity<LoginResponse> {
-        val issued = userService.issueAfterLocalLogin(req.email, req.password)
+    fun login(
+        @RequestBody loginRequest: LoginRequest,
+    ): ResponseEntity<LoginResponse> {
+        val tokenPair = userService.localLogin(
+            email = loginRequest.email,
+            password = loginRequest.password,
+        )
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, issued.refreshCookie.toString())
-            .body(LoginResponse(accessToken = issued.accessToken))
+        return ResponseEntity
+            .ok(
+                LoginResponse(
+                    accessToken = tokenPair.accessToken,
+                    refreshToken = tokenPair.refreshToken,
+                )
+            )
     }
 
     @PostMapping("/refresh")
-    fun refresh(
-        @CookieValue(name = "refreshToken", required = false) refreshToken: String?
-    ): ResponseEntity<RefreshResponse> {
-        if (refreshToken.isNullOrBlank()) throw DomainException(ErrorCode.AUTH_UNAUTHORIZED)
+    fun refresh(@RequestHeader("Authorization", required = false) authorization: String?)
+            : ResponseEntity<RefreshResponse> {
 
-        val issued = userService.rotateAndIssueAccessToken(refreshToken)
+        val refreshToken = extractBearerToken(authorization)
+            ?: throw DomainException(ErrorCode.AUTH_UNAUTHORIZED)
 
-        return ResponseEntity.ok()
-            .header(HttpHeaders.SET_COOKIE, issued.refreshCookie.toString())
-            .body(RefreshResponse(accessToken = issued.accessToken))
+        val accessToken = userService.refreshAccessToken(refreshToken)
+        return ResponseEntity.ok(RefreshResponse(accessToken))
     }
 
-    @PostMapping("/logout")
-    fun logout(
-        @CookieValue(name = "refreshToken", required = false) refreshToken: String?
-    ): ResponseEntity<Unit> {
-        userService.logout(refreshToken)
-
-        return ResponseEntity.noContent()
-            .header(HttpHeaders.SET_COOKIE, cookieSupport.clearRefreshCookie().toString())
-            .build()
+    private fun extractBearerToken(authorization: String?): String? {
+        if (authorization.isNullOrBlank()) return null
+        if (!authorization.startsWith("Bearer ")) return null
+        return authorization.substring(7).trim().ifBlank { null }
     }
 
 //    @PostMapping("/oauth/exchange")

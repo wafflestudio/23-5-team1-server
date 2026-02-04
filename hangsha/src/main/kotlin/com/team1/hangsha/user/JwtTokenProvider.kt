@@ -5,7 +5,6 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.http.ResponseCookie
 import java.util.Date
 import java.util.UUID
 
@@ -71,6 +70,9 @@ class JwtTokenProvider(
     fun getUserId(token: String): Long =
         parseClaims(token).subject.toLong()
 
+    fun getTokenType(token: String): String =
+        parseClaims(token)["type"] as String
+
     fun validateAccessToken(token: String): Boolean {
         try {
             val claims = Jwts
@@ -111,7 +113,4 @@ class JwtTokenProvider(
             return false
         }
     }
-
-    fun getJti(token: String): String =
-        parseClaims(token).id
 }
