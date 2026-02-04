@@ -9,28 +9,17 @@ import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.user.model.UserIdentity
 import com.team1.hangsha.user.repository.UserIdentityRepository
 import com.team1.hangsha.user.model.AuthProvider
-import com.team1.hangsha.user.dto.IssuedTokens
-import com.team1.hangsha.user.repository.RefreshTokenRepository
-import org.springframework.beans.factory.annotation.Value
-import com.team1.hangsha.user.AuthCookieSupport
-import com.team1.hangsha.user.model.RefreshToken
-import com.team1.hangsha.user.TokenHasher
+import com.team1.hangsha.user.model.AuthTokenPair
 import com.fasterxml.jackson.databind.JsonNode
 import org.mindrot.jbcrypt.BCrypt
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import java.net.URI
-import java.time.Instant
 
 @Service
 class UserService(
     private val userRepository: UserRepository,
     private val jwtTokenProvider: JwtTokenProvider,
     private val userIdentityRepository: UserIdentityRepository,
-    private val refreshTokenRepository: RefreshTokenRepository,
-    private val tokenHasher: TokenHasher,
-    private val cookieSupport: AuthCookieSupport,
-    @Value("\${jwt.refresh-expiration-ms}") private val refreshExpirationMs: Long,
 ) {
     fun localRegister(
         email: String,
@@ -78,90 +67,36 @@ class UserService(
         }
     }
 
-    @Transactional
-    fun issueAfterLocalLogin(email: String, password: String): IssuedTokens {
+    fun localLogin(email: String, password: String): AuthTokenPair {
         val identity = userIdentityRepository.findByProviderAndEmail(AuthProvider.LOCAL, email)
             ?: throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS)
 
-        val hashed = identity.password ?: throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS)
-        if (!BCrypt.checkpw(password, hashed)) throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS)
+        val hashed = identity.password
+            ?: throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS)
+
+        if (!BCrypt.checkpw(password, hashed)) {
+            throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS)
+        }
 
         val userId = identity.userId
 
-        val access = jwtTokenProvider.createAccessToken(userId)
-        val refresh = jwtTokenProvider.createRefreshToken(userId)
+        val accessToken = jwtTokenProvider.createAccessToken(userId = userId)
+        val refreshToken = jwtTokenProvider.createRefreshToken(userId = userId)
 
-        saveRefresh(userId, refresh)
-
-        val cookie = cookieSupport.buildRefreshCookie(
-            token = refresh,
-            maxAgeSeconds = refreshExpirationMs / 1000
+        return AuthTokenPair(
+            accessToken = accessToken,
+            refreshToken = refreshToken,
         )
-
-        return IssuedTokens(accessToken = access, refreshCookie = cookie)
     }
 
-    @Transactional
-    fun rotateAndIssueAccessToken(refreshToken: String): IssuedTokens {
+    fun refreshAccessToken(refreshToken: String): String {
         if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
         }
 
         val userId = jwtTokenProvider.getUserId(refreshToken)
-        val jti = jwtTokenProvider.getJti(refreshToken)
 
-        val row = refreshTokenRepository.findByJti(jti)
-            ?: throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
-
-        if (row.userId != userId) throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
-        if (row.revokedAt != null) throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
-        if (row.expiresAt.isBefore(Instant.now())) throw DomainException(ErrorCode.AUTH_TOKEN_EXPIRED)
-        if (!tokenHasher.matches(refreshToken, row.tokenHash)) throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
-
-        // rotation: 기존 refresh revoke
-        val updated = refreshTokenRepository.revokeIfNotRevoked(jti)
-        if (updated != 1) {
-            throw DomainException(ErrorCode.AUTH_INVALID_TOKEN)
-        }
-
-        val newAccess = jwtTokenProvider.createAccessToken(userId)
-        val newRefresh = jwtTokenProvider.createRefreshToken(userId)
-
-        saveRefresh(userId, newRefresh)
-
-        val cookie = cookieSupport.buildRefreshCookie(
-            token = newRefresh,
-            maxAgeSeconds = refreshExpirationMs / 1000
-        )
-
-        return IssuedTokens(accessToken = newAccess, refreshCookie = cookie)
-    }
-
-    @Transactional
-    fun logout(refreshToken: String?) {
-        if (refreshToken.isNullOrBlank()) return
-
-        runCatching {
-            val jti = jwtTokenProvider.getJti(refreshToken)
-            val row = refreshTokenRepository.findByJti(jti) ?: return
-            if (row.revokedAt == null) {
-                refreshTokenRepository.save(row.copy(revokedAt = Instant.now()))
-            }
-        }
-    }
-
-    private fun saveRefresh(userId: Long, refreshToken: String) {
-        val jti = jwtTokenProvider.getJti(refreshToken)
-        val expiresAt = jwtTokenProvider.parseClaims(refreshToken).expiration.toInstant()
-
-        refreshTokenRepository.save(
-            RefreshToken(
-                userId = userId,
-                jti = jti,
-                tokenHash = tokenHasher.hash(refreshToken),
-                expiresAt = expiresAt,
-            )
-        )
+        return jwtTokenProvider.createAccessToken(userId = userId)
     }
 
     fun updateProfile(userId: Long, body: JsonNode) {

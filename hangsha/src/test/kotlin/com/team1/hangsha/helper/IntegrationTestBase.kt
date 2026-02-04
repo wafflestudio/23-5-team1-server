@@ -5,7 +5,6 @@ import org.junit.jupiter.api.AfterEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.web.servlet.MockMvc
 
@@ -30,33 +29,14 @@ abstract class IntegrationTestBase {
     @Autowired lateinit var mockMvc: MockMvc
     @Autowired lateinit var objectMapper: ObjectMapper
     @Autowired lateinit var dataGenerator: DataGenerator
-    @Autowired lateinit var jdbcTemplate: JdbcTemplate
 
     protected fun bearer(token: String) = "Bearer $token"
+
     protected fun toJson(body: Any): String = objectMapper.writeValueAsString(body)
-
-    /**
-     * Spring MockMvc response 에서 Set-Cookie 헤더 중 refreshToken 쿠키를 찾아 "refreshToken=..." 형태로 반환.
-     * (Path/HttpOnly/SameSite 등 속성은 제외하고, 요청용 Cookie 헤더에 그대로 쓰기 좋게)
-     */
-    protected fun extractRefreshCookie(setCookieHeaders: Collection<String>): String {
-        val raw = setCookieHeaders.firstOrNull { it.startsWith("refreshToken=") }
-            ?: throw IllegalStateException("No refreshToken Set-Cookie header found: $setCookieHeaders")
-
-        // "refreshToken=xxx; Path=/...; HttpOnly; Secure; SameSite=Lax"
-        val pair = raw.substringBefore(";").trim()
-        if (!pair.startsWith("refreshToken=")) {
-            throw IllegalStateException("Invalid refreshToken cookie header: $raw")
-        }
-        return pair
-    }
-
-    /** MockMvc에 넣을 Cookie 헤더 값 (예: "refreshToken=xxx") */
-    protected fun cookieHeader(vararg cookies: String): String =
-        cookies.joinToString("; ")
 
     @AfterEach
     fun tearDown() {
+        // 테스트 격리 전략: 현재 repo들 전부 deleteAll 지원하니까 가장 단순하게 cleanup
         dataGenerator.cleanupAll()
     }
 }
