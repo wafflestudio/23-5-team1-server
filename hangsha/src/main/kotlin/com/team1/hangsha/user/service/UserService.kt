@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Value
 import com.team1.hangsha.user.AuthCookieSupport
 import com.team1.hangsha.user.model.RefreshToken
 import com.team1.hangsha.user.TokenHasher
-//import com.team1.hangsha.user.repository.OAuthLoginCodeRepository
-//import com.team1.hangsha.user.model.OAuthLoginCode
+import com.team1.hangsha.user.repository.OAuthLoginCodeRepository
+import com.team1.hangsha.user.model.OAuthLoginCode
 import java.time.Duration
 import java.util.UUID
 import com.fasterxml.jackson.databind.JsonNode
@@ -34,7 +34,7 @@ class UserService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userIdentityRepository: UserIdentityRepository,
     private val refreshTokenRepository: RefreshTokenRepository,
-//    private val oauthLoginCodeRepository: OAuthLoginCodeRepository,
+    private val oauthLoginCodeRepository: OAuthLoginCodeRepository,
     private val tokenHasher: TokenHasher,
     private val cookieSupport: AuthCookieSupport,
     @Value("\${jwt.refresh-expiration-ms}") private val refreshExpirationMs: Long,
@@ -98,6 +98,21 @@ class UserService(
 
         val userId = identity.userId
 
+        val access = jwtTokenProvider.createAccessToken(userId)
+        val refresh = jwtTokenProvider.createRefreshToken(userId)
+
+        saveRefresh(userId, refresh)
+
+        val cookie = cookieSupport.buildRefreshCookie(
+            token = refresh,
+            maxAgeSeconds = refreshExpirationMs / 1000
+        )
+
+        return IssuedTokens(accessToken = access, refreshCookie = cookie)
+    }
+
+    @Transactional
+    fun issueAfterSocialLogin(userId: Long): IssuedTokens {
         val access = jwtTokenProvider.createAccessToken(userId)
         val refresh = jwtTokenProvider.createRefreshToken(userId)
 
@@ -194,30 +209,30 @@ class UserService(
 
         return refreshCookie to rawCode
     }
-
-    @Transactional
-    fun exchangeOAuthCodeForAccessToken(code: String): String {
-        if (code.isBlank()) {
-            throw DomainException(ErrorCode.INVALID_REQUEST, "code가 비어있습니다")
-        }
-
-        // 최근 N개 중에서 매칭되는 code 찾기
-        val candidates = oauthLoginCodeRepository.findRecent(limit = 50)
-
-        val matched = candidates.firstOrNull { row ->
-            row.usedAt == null &&
-                    row.expiresAt.isAfter(Instant.now()) &&
-                    tokenHasher.matches(code, row.codeHash)
-        } ?: throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "유효하지 않은 code입니다")
-
-        // one-time 보장
-        val updated = oauthLoginCodeRepository.markUsedIfNotUsed(matched.id!!)
-        if (updated != 1) {
-            throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "이미 사용된 code입니다")
-        }
-
-        return jwtTokenProvider.createAccessToken(matched.userId)
-    }
+//
+//    @Transactional
+//    fun exchangeOAuthCodeForAccessToken(code: String): String {
+//        if (code.isBlank()) {
+//            throw DomainException(ErrorCode.INVALID_REQUEST, "code가 비어있습니다")
+//        }
+//
+//        // 최근 N개 중에서 매칭되는 code 찾기
+//        val candidates = oauthLoginCodeRepository.findRecent(limit = 50)
+//
+//        val matched = candidates.firstOrNull { row ->
+//            row.usedAt == null &&
+//                    row.expiresAt.isAfter(Instant.now()) &&
+//                    tokenHasher.matches(code, row.codeHash)
+//        } ?: throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "유효하지 않은 code입니다")
+//
+//        // one-time 보장
+//        val updated = oauthLoginCodeRepository.markUsedIfNotUsed(matched.id!!)
+//        if (updated != 1) {
+//            throw DomainException(ErrorCode.AUTH_INVALID_TOKEN, "이미 사용된 code입니다")
+//        }
+//
+//        return jwtTokenProvider.createAccessToken(matched.userId)
+//    }
 
     fun getMe(userId: Long): UserDto {
         val user = userRepository.findById(userId)

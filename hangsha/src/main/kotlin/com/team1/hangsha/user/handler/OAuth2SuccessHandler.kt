@@ -1,6 +1,5 @@
 package com.team1.hangsha.user.handler
 
-import com.team1.hangsha.user.JwtTokenProvider
 import com.team1.hangsha.user.repository.UserRepository
 import com.team1.hangsha.user.service.UserService
 import jakarta.servlet.http.HttpServletRequest
@@ -16,7 +15,6 @@ import org.springframework.http.HttpHeaders
 
 @Component
 class OAuth2SuccessHandler(
-    private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
     private val userService: UserService,
     @Value("\${auth.oauth2.frontend-callback-url}")
@@ -39,7 +37,7 @@ class OAuth2SuccessHandler(
         response.addHeader(HttpHeaders.SET_COOKIE, refreshCookie.toString())
 
         val targetUrl = UriComponentsBuilder
-            .fromUriString("frontendCallbackUrl")
+            .fromUriString(frontendCallbackUrl)
             .queryParam("code", code)
             .build()
             .toUriString()

@@ -1,5 +1,5 @@
-package com.team1.hangsha.user.dto
-
-data class OAuthExchangeRequest(
-    val code: String
-)
+//package com.team1.hangsha.user.dto
+//
+//data class OAuthExchangeRequest(
+//    val code: String
+//)
