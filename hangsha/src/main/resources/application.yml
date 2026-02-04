@@ -66,7 +66,7 @@ spring:
 
 auth:
   refresh-cookie:
-    secure: false
+    secure: true
     same-site: Lax
 
 # Swagger UI http://localhost:8080/swagger-ui/index.html
