@@ -31,7 +31,7 @@ class MemoController(
     @GetMapping
     fun getMyMemos(@Parameter(hidden = true) @LoggedInUser user: User,): ResponseEntity<ListMemoResponse> {
         val memos = memoService.getMyMemos(user.id!!)
-        return ResponseEntity.ok(ListMemoResponse(memos))
+        return ResponseEntity.ok(ListMemoResponse(items = memos))
     }
 
     @GetMapping("/by-tag/{tagId}")
