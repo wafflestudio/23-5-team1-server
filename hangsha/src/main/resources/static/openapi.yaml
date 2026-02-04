@@ -96,10 +96,9 @@ components:
 
     RegisterResponse:
       type: object
-      required: [accessToken, refreshToken]
+      required: [accessToken]
       properties:
         accessToken: { type: string }
-        refreshToken: { type: string }
 
     LoginRequest:
       type: object
@@ -110,28 +109,9 @@ components:
 
     LoginResponse:
       type: object
-      required: [accessToken, refreshToken]
+      required: [accessToken]
       properties:
         accessToken: { type: string }
-        refreshToken: { type: string }
-
-    SocialRegisterRequest:
-      type: object
-      required: [provider, idToken]
-      properties:
-        provider:
-          type: string
-          enum: [LOCAL, GOOGLE, KAKAO, NAVER]
-        idToken:
-          type: string
-          description: "provider에서 받은 idToken 또는 accessToken"
-        username:
-          type: string
-          nullable: true
-        email:
-          type: string
-          format: email
-          nullable: true
 
     GetMeResponse:
       type: object
@@ -142,11 +122,51 @@ components:
         email: { type: string, format: email, nullable: true }
         profileImageUrl: { type: string, nullable: true }
 
-    RefreshResponse:
+    SocialLoginRequest:
       type: object
-      required: [accessToken]
+      required: [ provider, code ]
       properties:
-        accessToken: { type: string }
+        provider:
+          type: string
+          description: 소셜 로그인 Provider
+          enum: [ GOOGLE, KAKAO, NAVER ]
+        code:
+          type: string
+          description: OAuth Authorization Code
+        codeVerifier:
+          type: string
+          nullable: true
+          description: |
+            Google PKCE code_verifier (선택).
+            KAKAO/NAVER에서는 사용하지 않음.
+      example:
+        provider: GOOGLE
+        code: "authorization_code_here"
+        codeVerifier: "pkce_code_verifier_here"
+
+    TokenResponse:
+        type: object
+        required: [ accessToken, isNewUser ]
+        properties:
+          accessToken:
+            type: string
+            description: 우리 서비스 Access JWT
+          isNewUser:
+            type: boolean
+            description: 소셜 로그인 과정에서 신규 생성된 유저인지 여부
+        example:
+          accessToken: "access.jwt.token"
+          isNewUser: false
+
+    RefreshResponse:
+        type: object
+        required: [ accessToken ]
+        properties:
+          accessToken:
+            type: string
+            description: 새로 발급된 우리 서비스 Access JWT
+        example:
+          accessToken: "new.access.jwt.token"
 
     UpdateProfileRequest:
       type: object
@@ -808,49 +828,131 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/ErrorResponse' }
 
-  /auth/social:
+  /auth/login/social:
     post:
-      tags: [Auth]
-      summary: 소셜 로그인/가입
+      tags: [ Auth ]
+      summary: 소셜 로그인 (code로 토큰 교환 후 우리 서비스 토큰 발급)
+      description: |
+        provider에 따라 code를 사용해 소셜 access token을 발급받고, 유저 정보를 조회한 뒤
+        우리 서비스 access token + refresh token(cookie)을 발급합니다.
+        refresh token은 Set-Cookie 헤더로 내려갑니다.
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/SocialRegisterRequest' }
+            schema:
+              $ref: '#/components/schemas/SocialLoginRequest'
+            examples:
+              google:
+                summary: Google (PKCE 포함 가능)
+                value:
+                  provider: GOOGLE
+                  code: "authorization_code_here"
+                  codeVerifier: "pkce_code_verifier_here"
+              kakao:
+                summary: Kakao
+                value:
+                  provider: KAKAO
+                  code: "authorization_code_here"
+                  codeVerifier: null
+              naver:
+                summary: Naver
+                value:
+                  provider: NAVER
+                  code: "authorization_code_here"
+                  codeVerifier: null
       responses:
         "200":
-          description: OK
+          description: 로그인 성공 (accessToken 반환 + refreshToken 쿠키 세팅)
+          headers:
+            Set-Cookie:
+              description: refreshToken 쿠키
+              schema:
+                type: string
+              example: refreshToken=xxxxx.yyyyy.zzzzz; Path=/; HttpOnly; SameSite=Lax
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/LoginResponse' }
-        "409":
-          description: Conflict (동일 이메일의 LOCAL 계정 존재 → 로컬 로그인 유도)
-          content:
-            application/json:
-              schema: { $ref: '#/components/schemas/ErrorResponse' }
+              schema:
+                { $ref: '#/components/schemas/ErrorResponse' }
+              examples:
+                existingUser:
+                  value:
+                    accessToken: "access.jwt.token"
+                    isNewUser: false
+                newUser:
+                  value:
+                    accessToken: "access.jwt.token"
+                    isNewUser: true
+        "400":
+          { $ref: '#/components/schemas/ErrorResponse' }
+        "401":
+          { $ref: '#/components/schemas/ErrorResponse' }
+        "500":
+          { $ref: '#/components/schemas/ErrorResponse' }
 
   /auth/logout:
     post:
-      tags: [Auth]
-      summary: 로그아웃
-      security: [{ bearerAuth: [] }]
+      tags: [ Auth ]
+      summary: 로그아웃 (refresh token revoke + 쿠키 삭제)
+      description: |
+        refreshToken이 있으면 DB에서 revoke 처리합니다.
+        응답에서 refreshToken 쿠키를 삭제(Set-Cookie로 만료)합니다.
+      parameters:
+        - in: cookie
+          name: refreshToken
+          required: false
+          schema:
+            type: string
+          description: HttpOnly refresh token 쿠키 (없어도 204 반환)
       responses:
-        "204": { description: No Content }
+        "204":
+          description: 로그아웃 성공 (쿠키 삭제)
+          headers:
+            Set-Cookie:
+              description: refreshToken 쿠키 삭제(만료)
+              schema:
+                type: string
+              example: refreshToken=; Max-Age=0; Path=/; HttpOnly; SameSite=Lax
+        "500":
+          { $ref: '#/components/schemas/ErrorResponse' }
 
   /auth/refresh:
     post:
-      tags: [Auth]
-      summary: AccessToken 재발급
+      tags: [ Auth ]
+      summary: 액세스 토큰 재발급 (refresh token rotation)
       description: |
-        refreshToken을 Authorization 헤더(Bearer)로 전달하여 새 accessToken을 발급합니다.
-        (현재 버전에서는 refreshToken은 재발급되지 않습니다)
-      security: [{ bearerAuth: [] }]
+        refreshToken 쿠키를 받아 access token을 재발급합니다.
+        동시에 refresh token을 rotation(기존 revoke + 새로 발급) 하고 Set-Cookie로 내려줍니다.
+      parameters:
+        - in: cookie
+          name: refreshToken
+          required: true
+          schema:
+            type: string
+          description: HttpOnly refresh token 쿠키
       responses:
         "200":
-          description: OK
+          description: 재발급 성공 (accessToken 반환 + refreshToken 쿠키 갱신)
+          headers:
+            Set-Cookie:
+              description: 갱신된 refreshToken 쿠키
+              schema:
+                type: string
+              example: refreshToken=xxxxx.yyyyy.zzzzz; Path=/; HttpOnly; SameSite=Lax
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/RefreshResponse' }
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+              example:
+                accessToken: "new.access.jwt.token"
+        "401":
+          description: refreshToken이 없거나 유효하지 않음
+          content:
+            application/json:
+              schema:
+                { $ref: '#/components/schemas/ErrorResponse' }
+        "500":
+          { $ref: '#/components/schemas/ErrorResponse' }
 
   # ---------------- Users ----------------
   /users/me:
