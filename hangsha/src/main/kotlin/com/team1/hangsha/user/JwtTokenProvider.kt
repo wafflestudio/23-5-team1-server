@@ -5,6 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import org.springframework.http.ResponseCookie
 import java.util.Date
 import java.util.UUID
 
@@ -70,9 +71,6 @@ class JwtTokenProvider(
     fun getUserId(token: String): Long =
         parseClaims(token).subject.toLong()
 
-    fun getTokenType(token: String): String =
-        parseClaims(token)["type"] as String
-
     fun validateAccessToken(token: String): Boolean {
         try {
             val claims = Jwts
@@ -113,4 +111,25 @@ class JwtTokenProvider(
             return false
         }
     }
+
+    fun getJti(token: String): String =
+        parseClaims(token).id
+
+    fun buildRefreshCookie(token: String, maxAgeSeconds: Long): ResponseCookie =
+        ResponseCookie.from("refreshToken", token)
+            .httpOnly(true)
+            .secure(true)         // prod는 true, 로컬 http 테스트면 false 필요
+            .sameSite("Lax")
+            .path("/api/v1/auth")
+            .maxAge(maxAgeSeconds)
+            .build()
+
+    fun clearRefreshCookie(): ResponseCookie =
+        ResponseCookie.from("refreshToken", "")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("Lax")
+            .path("/api/v1/auth")
+            .maxAge(0)
+            .build()
 }

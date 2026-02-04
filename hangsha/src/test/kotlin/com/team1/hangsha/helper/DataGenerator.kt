@@ -1,5 +1,8 @@
 package com.team1.hangsha.helper
 
+import com.team1.hangsha.user.TokenHasher
+import com.team1.hangsha.user.model.RefreshToken
+import com.team1.hangsha.user.repository.RefreshTokenRepository
 import com.team1.hangsha.category.model.Category
 import com.team1.hangsha.category.model.CategoryGroup
 import com.team1.hangsha.common.enums.CourseSource
@@ -15,7 +18,6 @@ import com.team1.hangsha.timetable.model.Enroll
 import com.team1.hangsha.timetable.model.Timetable
 import com.team1.hangsha.user.JwtTokenProvider
 import com.team1.hangsha.user.model.AuthProvider
-import com.team1.hangsha.user.model.AuthTokenPair
 import com.team1.hangsha.user.model.User
 import com.team1.hangsha.user.model.UserIdentity
 import com.team1.hangsha.user.model.UserInterestCategory
@@ -44,6 +46,9 @@ class DataGenerator(
     private val userInterestCategoryRepository: UserInterestCategoryRepository,
     private val jwtTokenProvider: JwtTokenProvider,
 
+    private val refreshTokenRepository: RefreshTokenRepository,
+    private val tokenHasher: TokenHasher,
+
     private val categoryGroupRepository: CategoryGroupRepository,
     private val categoryRepository: CategoryRepository,
 
@@ -62,6 +67,34 @@ class DataGenerator(
     }
 
     private fun next(): Long = seq.getAndIncrement()
+
+    private fun defaultPassword(n: Long): String = "Abcd1234!$n"
+
+    private fun persistRefreshToken(userId: Long, refreshToken: String) {
+        val claims = jwtTokenProvider.parseClaims(refreshToken)
+        val jti = try {
+            jwtTokenProvider.getJti(refreshToken)
+        } catch (e: Exception) {
+            // fallback: JJWT standard claim id
+            claims.id
+        }
+
+        val expiresAt = claims.expiration.toInstant()
+
+        refreshTokenRepository.save(
+            RefreshToken(
+                userId = userId,
+                jti = jti,
+                tokenHash = tokenHasher.hash(refreshToken),
+                expiresAt = expiresAt,
+                revokedAt = null,
+            )
+        )
+    }
+
+    // ----------------------------
+    // Users / Auth
+    // ----------------------------
 
     // ----------------------------
     // Users / Auth
@@ -82,13 +115,15 @@ class DataGenerator(
             ),
         )
 
+        val pw = rawPassword ?: defaultPassword(n)
+
         userIdentityRepository.save(
             UserIdentity(
                 userId = u.id!!,
                 provider = AuthProvider.LOCAL,
                 providerUserId = null,
                 email = u.email,
-                password = BCrypt.hashpw(rawPassword ?: "pw-$n", BCrypt.gensalt()),
+                password = BCrypt.hashpw(pw, BCrypt.gensalt()),
             ),
         )
 
@@ -96,6 +131,9 @@ class DataGenerator(
             accessToken = jwtTokenProvider.createAccessToken(u.id!!),
             refreshToken = jwtTokenProvider.createRefreshToken(u.id!!),
         )
+
+        // refresh_tokens 테이블에도 저장 (rotation/revoke 테스트가 가능해짐)
+        persistRefreshToken(u.id!!, tokens.refreshToken)
 
         return u to tokens
     }
@@ -130,6 +168,9 @@ class DataGenerator(
             accessToken = jwtTokenProvider.createAccessToken(u.id!!),
             refreshToken = jwtTokenProvider.createRefreshToken(u.id!!),
         )
+
+        // ✅ 소셜도 동일하게 refresh 저장
+        persistRefreshToken(u.id!!, tokens.refreshToken)
 
         return u to tokens
     }
@@ -437,6 +478,7 @@ class DataGenerator(
         categoryRepository.deleteAll()
         categoryGroupRepository.deleteAll()
 
+        refreshTokenRepository.deleteAll()
         userIdentityRepository.deleteAll()
         userRepository.deleteAll()
     }
