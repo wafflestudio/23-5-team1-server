@@ -81,6 +81,12 @@ jwt:
   access-expiration-ms: 3600000
   refresh-expiration-ms: 1209600000
 
+
+auth:
+  refresh-cookie:
+    secure: true
+    same-site: Lax
+
 # Variable for the crawler
 crawler:
   events-json-path: tools/extra-snu-crawler/events.json
