@@ -11,6 +11,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/campus_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: user
       SPRING_DATASOURCE_PASSWORD: password
+      UPLOAD_DIR: /data/uploads
+      UPLOAD_PUBLIC_BASE_URL: http://13.125.246.220:8080/static
+    volumes:
+      - /home/ubuntu/hangsha-uploads:/data/uploads
     depends_on:
       db:
         condition: service_healthy

@@ -64,6 +64,9 @@ class SecurityConfig(
                         "/api/v1/categories/**",
                         // @TODO: 자동 크롤링 시 삭제 필요
                         "/admin/events/sync",
+                        "/admin/events/delete",
+                        // 파일 업로드
+                        "/static/**",
                     ).permitAll()
                     .anyRequest().authenticated()
             }

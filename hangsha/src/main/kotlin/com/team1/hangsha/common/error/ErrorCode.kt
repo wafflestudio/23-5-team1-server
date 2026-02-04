@@ -63,4 +63,9 @@ enum class ErrorCode(
     TIME_SLOTS_REQUIRED(HttpStatus.BAD_REQUEST, "강의 시간 정보가 필요합니다"),
     TIME_SLOTS_CANNOT_BE_NULL(HttpStatus.BAD_REQUEST, "강의 시간 정보는 null일 수 없습니다"),
     TIME_SLOTS_CANNOT_BE_EMPTY(HttpStatus.BAD_REQUEST, "강의 시간 정보는 비워둘 수 없습니다"),
+
+    // Upload
+    UPLOAD_FILE_EMPTY(HttpStatus.BAD_REQUEST, "업로드할 파일이 없습니다"),
+    UPLOAD_UNSUPPORTED_MEDIA_TYPE(HttpStatus.BAD_REQUEST, "지원하지 않는 파일 형식입니다"),
+    UPLOAD_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다"),
 }

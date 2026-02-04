@@ -104,3 +104,12 @@ oauth2:
     client-id: ${NAVER_CLIENT_ID}
     client-secret: ${NAVER_CLIENT_SECRET}
     redirect-uri: "https://hangsha.site/login/callback/naver"
+
+# Image upload (local static)
+upload:
+  # 실제 파일이 저장될 디렉토리(컨테이너/EC2 내부 경로)
+  dir: ${UPLOAD_DIR:/data/uploads}
+  # 클라이언트에 돌려줄 공개 URL prefix
+  # 예) https://api.example.com/static
+  public-base-url: ${UPLOAD_PUBLIC_BASE_URL}
+  max-size-bytes: ${UPLOAD_MAX_SIZE_BYTES:10485760}

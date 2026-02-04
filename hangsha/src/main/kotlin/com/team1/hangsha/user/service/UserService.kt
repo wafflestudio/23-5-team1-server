@@ -261,4 +261,18 @@ class UserService(
             throw DomainException(ErrorCode.INVALID_REQUEST, "profileImageUrl이 유효한 URL이 아닙니다")
         }
     }
+
+    fun getMe(userId: Long): UserDto {
+        val user = userRepository.findById(userId)
+            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
+        return UserDto(user)
+    }
+
+    fun updateProfileImageUrl(userId: Long, profileImageUrl: String) {
+        val user = userRepository.findById(userId)
+            .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
+
+        user.profileImageUrl = profileImageUrl
+        userRepository.save(user)
+    }
 }
