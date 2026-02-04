@@ -281,10 +281,10 @@ class DataGenerator(
     // Tags / Memos
     // ----------------------------
 
-    fun generateTag(name: String? = null): Tag {
+    fun generateTag(userId: Long, name: String? = null): Tag {
         val n = next()
         return tagRepository.save(
-            Tag(name = name ?: "tag-$n"),
+            Tag(userId = userId, name = name ?: "tag-$n"),
         )
     }
 

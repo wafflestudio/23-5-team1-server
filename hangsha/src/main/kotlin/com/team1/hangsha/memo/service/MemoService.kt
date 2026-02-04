@@ -13,12 +13,15 @@ import com.team1.hangsha.tag.model.Tag
 import com.team1.hangsha.tag.repository.TagRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.ObjectMapper
 
 @Service
 class MemoService(
     private val memoRepository: MemoRepository,
     private val tagRepository: TagRepository,
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val objectMapper: ObjectMapper,
 ) {
 
     @Transactional
@@ -42,32 +45,65 @@ class MemoService(
     }
 
     @Transactional
-    fun updateMemo(userId: Long, memoId: Long, req: UpdateMemoRequest): MemoResponse {
+    fun updateMemo(userId: Long, memoId: Long, body: JsonNode): MemoResponse {
         val memo = memoRepository.findById(memoId)
-            .orElseThrow { DomainException(ErrorCode.MEMO_NOT_FOUND) } // MEMO_NOT_FOUND 필요
+            .orElseThrow { DomainException(ErrorCode.MEMO_NOT_FOUND) }
 
         if (memo.userId != userId) {
-            throw DomainException(ErrorCode.MEMO_NOT_FOUND) // 권한 없음 처리
+            throw DomainException(ErrorCode.MEMO_NOT_FOUND)
         }
 
-        // 태그 업데이트 (기존 태그 갈아끼우기)
-        val newTagRefs = resolveTags(userId, req.tagNames)
+        val hasContent = body.has("content")
+        val hasTagNames = body.has("tagNames")
 
-        // 메모 내용 및 태그 업데이트
+        // 둘 다 미포함이면 PATCH empty
+        if (!hasContent && !hasTagNames) {
+            // 너희 코드 스타일대로 에러코드 하나 만들기 추천
+            throw DomainException(ErrorCode.INVALID_REQUEST)
+        }
+
+        val req = try {
+            objectMapper.treeToValue(body, UpdateMemoRequest::class.java)
+        } catch (e: Exception) {
+            throw DomainException(ErrorCode.INVALID_REQUEST, "Invalid request body")
+        }
+
+        // -------- content 정책: 미포함=변경없음 / null=비우기 / 값=업데이트 --------
+        val nextContent: String =
+            if (!hasContent) {
+                memo.content
+            } else {
+                // null이면 비우기 의도
+                (req.content ?: "").trimEnd() // trim 정책이 필요 없으면 그냥 (req.content ?: "")
+            }
+
+        // -------- tagNames 정책: 미포함=변경없음 / null=비우기 / 값=replace-all --------
+        val nextTags =
+            if (!hasTagNames) {
+                memo.tags
+            } else {
+                val namesOrNull = req.tagNames
+                if (namesOrNull == null) {
+                    emptySet()
+                } else {
+                    resolveTags(userId, namesOrNull) // distinct는 resolveTags 내부에서 하고 있지? 지금 코드에 distinct() 있음
+                }
+            }
+
         val updatedMemo = memoRepository.save(
             memo.copy(
-                content = req.content,
-                tags = newTagRefs
+                content = nextContent,
+                tags = nextTags
             )
         )
 
-        // Event Title 조회 (응답용)
         val eventTitle = eventRepository.findById(updatedMemo.eventId)
             .map { it.title }
             .orElse("Unknown Event")
 
         return mapToMemoResponse(updatedMemo, eventTitle)
     }
+
 
     @Transactional
     fun deleteMemo(userId: Long, memoId: Long) {
@@ -79,6 +115,7 @@ class MemoService(
         }
 
         memoRepository.delete(memo)
+        // 끝. 태그는 건드리지 않는다.
     }
 
     @Transactional(readOnly = true)
@@ -89,6 +126,22 @@ class MemoService(
             val eventTitle = eventRepository.findById(memo.eventId)
                 .map { it.title }
                 .orElse("Unknown Event")
+            mapToMemoResponse(memo, eventTitle)
+        }
+    }
+
+    @Transactional(readOnly = true)
+    fun findMemosByTagId(userId: Long, tagId: Long): List<MemoResponse> {
+        val tag = tagRepository.findById(tagId).orElseThrow { DomainException(ErrorCode.TAG_NOT_FOUND) }
+        if (tag.userId != userId) throw DomainException(ErrorCode.TAG_NOT_FOUND)
+
+        val memos = memoRepository.findAllByUserIdAndTagId(userId, tagId)
+
+        return memos.map { memo ->
+            val eventTitle = eventRepository.findById(memo.eventId)
+                .map { it.title }
+                .orElse("Unknown Event")
+
             mapToMemoResponse(memo, eventTitle)
         }
     }

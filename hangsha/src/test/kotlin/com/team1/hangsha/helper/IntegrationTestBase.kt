@@ -15,6 +15,13 @@ import org.springframework.test.web.servlet.MockMvc
         "jwt.secret=v3rys3cr3tk3y_must_be_l0ng_enough_to_be_secure_minimum_256_bits__test",
         "jwt.access-expiration-ms=3600000",
         "jwt.refresh-expiration-ms=1209600000",
+
+        "GOOGLE_CLIENT_ID=test-google-client-id",
+        "GOOGLE_CLIENT_SECRET=test-google-client-secret",
+        "NAVER_CLIENT_ID=test-naver-client-id",
+        "NAVER_CLIENT_SECRET=test-naver-client-secret",
+        "KAKAO_CLIENT_ID=test-kakao-client-id",
+        "KAKAO_CLIENT_SECRET=test-kakao-client-secret",
     ],
 )
 abstract class IntegrationTestBase {
