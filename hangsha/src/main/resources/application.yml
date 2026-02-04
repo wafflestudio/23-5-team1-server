@@ -64,6 +64,10 @@ spring:
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
 
+auth:
+  refresh-cookie:
+    secure: false
+    same-site: Lax
 
 # Swagger UI http://localhost:8080/swagger-ui/index.html
 springdoc:
