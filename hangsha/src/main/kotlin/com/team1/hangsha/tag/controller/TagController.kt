@@ -16,7 +16,7 @@ class TagController(
     @GetMapping
     fun getAllTags(@LoggedInUser user: User): ResponseEntity<ListTagResponse> {
         val tags = tagService.getAllTags(user.id!!)
-        return ResponseEntity.ok(ListTagResponse(tags))
+        return ResponseEntity.ok(ListTagResponse(items = tags))
     }
 
     @PostMapping

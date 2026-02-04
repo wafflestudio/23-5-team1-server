@@ -63,7 +63,7 @@ class MemoService(
         }
 
         val req = try {
-            objectMapper.treeToValue(body, UpdateMemoPatchRequest::class.java)
+            objectMapper.treeToValue(body, UpdateMemoRequest::class.java)
         } catch (e: Exception) {
             throw DomainException(ErrorCode.INVALID_REQUEST, "Invalid request body")
         }

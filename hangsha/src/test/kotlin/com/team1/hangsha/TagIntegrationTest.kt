@@ -40,14 +40,14 @@ class TagIntegrationTest : IntegrationTestBase() {
         )
             .andExpect(status().isOk)
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.tags").isArray)
-            .andExpect(jsonPath("$.tags.length()").value(2))
+            .andExpect(jsonPath("$.items").isArray)
+            .andExpect(jsonPath("$.items.length()").value(2))
             .andReturn()
 
         val root = objectMapper.readTree(res.response.contentAsString)
-        val tags = root["tags"]
-        val ids = tags.map { it["id"].asLong() }.toSet()
-        val names = tags.map { it["name"].asText() }.toSet()
+        val items = root["items"]
+        val ids = items.map { it["id"].asLong() }.toSet()
+        val names = items.map { it["name"].asText() }.toSet()
 
         assertEquals(setOf(requireNotNull(a1.id), requireNotNull(a2.id)), ids)
         assertEquals(setOf("A1", "A2"), names)
@@ -57,8 +57,8 @@ class TagIntegrationTest : IntegrationTestBase() {
                 .header("Authorization", bearer(tokenB))
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.tags.length()").value(1))
-            .andExpect(jsonPath("$.tags[0].name").value("B1"))
+            .andExpect(jsonPath("$.items.length()").value(1))
+            .andExpect(jsonPath("$.items[0].name").value("B1"))
     }
 
     @Test
@@ -255,8 +255,8 @@ class TagIntegrationTest : IntegrationTestBase() {
                 .header("Authorization", bearer(tokenB))
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.tags[*].name", hasItem("same")))
-            .andExpect(jsonPath("$.tags[*].name", not(hasItem("changed"))))
+            .andExpect(jsonPath("$.items[*].name", hasItem("same")))
+            .andExpect(jsonPath("$.items[*].name", not(hasItem("changed"))))
     }
 
     @Test
@@ -323,7 +323,7 @@ class TagIntegrationTest : IntegrationTestBase() {
                 .header("Authorization", bearer(tokenB))
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.tags[*].name", hasItem("same")))
+            .andExpect(jsonPath("$.items[*].name", hasItem("same")))
     }
 
     @Test

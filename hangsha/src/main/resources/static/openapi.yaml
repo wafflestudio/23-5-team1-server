@@ -406,100 +406,155 @@ components:
               items: { $ref: '#/components/schemas/EventDto' }
 
     # ---------------- Memos ----------------
-    MemoDto:
-      type: object
-      required: [id, eventId, content, createdAt, updatedAt]
-      properties:
-        id: { type: integer, format: int64 }
-        eventId: { type: integer, format: int64 }
-        content: { type: string }
-        tags:
-          type: array
-          items: { $ref: '#/components/schemas/TagDto' }
-        createdAt: { type: string, format: date-time }
-        updatedAt: { type: string, format: date-time }
-
     CreateMemoRequest:
       type: object
-      required: [eventId, content]
+      required: [ eventId, content ]
       properties:
-        eventId: { type: integer, format: int64 }
-        content: { type: string, minLength: 1 }
-        tagIds:
+        eventId:
+          type: integer
+          format: int64
+          example: 160
+        content:
+          type: string
+          example: "memo-content"
+        tagNames:
           type: array
-          items: { type: integer, format: int64 }
-          nullable: true
+          items:
+            type: string
+          default: [ ]
+          example: [ "t1", "t2" ]
 
-    CreateMemoResponse:
-      type: object
-      required: [id]
-      properties:
-        id: { type: integer, format: int64 }
-
+      # PATCH는 JsonNode 기반이라 "필드 미포함/ null / 값" 정책을 명확히 문서화
     UpdateMemoRequest:
       type: object
+      additionalProperties: false
       properties:
-        content: { type: string, nullable: true }
-        tagIds:
-          type: array
-          items: { type: integer, format: int64 }
+        content:
+          type: string
           nullable: true
-      description: "content/tagIds 중 하나 이상 변경"
+          description: |
+            - 미포함: 변경 없음
+            - null: 값 비우기 (""로 저장)
+            - string: 해당 값으로 업데이트
+          example: "updated-content"
+        tagNames:
+          type: array
+          nullable: true
+          description: |
+            - 미포함: 변경 없음
+            - null: 태그 전부 제거
+            - array: replace-all (중복은 distinct 처리)
+          items:
+            type: string
+          example: [ "shared", "other" ]
 
-    UpdateMemoResponse:
+    MemoResponse:
       type: object
-      required: [id]
+      required: [ id, eventId, eventTitle, content, tags ]
       properties:
-        id: { type: integer, format: int64 }
+        id:
+          type: integer
+          format: int64
+          example: 70
+        eventId:
+          type: integer
+          format: int64
+          example: 160
+        eventTitle:
+          type: string
+          example: "EV1"
+        content:
+          type: string
+          example: "m1"
+        tags:
+          type: array
+          items:
+            type: string
+          example: [ "shared", "other" ]
+        createdAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-02-04T06:56:14.227038Z"
+        updatedAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2026-02-04T06:56:14.248542Z"
 
     ListMemoResponse:
       type: object
-      required: [items]
+      required: [ items ]
       properties:
         items:
           type: array
-          items: { $ref: '#/components/schemas/MemoDto' }
+          items:
+            $ref: "#/components/schemas/MemoResponse"
 
     # ---------------- Tags ----------------
-    TagDto:
+    Tag:
       type: object
-      required: [id, name]
+      required: [ id, name ]
       properties:
-        id: { type: integer, format: int64 }
-        name: { type: string }
-
-    CreateTagRequest:
-      type: object
-      required: [name]
-      properties:
-        name: { type: string, minLength: 1 }
-
-    CreateTagResponse:
-      type: object
-      required: [id]
-      properties:
-        id: { type: integer, format: int64 }
-
-    UpdateTagRequest:
-      type: object
-      required: [name]
-      properties:
-        name: { type: string, minLength: 1 }
-
-    UpdateTagResponse:
-      type: object
-      required: [id, name]
-      properties:
-        id: { type: integer, format: int64 }
-        name: { type: string }
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "shared"
 
     ListTagResponse:
-      type: object
-      required: [items]
-      properties:
-        items:
-          type: array
-          items: { $ref: '#/components/schemas/TagDto' }
+        type: object
+        required: [ items ]
+        properties:
+          items:
+            type: array
+            items:
+              $ref: "#/components/schemas/Tag"
+
+    CreateTagRequest:
+        type: object
+        additionalProperties: false
+        required: [ name ]
+        properties:
+          name:
+            type: string
+            example: "new-tag"
+
+    CreateTagResponse:
+        type: object
+        required: [ id, name ]
+        properties:
+          id:
+            type: integer
+            format: int64
+            example: 10
+          name:
+            type: string
+            example: "new-tag"
+
+    UpdateTagRequest:
+        type: object
+        additionalProperties: false
+        required: [ name ]
+        properties:
+          name:
+            type: string
+            example: "changed"
+
+    UpdateTagResponse:
+        type: object
+        required: [ id, name ]
+        properties:
+          id:
+            type: integer
+            format: int64
+            example: 1
+          name:
+            type: string
+            example: "changed"
+
 
     # ---------------- Timetables / Courses ----------------
     CreateTimetableRequest:
@@ -1148,133 +1203,365 @@ paths:
 
   # ---------------- Memos ----------------
   /memos:
-    get:
-      tags: [Memos]
-      summary: 내 메모 목록
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: query
-          name: eventId
-          schema: { type: integer, format: int64 }
-          description: "특정 이벤트의 메모만 보고 싶으면"
+    post:
+      tags: [ Memos ]
+      summary: Create memo
+      description: |
+        메모를 생성합니다.
+        - tagNames에 포함된 태그가 없어도 생성
+        - tagNames는 유저 스코프이며 중복 입력은 distinct 처리됩니다. (중복 입력 처리 따로 안 해도 됨)
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMemoRequest"
       responses:
         "200":
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ListMemoResponse' }
-    post:
-      tags: [Memos]
-      summary: 메모 생성
-      security: [{ bearerAuth: [] }]
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/CreateMemoRequest' }
-      responses:
-        "201":
-          description: Created
+              schema:
+                $ref: "#/components/schemas/MemoResponse"
+        "401":
+          description: Unauthorized
+        "404":
+          description: EVENT_NOT_FOUND
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CreateMemoResponse' }
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              examples:
+                eventNotFound:
+                  value:
+                    code: EVENT_NOT_FOUND
+                    message: "행사를 찾을 수 없습니다"
+
+    get:
+      tags: [ Memos ]
+      summary: Get my memos
+      description: 내 메모를 createdAt 내림차순으로 반환합니다.
+      security:
+        - bearerAuth: [ ]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListMemoResponse"
+        "401":
+          description: Unauthorized
+
+  /memos/by-tag/{tagId}:
+      get:
+        tags: [ Memos ]
+        summary: Get my memos by tag
+        description: |
+          특정 태그(tagId)를 가진 내 메모 목록을 반환합니다.
+          - tagId가 존재하지 않거나, 내 태그가 아니면 TAG_NOT_FOUND(404)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: tagId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            example: 123
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ListMemoResponse"
+          "401":
+            description: Unauthorized
+          "404":
+            description: TAG_NOT_FOUND
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+                examples:
+                  tagNotFound:
+                    value:
+                      code: TAG_NOT_FOUND
+                      message: "태그를 찾을 수 없습니다"
 
   /memos/{memoId}:
-    patch:
-      tags: [Memos]
-      summary: 메모 수정
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: memoId
+      patch:
+        tags: [ Memos ]
+        summary: Update memo (patch)
+        description: |
+          메모를 부분 수정합니다.
+
+          **PATCH 정책**
+          - 필드 미포함: 변경 없음
+          - content: null → 값 비우기 ("" 저장)
+          - tagNames: null → 태그 전부 제거
+          - tagNames: array → replace-all (중복은 distinct)
+
+          ※ content, tagNames 둘 다 미포함이면 INVALID_REQUEST
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: memoId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            example: 70
+        requestBody:
           required: true
-          schema: { type: integer, format: int64 }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateMemoRequest' }
-      responses:
-        "200":
-          description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/UpdateMemoResponse' }
-    delete:
-      tags: [Memos]
-      summary: 메모 삭제
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: memoId
-          required: true
-          schema: { type: integer, format: int64 }
-      responses:
-        "204": { description: No Content }
+              schema:
+                $ref: "#/components/schemas/UpdateMemoRequest"
+              examples:
+                updateContentOnly:
+                  value:
+                    content: "new content"
+                clearContent:
+                  value:
+                    content: null
+                replaceTags:
+                  value:
+                    tagNames: [ "shared", "other" ]
+                clearTags:
+                  value:
+                    tagNames: null
+                updateBoth:
+                  value:
+                    content: "updated"
+                    tagNames: [ "t1", "t2" ]
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/MemoResponse"
+          "400":
+            description: INVALID_REQUEST
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+                examples:
+                  invalidRequest:
+                    value:
+                      code: INVALID_REQUEST
+                      message: "잘못된 요청입니다"
+          "401":
+            description: Unauthorized
+          "404":
+            description: MEMO_NOT_FOUND
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+                examples:
+                  memoNotFound:
+                    value:
+                      code: MEMO_NOT_FOUND
+                      message: "메모를 찾을 수 없습니다"
+
+      delete:
+        tags: [ Memos ]
+        summary: Delete memo
+        description: |
+          메모를 삭제합니다.
+          - memo_tags는 FK cascade로 함께 삭제됩니다.
+          - tags 테이블의 태그는 삭제하지 않습니다. (명시적 삭제만)
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - name: memoId
+            in: path
+            required: true
+            schema:
+              type: integer
+              format: int64
+            example: 70
+        responses:
+          "204":
+            description: No Content
+          "401":
+            description: Unauthorized
+          "404":
+            description: MEMO_NOT_FOUND
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+                examples:
+                  memoNotFound:
+                    value:
+                      code: MEMO_NOT_FOUND
+                      message: "메모를 찾을 수 없습니다"
 
   # ---------------- Tags ----------------
   /tags:
     get:
-      tags: [Tags]
-      summary: 태그 목록
-      parameters:
-        - in: query
-          name: q
-          schema: { type: string }
+      summary: 내 태그 전체 조회
+      description: 로그인한 사용자의 태그 목록을 반환합니다.
+      tags: [ Tags ]
+      security:
+        - bearerAuth: [ ]
       responses:
         "200":
           description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/ListTagResponse' }
+              schema:
+                $ref: "#/components/schemas/ListTagResponse"
+              examples:
+                success:
+                  value:
+                    items:
+                      - id: 1
+                        name: "shared"
+                      - id: 2
+                        name: "other"
+        "401":
+          description: Unauthorized (토큰 없음/만료)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
     post:
-      tags: [Tags]
       summary: 태그 생성
-      security: [{ bearerAuth: [] }]
+      description: 로그인한 사용자의 태그를 생성합니다. 동일 유저 내 중복 이름은 409입니다.
+      tags: [ Tags ]
+      security:
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
           application/json:
-            schema: { $ref: '#/components/schemas/CreateTagRequest' }
+            schema:
+              $ref: "#/components/schemas/CreateTagRequest"
+            examples:
+              example:
+                value:
+                  name: "new-tag"
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/CreateTagResponse' }
+              schema:
+                $ref: "#/components/schemas/CreateTagResponse"
+              examples:
+                success:
+                  value:
+                    id: 10
+                    name: "new-tag"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: TAG_ALREADY_EXISTS
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /tags/{tagId}:
-    patch:
-      tags: [Tags]
-      summary: 태그 수정
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: tagId
+      patch:
+        summary: 태그 이름 수정
+        description: 로그인한 사용자가 소유한 태그의 이름을 수정합니다.
+        tags: [ Tags ]
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - in: path
+            name: tagId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            example: 1
+        requestBody:
           required: true
-          schema: { type: integer, format: int64 }
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema: { $ref: '#/components/schemas/UpdateTagRequest' }
-      responses:
-        "200":
-          description: OK
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/UpdateTagResponse' }
-    delete:
-      tags: [Tags]
-      summary: 태그 삭제
-      security: [{ bearerAuth: [] }]
-      parameters:
-        - in: path
-          name: tagId
-          required: true
-          schema: { type: integer, format: int64 }
-      responses:
-        "204": { description: No Content }
+              schema:
+                $ref: "#/components/schemas/UpdateTagRequest"
+              examples:
+                example:
+                  value:
+                    name: "changed"
+        responses:
+          "200":
+            description: OK
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/UpdateTagResponse"
+                examples:
+                  success:
+                    value:
+                      id: 1
+                      name: "changed"
+          "401":
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "404":
+            description: TAG_NOT_FOUND (없거나 내 소유가 아님)
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "409":
+            description: TAG_ALREADY_EXISTS (내 다른 태그와 이름 중복)
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+
+      delete:
+        summary: 태그 삭제
+        description: 로그인한 사용자가 소유한 태그를 삭제합니다.
+        tags: [ Tags ]
+        security:
+          - bearerAuth: [ ]
+        parameters:
+          - in: path
+            name: tagId
+            required: true
+            schema:
+              type: integer
+              format: int64
+            example: 1
+        responses:
+          "204":
+            description: No Content
+          "401":
+            description: Unauthorized
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
+          "404":
+            description: TAG_NOT_FOUND (없거나 내 소유가 아님)
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ErrorResponse"
 
   # ---------------- Timetables ----------------
   /timetables:
