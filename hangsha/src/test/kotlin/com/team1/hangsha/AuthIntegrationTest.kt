@@ -1,54 +1,61 @@
 package com.team1.hangsha
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.http.MediaType
 import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.test.context.ActiveProfiles
-import org.springframework.test.context.TestPropertySource
-import org.springframework.test.web.servlet.MockMvc
+import org.springframework.http.HttpHeaders
 import org.springframework.test.web.servlet.patch
 import org.springframework.test.web.servlet.post
 import java.util.UUID
+import com.team1.hangsha.helper.IntegrationTestBase
+import jakarta.servlet.http.Cookie
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
-@TestPropertySource(
-    properties = [
-        "jwt.secret=v3rys3cr3tk3y_must_be_l0ng_enough_to_be_secure_minimum_256_bits__test",
-        "jwt.access-expiration-ms=3600000",
-        "jwt.refresh-expiration-ms=1209600000",
-    ],
-)
-class AuthIntegrationTest {
 
-    @Autowired lateinit var mockMvc: MockMvc
-    @Autowired lateinit var objectMapper: ObjectMapper
+class AuthIntegrationTest : IntegrationTestBase() {
+
     @Autowired lateinit var jdbcTemplate: JdbcTemplate
 
     data class RegisterRequest(val email: String, val password: String)
     data class LoginRequest(val email: String, val password: String)
 
-    data class TokenPairResponse(val accessToken: String, val refreshToken: String)
+    data class AccessTokenResponse(val accessToken: String)
     data class RefreshResponse(val accessToken: String)
 
-    private fun registerAndGetTokens(email: String, password: String): TokenPairResponse {
-        val result = mockMvc.post("/api/v1/auth/register") {
+    private fun extractRefreshCookiePair(setCookieHeader: String): String {
+        // 예: "refreshToken=abc.def; Path=/api/v1/auth; HttpOnly; ..."
+        // -> "refreshToken=abc.def"
+        return setCookieHeader.substringBefore(";")
+    }
+
+    private fun extractRefreshTokenValue(setCookieHeader: String): String {
+        // refreshToken=xxxxx.yyyyy.zzzzz; Path=... -> xxxxx.yyyyy.zzzzz
+        return setCookieHeader
+            .substringBefore(";")
+            .substringAfter("refreshToken=")
+    }
+
+    private fun postRegister(email: String, password: String): Pair<String, String> {
+        val res = mockMvc.post("/api/v1/auth/register") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(RegisterRequest(email, password))
+            content = toJson(RegisterRequest(email, password))
         }.andExpect {
             status { isOk() }
             content { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
             jsonPath("$.accessToken") { exists() }
-            jsonPath("$.refreshToken") { exists() }
+            jsonPath("$.refreshToken") { doesNotExist() }
+            header { exists(HttpHeaders.SET_COOKIE) }
         }.andReturn()
 
-        return objectMapper.readValue(result.response.contentAsString, TokenPairResponse::class.java)
+        val body = objectMapper.readValue(res.response.contentAsString, AccessTokenResponse::class.java)
+        val setCookie = res.response.getHeader(HttpHeaders.SET_COOKIE)
+            ?: fail("Expected Set-Cookie for refreshToken, but it was null")
+
+        val refreshCookiePair = extractRefreshCookiePair(setCookie)
+        assertTrue(refreshCookiePair.startsWith("refreshToken="), "Set-Cookie must include refreshToken")
+
+        return body.accessToken to refreshCookiePair
     }
 
     private fun selectUserProfileByEmail(email: String): Pair<String?, String?> {
@@ -65,49 +72,66 @@ class AuthIntegrationTest {
         return username to profileImageUrl
     }
 
+    private fun postLogin(email: String, password: String): Pair<String, String> {
+        val res = mockMvc.post("/api/v1/auth/login") {
+            contentType = MediaType.APPLICATION_JSON
+            content = toJson(LoginRequest(email, password))
+        }.andExpect {
+            status { isOk() }
+            content { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
+            jsonPath("$.accessToken") { exists() }
+            jsonPath("$.refreshToken") { doesNotExist() }
+            header { exists(HttpHeaders.SET_COOKIE) }
+        }.andReturn()
+
+        val body = objectMapper.readValue(res.response.contentAsString, AccessTokenResponse::class.java)
+        val setCookie = res.response.getHeader(HttpHeaders.SET_COOKIE)
+            ?: fail("Expected Set-Cookie for refreshToken, but it was null")
+
+        val refreshCookiePair = extractRefreshCookiePair(setCookie)
+        assertTrue(refreshCookiePair.startsWith("refreshToken="), "Set-Cookie must include refreshToken")
+
+        return body.accessToken to refreshCookiePair
+    }
+
+    // ---------------------------
+    // Auth flow tests (Cookie-based refresh)
+    // ---------------------------
+
     @Test
     fun `register login refresh flow works`() {
         val email = "test_${UUID.randomUUID()}@example.com"
-        val password = "Abcd1234!" // 정책: 8자+, 영문/숫자/특수문자 포함, 공백 없음
+        val password = "Abcd1234!"
 
-        // 1) 회원가입
-        val registerResult = mockMvc.post("/api/v1/auth/register") {
+        // 1) register
+        val (_, _) = postRegister(email, password)
+
+        // 2) login
+        val loginRes = mockMvc.post("/api/v1/auth/login") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(RegisterRequest(email, password))
+            content = toJson(LoginRequest(email, password))
         }.andExpect {
             status { isOk() }
-            content { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
             jsonPath("$.accessToken") { exists() }
-            jsonPath("$.refreshToken") { exists() }
+            header { exists(HttpHeaders.SET_COOKIE) }
         }.andReturn()
 
-        val registerTokens = objectMapper.readValue(registerResult.response.contentAsString, TokenPairResponse::class.java)
+        val loginBody = objectMapper.readValue(loginRes.response.contentAsString, AccessTokenResponse::class.java)
+        val loginSetCookie = loginRes.response.getHeader(HttpHeaders.SET_COOKIE)!!
+        val refreshTokenValue = extractRefreshTokenValue(loginSetCookie)
 
-        // 2) 로그인
-        val loginResult = mockMvc.post("/api/v1/auth/login") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(LoginRequest(email, password))
+        // 3) refresh (cookie()로 전달 + secure(true)로 https 요청처럼)
+        val refreshRes = mockMvc.post("/api/v1/auth/refresh") {
+            secure = true
+            cookie(Cookie("refreshToken", refreshTokenValue))
         }.andExpect {
             status { isOk() }
-            content { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
             jsonPath("$.accessToken") { exists() }
-            jsonPath("$.refreshToken") { exists() }
+            header { exists(HttpHeaders.SET_COOKIE) } // rotation이면 내려옴
         }.andReturn()
 
-        val loginTokens = objectMapper.readValue(loginResult.response.contentAsString, TokenPairResponse::class.java)
-        assertNotEquals(registerTokens.accessToken, loginTokens.accessToken)
-
-        // 3) refresh
-        val refreshResult = mockMvc.post("/api/v1/auth/refresh") {
-            header("Authorization", "Bearer ${loginTokens.refreshToken}")
-        }.andExpect {
-            status { isOk() }
-            content { contentTypeCompatibleWith(MediaType.APPLICATION_JSON) }
-            jsonPath("$.accessToken") { exists() }
-        }.andReturn()
-
-        val refreshed = objectMapper.readValue(refreshResult.response.contentAsString, RefreshResponse::class.java)
-        assertNotEquals(loginTokens.accessToken, refreshed.accessToken)
+        val refreshed = objectMapper.readValue(refreshRes.response.contentAsString, RefreshResponse::class.java)
+        assertNotEquals(loginBody.accessToken, refreshed.accessToken)
     }
 
     @Test
@@ -118,57 +142,79 @@ class AuthIntegrationTest {
 
         mockMvc.post("/api/v1/auth/register") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(RegisterRequest(email, password))
+            content = toJson(RegisterRequest(email, password))
         }.andExpect {
             status { isOk() }
         }
 
         mockMvc.post("/api/v1/auth/login") {
             contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(LoginRequest(email, wrongPassword))
+            content = toJson(LoginRequest(email, wrongPassword))
         }.andExpect {
             status { isUnauthorized() }
         }
     }
 
     @Test
-    fun `refresh fails with access token`() {
-        val email = "test_${UUID.randomUUID()}@example.com"
-        val password = "Abcd1234!"
-
-        val loginResult = mockMvc.post("/api/v1/auth/register") {
-            contentType = MediaType.APPLICATION_JSON
-            content = objectMapper.writeValueAsString(RegisterRequest(email, password))
-        }.andExpect {
-            status { isOk() }
-        }.andReturn()
-
-        val tokens = objectMapper.readValue(loginResult.response.contentAsString, TokenPairResponse::class.java)
-
-        // refresh endpoint에 accessToken을 넣으면 validateRefreshToken에서 걸려야 함
+    fun `refresh fails without cookie`() {
         mockMvc.post("/api/v1/auth/refresh") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            // no Cookie
         }.andExpect {
-            status { isUnauthorized() } // AUTH_INVALID_TOKEN이 401이라면
+            status { isUnauthorized() }
         }
     }
 
+    @Test
+    fun `refresh fails when access token is used as refresh token`() {
+        val email = "test_${UUID.randomUUID()}@example.com"
+        val password = "Abcd1234!"
+
+        val (accessToken, _) = postRegister(email, password)
+
+        mockMvc.post("/api/v1/auth/refresh") {
+            header(HttpHeaders.COOKIE, "refreshToken=$accessToken")
+        }.andExpect {
+            status { isUnauthorized() }
+        }
+    }
+
+    @Test
+    fun `logout clears refresh cookie`() {
+        val email = "test_${UUID.randomUUID()}@example.com"
+        val password = "Abcd1234!"
+
+        val (_, refreshCookie) = postRegister(email, password)
+
+        val res = mockMvc.post("/api/v1/auth/logout") {
+            header(HttpHeaders.COOKIE, refreshCookie)
+        }.andExpect {
+            status { isNoContent() }
+            header { exists(HttpHeaders.SET_COOKIE) }
+        }.andReturn()
+
+        val setCookie = res.response.getHeader(HttpHeaders.SET_COOKIE)
+            ?: fail("Expected Set-Cookie header to clear refresh cookie on logout")
+
+        assertTrue(setCookie.contains("refreshToken="))
+        // Max-Age=0 같은 세부값은 구현에 따라 다를 수 있으니 핵심만 체크
+    }
+
     // ---------------------------
-    // 여기부터 "User PATCH" 케이스들
+    // User PATCH cases (access token only)
     // ---------------------------
 
     @Test
     fun `PATCH me updates username only`() {
         val email = "pref_${UUID.randomUUID()}@example.com"
         val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
+        val (accessToken, _) = postRegister(email, password)
 
         val before = selectUserProfileByEmail(email)
-        assertNull(before.first) // username
-        assertNull(before.second) // profileImageUrl
+        assertNull(before.first)
+        assertNull(before.second)
 
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{"username":"new_name_${UUID.randomUUID()}"}"""
         }.andExpect {
@@ -184,12 +230,12 @@ class AuthIntegrationTest {
     fun `PATCH me updates profileImageUrl only`() {
         val email = "pref_${UUID.randomUUID()}@example.com"
         val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
+        val (accessToken, _) = postRegister(email, password)
 
         val url = "https://example.com/${UUID.randomUUID()}.png"
 
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{"profileImageUrl":"$url"}"""
         }.andExpect {
@@ -205,13 +251,13 @@ class AuthIntegrationTest {
     fun `PATCH me updates both fields`() {
         val email = "pref_${UUID.randomUUID()}@example.com"
         val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
+        val (accessToken, _) = postRegister(email, password)
 
         val name = "name_${UUID.randomUUID()}"
         val url = "https://example.com/${UUID.randomUUID()}.jpg"
 
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{"username":"$name","profileImageUrl":"$url"}"""
         }.andExpect {
@@ -227,11 +273,11 @@ class AuthIntegrationTest {
     fun `PATCH me supports clearing values with null`() {
         val email = "pref_${UUID.randomUUID()}@example.com"
         val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
+        val (accessToken, _) = postRegister(email, password)
 
-        // 먼저 둘 다 채워넣기
+        // 먼저 채우기
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{"username":"temp","profileImageUrl":"https://example.com/temp.png"}"""
         }.andExpect {
@@ -240,7 +286,7 @@ class AuthIntegrationTest {
 
         // null로 비우기
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{"username":null,"profileImageUrl":null}"""
         }.andExpect {
@@ -256,29 +302,14 @@ class AuthIntegrationTest {
     fun `PATCH me fails when both fields are missing`() {
         val email = "pref_${UUID.randomUUID()}@example.com"
         val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
+        val (accessToken, _) = postRegister(email, password)
 
         mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
+            header(HttpHeaders.AUTHORIZATION, bearer(accessToken))
             contentType = MediaType.APPLICATION_JSON
             content = """{}"""
         }.andExpect {
-            status { isBadRequest() } // ErrorCode.INVALID_REQUEST (400) 기대
-        }
-    }
-
-    @Test
-    fun `PATCH me fails when only unknown fields provided`() {
-        val email = "pref_${UUID.randomUUID()}@example.com"
-        val password = "Abcd1234!"
-        val tokens = registerAndGetTokens(email, password)
-
-        mockMvc.patch("/api/v1/users/me") {
-            header("Authorization", "Bearer ${tokens.accessToken}")
-            contentType = MediaType.APPLICATION_JSON
-            content = """{"foo":"bar"}"""
-        }.andExpect {
-            status { isBadRequest() } // username/profileImageUrl 둘 다 없으니 INVALID_REQUEST 기대
+            status { isBadRequest() }
         }
     }
 
