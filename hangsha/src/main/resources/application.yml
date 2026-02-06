@@ -104,5 +104,5 @@ oauth2:
 
 upload:
   dir: ${UPLOAD_DIR:/data/uploads}
-  public-base-url: ${UPLOAD_PUBLIC_BASE_URL:http://13.125.246.220:8080/static}
+  public-base-url: ${UPLOAD_PUBLIC_BASE_URL:https://hangsha.site/static}
   max-size-bytes: ${UPLOAD_MAX_SIZE_BYTES:10485760}
