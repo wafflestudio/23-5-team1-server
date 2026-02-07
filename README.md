@@ -40,7 +40,7 @@ https://hangsha.site/
 | 정혜인 | @aystoe | Backend |
 
 ### 기술 스택
-- Frontend: React, TS, ...
+- Frontend: React, TS
 - Backend: Spring Boot, MySQL, Flyway, Docker, AWS S3, Nginx
 - Data Crawling: OKHttp, Playwright 
 
@@ -80,9 +80,18 @@ https://hangsha.site/
 ### 시간표 및 수업 추가
 <img width="2544" height="1260" alt="image" src="https://github.com/user-attachments/assets/0591e8d6-b342-47e0-b699-990446831bbd" />
 
+### 검색
+<img width="911" height="693" alt="image" src="https://github.com/user-attachments/assets/36e4a93a-a1b7-4175-bda9-0c98f151b532" />
+<img width="1173" height="692" alt="image" src="https://github.com/user-attachments/assets/3d2676d3-409b-4fb9-8efe-e04915f82e71" />
+
 ### 마이페이지
 
 ### 북마크
+<img width="1169" height="696" alt="image" src="https://github.com/user-attachments/assets/d5b30f49-a03a-42b7-8277-63af5755e63e" />
 
 ### 후기 작성 : 메모, 태그
+<img width="1168" height="693" alt="image" src="https://github.com/user-attachments/assets/23330d5b-0f5c-4500-9cc5-38a23e0723da" />
+<img width="422" height="695" alt="image" src="https://github.com/user-attachments/assets/dcd4c47b-762d-4092-8209-0428eeef66c8" />
+
+<img width="1170" height="691" alt="image" src="https://github.com/user-attachments/assets/4a74b3ee-0766-4c20-b3b2-99f653143d9e" />
 
