@@ -10,6 +10,7 @@ import com.team1.hangsha.event.model.Event
 import com.team1.hangsha.event.repository.EventRepository
 import com.team1.hangsha.event.dto.core.CrawledDetailSession
 import com.team1.hangsha.event.dto.core.CrawledProgramEvent
+import com.team1.hangsha.event.dto.request.EventPatchRequest
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Service
@@ -265,5 +266,58 @@ class EventSyncService(
         return sessions.map { s ->
             if (s.startTime == null && s.endTime == null) s.copy(startTime = start, endTime = end) else s
         }
+    }
+
+    @Transactional
+    fun patchEvent(eventId: Long, req: EventPatchRequest): Map<String, Any> {
+        val existing = eventRepository.findById(eventId).orElseThrow {
+            DomainException(ErrorCode.EVENT_NOT_FOUND)
+        }
+
+        val cleanedTagsJson = req.tags?.let { tags ->
+            val cleaned = tags.asSequence()
+                .map { it.trim() }
+                .filter { it.isNotBlank() }
+                .distinct()
+                .toList()
+            if (cleaned.isEmpty()) null else objectMapper.writeValueAsString(cleaned)
+        }
+
+        val updated = existing.copy(
+            title = req.title?.trim()?.takeIf { it.isNotBlank() } ?: existing.title,
+            imageUrl = req.imageUrl?.trim() ?: existing.imageUrl,
+            operationMode = req.operationMode?.trim() ?: existing.operationMode,
+
+            tags = cleanedTagsJson ?: existing.tags,
+            mainContentHtml = req.mainContentHtml ?: existing.mainContentHtml,
+
+            statusId = req.statusId ?: existing.statusId,
+            eventTypeId = req.eventTypeId ?: existing.eventTypeId,
+            orgId = req.orgId ?: existing.orgId,
+
+            applyStart = req.applyStart ?: existing.applyStart,
+            applyEnd = req.applyEnd ?: existing.applyEnd,
+            eventStart = req.eventStart ?: existing.eventStart,
+            eventEnd = req.eventEnd ?: existing.eventEnd,
+
+            capacity = req.capacity ?: existing.capacity,
+            applyCount = req.applyCount ?: existing.applyCount,
+
+            organization = req.organization?.trim() ?: existing.organization,
+            location = req.location?.trim() ?: existing.location,
+            applyLink = req.applyLink?.trim() ?: existing.applyLink,
+        )
+
+        val saved = eventRepository.save(updated)
+        return mapOf("ok" to true, "eventId" to (saved.id ?: eventId))
+    }
+
+    @Transactional
+    fun deleteEvent(eventId: Long): Map<String, Any> {
+        if (!eventRepository.existsById(eventId)) {
+            throw DomainException(ErrorCode.EVENT_NOT_FOUND)
+        }
+        eventRepository.deleteById(eventId)
+        return mapOf("ok" to true, "deletedEventId" to eventId)
     }
 }

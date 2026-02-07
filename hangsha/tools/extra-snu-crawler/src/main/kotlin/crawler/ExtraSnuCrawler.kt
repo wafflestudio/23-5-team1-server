@@ -171,6 +171,8 @@ class ExtraSnuCrawler(
                 if (curUrl != lastUrl && debug) println("[PW] url => $curUrl")
                 lastUrl = curUrl
 
+                if (curUrl == "https://nsso.snu.ac.kr/sso/usr/snu/mfa/login/view") { return null }
+
                 // 1) wait.jsp면: 서버가 대기열 처리 중. 재navigate 하지 말고 잠깐 기다림.
                 if (isWait(curUrl)) {
                     if (debug) println("[PW] wait.jsp... (sleep)")
