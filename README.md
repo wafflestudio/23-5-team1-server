@@ -37,13 +37,13 @@ https://hangsha.site/
 | 허서연(PM) | @h-seo-n | Frontend, UI/UX Design |
 | 김하람 | @haram831 | Frontend, UI/UX Design |
 | 김도향 | @D-hyang | Backend |
-| 이승현 | @subir-sh | Backend |
+| 이승현 | @subir-sh | Backend, Data Scraping |
 | 정혜인 | @aystoe | Backend |
 
 ### 기술 스택
 - Frontend: React, TS
 - Backend: Spring Boot, MySQL, Flyway, Docker, AWS S3, Nginx
-- Data Crawling: OKHttp, Playwright 
+- Data Scraping: OKHttp, Playwright 
 
 ## 프로젝트 뷰
 
