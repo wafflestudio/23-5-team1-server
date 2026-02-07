@@ -90,6 +90,8 @@ jobs:
                 container_name: campus-server
                 ports:
                   - "8080:8080"
+                volumes:
+                  - /data/uploads:/data/uploads
                 env_file:
                   - .env
                 environment:
