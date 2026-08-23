@@ -163,3 +163,5 @@ auth:
     secure: true
     # OAuth 콜백 302(cross-site 리다이렉트)에서 심기는 쿠키는 SameSite=Lax면 브라우저가 저장을 거부 : None + Secure로 설정 변경
     same-site: None
+email:
+  sender: oci
