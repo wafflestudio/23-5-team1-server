@@ -142,6 +142,7 @@ class EventService(
         orgIds: List<Long>?,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String>? = null,
     ): EventCountResponse {
         if (from.isAfter(to)) {
             throw DomainException(ErrorCode.INVALID_REQUEST, "from은 to보다 이후일 수 없습니다")
@@ -155,6 +156,7 @@ class EventService(
             orgIds = orgIds,
             userId = userId,
             applyExcludedKeywords = applyExcludedKeywords,
+            excludedKeywords = explicitExcludedKeywords(userId, applyExcludedKeywords, excludedKeywords),
         )
         return EventCountResponse(count = count)
     }
