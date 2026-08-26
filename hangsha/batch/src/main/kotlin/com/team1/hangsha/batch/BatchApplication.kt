@@ -57,4 +57,4 @@ private fun resolveBatchJob(args: Array<String>): String =
     System.getenv("BATCH_JOB")?.trim()?.takeIf { it.isNotEmpty() }
         ?: args.firstOrNull { it.startsWith("--batch.job=") }?.substringAfter("=")
         ?: args.firstOrNull { it.startsWith("--job=") }?.substringAfter("=")
-        ?: error("BATCH_JOB environment variable is required")
+        ?: "crawler"
