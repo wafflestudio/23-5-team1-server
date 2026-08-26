@@ -100,6 +100,11 @@ email:
     code-length: 6
     signup-token-ttl: 30m
 
+auth:
+  apple:
+    # Apple identity token의 aud에 허용할 iOS bundle identifier 목록 (쉼표 구분)
+    allowed-client-ids: ${APPLE_CLIENT_IDS:com.wafflestudio.hangsha.dev,com.wafflestudio.hangsha}
+
 search:
   reindex:
     enabled: true
