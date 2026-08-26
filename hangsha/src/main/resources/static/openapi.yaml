@@ -124,15 +124,36 @@ components:
 
     SocialLoginRequest:
       type: object
-      required: [ provider, code ]
+      required: [ provider ]
       properties:
         provider:
           type: string
           description: 소셜 로그인 Provider
-          enum: [ GOOGLE, KAKAO, NAVER ]
+          enum: [ APPLE, GOOGLE, KAKAO, NAVER ]
         code:
           type: string
+          nullable: true
           description: OAuth Authorization Code
+        accessToken:
+          type: string
+          nullable: true
+          description: Google/Kakao/Naver 모바일 access token
+        identityToken:
+          type: string
+          nullable: true
+          description: Apple 네이티브 로그인에서 받은 identity JWT
+        userIdentifier:
+          type: string
+          nullable: true
+          description: Apple credential user identifier (서버에서 JWT sub와 대조)
+        email:
+          type: string
+          nullable: true
+          description: Apple가 최초 승인에서 반환한 이메일 참고값 (계정 식별에는 검증된 JWT claim 사용)
+        name:
+          type: string
+          nullable: true
+          description: Apple가 최초 승인에서 반환한 사용자 이름
         codeVerifier:
           type: string
           nullable: true
@@ -912,6 +933,15 @@ paths:
                   provider: NAVER
                   code: "authorization_code_here"
                   codeVerifier: null
+              apple:
+                summary: Apple (iOS native)
+                value:
+                  provider: APPLE
+                  identityToken: "apple.identity.jwt"
+                  userIdentifier: "apple-user-identifier"
+                  name: "홍길동"
+                  code: "short-lived-authorization-code"
+                  client_type: MOB
       responses:
         "200":
           description: 로그인 성공 (accessToken 반환 + refreshToken 쿠키 세팅)
