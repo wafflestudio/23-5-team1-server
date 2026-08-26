@@ -15,7 +15,7 @@ data class MemoWithEventRow(
     val updatedAt: Instant?,
 
     val eventTitle: String?,
-    val categoryId: Long?,
+    val eventTypeId: Long?,
     val applyEnd: LocalDateTime?,
     val orgId: Long?,
     val orgName: String?,
@@ -34,7 +34,7 @@ class MemoQueryRepository(
 ) {
     /**
      * 유저의 메모를 행사 정보(마감일/주최기관/북마크 여부)와 함께 조회한다.
-     * events/categories/bookmarks는 LEFT JOIN이라 행사가 지워졌거나 주최기관 미분류여도 메모는 그대로 나온다.
+     * events/organizations/bookmarks는 LEFT JOIN이라 행사가 지워졌거나 주최기관 미분류여도 메모는 그대로 나온다.
      */
     fun findMemosWithEventByUserId(userId: Long): List<MemoWithEventRow> {
         val sql = """
@@ -44,14 +44,14 @@ class MemoQueryRepository(
                    m.created_at     AS created_at,
                    m.updated_at     AS updated_at,
                    e.title          AS event_title,
-                   e.org_id         AS category_id,
+                   e.event_type_id  AS event_type_id,
                    e.apply_end      AS apply_end,
                    c.id             AS org_id,
                    c.name           AS org_name,
                    (b.id IS NOT NULL) AS is_bookmarked
             FROM memos m
             LEFT JOIN events e ON e.id = m.event_id
-            LEFT JOIN categories c ON c.id = e.org_id
+            LEFT JOIN organizations c ON c.id = e.org_id
             LEFT JOIN bookmarks b ON b.event_id = m.event_id AND b.user_id = :userId
             WHERE m.user_id = :userId
             ORDER BY m.created_at DESC, m.id DESC
@@ -94,7 +94,7 @@ private fun ResultSet.toMemoWithEventRow(): MemoWithEventRow = MemoWithEventRow(
     updatedAt = getTimestamp("updated_at")?.toInstant(),
 
     eventTitle = getString("event_title"),
-    categoryId = getLongOrNull("category_id"),
+    eventTypeId = getLongOrNull("event_type_id"),
     applyEnd = getTimestamp("apply_end")?.toLocalDateTime(),
     orgId = getLongOrNull("org_id"),
     orgName = getString("org_name"),
