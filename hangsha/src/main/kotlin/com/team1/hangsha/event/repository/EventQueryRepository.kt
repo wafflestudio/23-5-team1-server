@@ -21,6 +21,7 @@ class EventQueryRepository(
         orgIds: List<Long>?,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String> = emptyList(),
     ): List<Event> {
         val sql = buildString {
             append(
@@ -51,7 +52,7 @@ class EventQueryRepository(
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
 
             if (applyExcludedKeywords) {
-                appendExcludedKeywordsFilter(userId)
+                appendExcludedKeywordsFilter(userId, excludedKeywords)
             }
 
             appendEventOrderBy(userId)
@@ -65,6 +66,7 @@ class EventQueryRepository(
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
         if (userId != null) params["userId"] = userId
+        excludedKeywords.forEachIndexed { index, keyword -> params["excludedKeyword$index"] = keyword }
 
         return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
     }
@@ -77,6 +79,7 @@ class EventQueryRepository(
         orgIds: List<Long>?,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String> = emptyList(),
     ): Int {
         val sql = buildString {
             append(
@@ -106,7 +109,7 @@ class EventQueryRepository(
             if (!eventTypeIds.isNullOrEmpty()) append("\n  AND event_type_id IN (:eventTypeIds)")
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
             if (applyExcludedKeywords) {
-                appendExcludedKeywordsFilter(userId)
+                appendExcludedKeywordsFilter(userId, excludedKeywords)
             }
         }
 
@@ -118,6 +121,7 @@ class EventQueryRepository(
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
         if (userId != null) params["userId"] = userId
+        excludedKeywords.forEachIndexed { index, keyword -> params["excludedKeyword$index"] = keyword }
 
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
@@ -129,6 +133,7 @@ class EventQueryRepository(
         orgIds: List<Long>?,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String> = emptyList(),
     ): Int {
         val dayStart = date.atStartOfDay()
         val dayEndExclusive = date.plusDays(1).atStartOfDay()
@@ -161,7 +166,7 @@ class EventQueryRepository(
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
 
             if (applyExcludedKeywords) {
-                appendExcludedKeywordsFilter(userId)
+                appendExcludedKeywordsFilter(userId, excludedKeywords)
             }
         }
 
@@ -173,6 +178,7 @@ class EventQueryRepository(
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
         if (userId != null) params["userId"] = userId
+        excludedKeywords.forEachIndexed { index, keyword -> params["excludedKeyword$index"] = keyword }
 
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
@@ -186,6 +192,7 @@ class EventQueryRepository(
         size: Int,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String> = emptyList(),
     ): List<Event> {
         val safePage = max(1, page)
         val safeSize = max(1, size)
@@ -222,7 +229,7 @@ class EventQueryRepository(
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
 
             if (applyExcludedKeywords) {
-                appendExcludedKeywordsFilter(userId)
+                appendExcludedKeywordsFilter(userId, excludedKeywords)
             }
 
             appendEventOrderBy(userId)
@@ -239,6 +246,7 @@ class EventQueryRepository(
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
         if (userId != null) params["userId"] = userId
+        excludedKeywords.forEachIndexed { index, keyword -> params["excludedKeyword$index"] = keyword }
 
         return jdbc.query(sql, params) { rs, _ -> rs.toEvent() }
     }
@@ -316,8 +324,18 @@ private fun ResultSet.toEvent(): Event {
     )
 }
 
-private fun StringBuilder.appendExcludedKeywordsFilter(userId: Long?) {
-    if (userId == null) return
+private fun StringBuilder.appendExcludedKeywordsFilter(userId: Long?, excludedKeywords: List<String>) {
+    if (userId == null) {
+        if (excludedKeywords.isEmpty()) return
+        append("\n  AND NOT (")
+        append(
+            excludedKeywords.indices.joinToString(" OR ") { index ->
+                "LOWER(e.title) LIKE CONCAT('%', :excludedKeyword$index, '%') ESCAPE '!'"
+            }
+        )
+        append(")")
+        return
+    }
 
     append(
         """
@@ -339,11 +357,10 @@ private fun StringBuilder.appendEventOrderBy(userId: Long?) {
     }
 
     val matchedPriorityExpr = """
-        (
-          SELECT MIN(uic.priority)
-          FROM user_interest_categories uic
-          WHERE uic.user_id = :userId
-            AND uic.category_id IN (e.status_id, e.event_type_id, e.org_id)
+        LEAST(
+          COALESCE((SELECT MIN(u.priority) FROM user_interest_categories u WHERE u.user_id = :userId AND u.event_status_id = e.status_id), 2147483647),
+          COALESCE((SELECT MIN(u.priority) FROM user_interest_categories u WHERE u.user_id = :userId AND u.event_type_id = e.event_type_id), 2147483647),
+          COALESCE((SELECT MIN(u.priority) FROM user_interest_categories u WHERE u.user_id = :userId AND u.organization_id = e.org_id), 2147483647)
         )
     """.trimIndent()
 
@@ -351,7 +368,7 @@ private fun StringBuilder.appendEventOrderBy(userId: Long?) {
         """
 
         ORDER BY
-          CASE WHEN $matchedPriorityExpr IS NULL THEN 1 ELSE 0 END ASC,
+          CASE WHEN $matchedPriorityExpr = 2147483647 THEN 1 ELSE 0 END ASC,
           $matchedPriorityExpr ASC,
           COALESCE(e.event_start, e.apply_start) ASC,
           e.id ASC

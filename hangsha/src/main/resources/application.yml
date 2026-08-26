@@ -94,7 +94,7 @@ email:
     from-address: hangsha@wafflestudio.com
     from-name: 행샤
   verification:
-    ttl: 30m                  # 화면 카운트다운(30:00)과 같은 값
+    ttl: 10m                  # 화면 카운트다운(10:00)과 같은 값
     resend-cooldown: 60s
     max-attempts: 5
     code-length: 6
@@ -168,3 +168,5 @@ auth:
     secure: true
     # OAuth 콜백 302(cross-site 리다이렉트)에서 심기는 쿠키는 SameSite=Lax면 브라우저가 저장을 거부 : None + Secure로 설정 변경
     same-site: None
+email:
+  sender: oci
