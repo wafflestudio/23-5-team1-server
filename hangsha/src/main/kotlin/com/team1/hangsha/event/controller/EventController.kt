@@ -55,6 +55,7 @@ class EventController(
         @RequestParam("eventTypeId", required = false) eventTypeIds: List<Long>?,
         @RequestParam("orgId", required = false) orgIds: List<Long>?,
         @RequestParam("applyExcludedKeywords", defaultValue = "true") applyExcludedKeywords: Boolean,
+        @RequestParam("excludedKeyword", required = false) excludedKeywords: List<String>?,
     ): EventCountResponse =
         eventService.countEvents(
             from = from,
@@ -64,6 +65,7 @@ class EventController(
             orgIds = orgIds,
             userId = user?.id,
             applyExcludedKeywords = applyExcludedKeywords,
+            excludedKeywords = excludedKeywords,
         )
 
     @GetMapping("/{eventId}")

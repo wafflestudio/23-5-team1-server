@@ -79,6 +79,7 @@ class EventQueryRepository(
         orgIds: List<Long>?,
         userId: Long?,
         applyExcludedKeywords: Boolean = true,
+        excludedKeywords: List<String> = emptyList(),
     ): Int {
         val sql = buildString {
             append(
@@ -108,7 +109,7 @@ class EventQueryRepository(
             if (!eventTypeIds.isNullOrEmpty()) append("\n  AND event_type_id IN (:eventTypeIds)")
             if (!orgIds.isNullOrEmpty()) append("\n  AND org_id IN (:orgIds)")
             if (applyExcludedKeywords) {
-                appendExcludedKeywordsFilter(userId, emptyList())
+                appendExcludedKeywordsFilter(userId, excludedKeywords)
             }
         }
 
@@ -120,6 +121,7 @@ class EventQueryRepository(
         if (!eventTypeIds.isNullOrEmpty()) params["eventTypeIds"] = eventTypeIds
         if (!orgIds.isNullOrEmpty()) params["orgIds"] = orgIds
         if (userId != null) params["userId"] = userId
+        excludedKeywords.forEachIndexed { index, keyword -> params["excludedKeyword$index"] = keyword }
 
         return jdbc.queryForObject(sql, params, Int::class.java) ?: 0
     }
