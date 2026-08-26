@@ -38,6 +38,7 @@ repositories {
 dependencies {
     implementation(project(":common"))
     implementation("com.wafflestudio.spring:spring-boot-starter-waffle-oci-vault:1.1.0")
+    implementation("com.google.firebase:firebase-admin:9.10.0")
 
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")

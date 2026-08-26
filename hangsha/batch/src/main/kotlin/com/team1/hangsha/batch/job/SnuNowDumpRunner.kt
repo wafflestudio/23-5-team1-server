@@ -4,21 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.team1.hangsha.batch.crawler.SnuNowCrawler
 import com.team1.hangsha.event.dto.core.CrawledProgramEvent
 import org.springframework.boot.ApplicationArguments
-import org.springframework.boot.ApplicationRunner
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.nio.file.Files
 import java.nio.file.Path
-import kotlin.system.exitProcess
 
-@Component
-class SnuNowDumpRunner(
+@Service
+class SnuNowDumpJob(
     private val objectMapper: ObjectMapper,
-) : ApplicationRunner {
-    override fun run(args: ApplicationArguments) {
-        if (args.getOptionValues("job")?.firstOrNull() !in setOf("snu-now-dump", "snu-calendar-dump")) {
-            return
-        }
+) : BatchJob {
+    override val names: Set<String> = setOf("snu-now-dump", "snu-calendar-dump")
 
+    override fun run(args: ApplicationArguments) {
         val opt = SnuNowDumpArgs.from(args)
         val rows = SnuNowCrawler(
             delayMsBetweenPages = opt.delayMs,
@@ -36,7 +32,6 @@ class SnuNowDumpRunner(
 
         writeDumpFile(opt.outFile, rows)
         println("Saved SNU Now events to ${Path.of(opt.outFile).toAbsolutePath().normalize()} (count=${rows.size})")
-        exitProcess(0)
     }
 
     private fun writeDumpFile(outFile: String, rows: List<CrawledProgramEvent>) {

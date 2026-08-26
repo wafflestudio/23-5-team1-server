@@ -3,7 +3,12 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V17__create_table_bookmarks.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V18__create_table_user_excluded_keywords.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V1__create_table_users.sql" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V23__add_is_period_event_to_events.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V26__add_admin_event_overrides.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V32__add_event_time_precision.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V34__create_user_event_activity_tables.sql" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V35__create_recommendation_result_tables.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V8__add_tags_and_html_to_events.sql" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/hangsha/src/main/resources/db/migration/V9__rename_category_deadline.sql" dialect="GenericSQL" />
   </component>

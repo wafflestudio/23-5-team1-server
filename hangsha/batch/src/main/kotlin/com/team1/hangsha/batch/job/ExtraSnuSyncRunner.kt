@@ -17,34 +17,27 @@ import com.team1.hangsha.event.repository.EventRepository
 import com.team1.hangsha.event.service.EventSyncService
 import com.team1.hangsha.search.outbox.EventSearchOutboxWriter
 import org.springframework.boot.ApplicationArguments
-import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.beans.factory.ObjectProvider
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Service
 import java.nio.file.Files
 import java.nio.file.Path
 import java.time.LocalDate
-import kotlin.system.exitProcess
 
-@Component
-@ConditionalOnProperty(name = ["job"], havingValue = "extra-snu-sync", matchIfMissing = true)
-class ExtraSnuSyncRunner(
+@Service
+class CrawlerJob(
     private val eventSyncServiceProvider: ObjectProvider<EventSyncService>,
     private val eventRepositoryProvider: ObjectProvider<EventRepository>,
     private val ociUploadService: OciUploadService,
     private val eliceEventParserClient: EliceEventParserClient,
     private val objectMapper: ObjectMapper,
-) : ApplicationRunner {
+) : BatchJob {
+    override val names: Set<String> = setOf("crawler")
 
     override fun run(args: ApplicationArguments) {
-        val job = args.getOptionValues("job")?.firstOrNull()
-        if (job != null && job != "extra-snu-sync") {
-            return
-        }
-
         val opt = BatchArgs.from(args)
 
         val applyChkCodes = listOf("0001", "0002", "0003", "0004")
@@ -202,7 +195,6 @@ class ExtraSnuSyncRunner(
                         "(skipped=$totalSkipped, openedRecruiting=$openedRecruiting, closedExpired=$closedExpired)"
             )
         }
-        exitProcess(0)
     }
 
     private fun writeDumpFile(outFile: String, rows: List<CrawledProgramEvent>) {
@@ -337,7 +329,7 @@ private fun ProgramEvent.extraSnuApplyLink(): String? =
         ?.let { "https://extra.snu.ac.kr/ptfol/pgm/view.do?dataSeq=$it" }
 
 @Configuration
-@ConditionalOnProperty(name = ["job"], havingValue = "extra-snu-sync", matchIfMissing = true)
+@ConditionalOnProperty(prefix = "batch", name = ["job"], havingValue = "crawler")
 @Import(
     TestValueLogger::class,
     OciConfig::class,
@@ -346,7 +338,7 @@ private fun ProgramEvent.extraSnuApplyLink(): String? =
 class ExtraSnuSyncConfiguration
 
 @Configuration
-@ConditionalOnExpression("'\${job:extra-snu-sync}' == 'extra-snu-sync' && '\${dumpOnly:false}' == 'false'")
+@ConditionalOnExpression("'\${batch.job}' == 'crawler' && '\${dumpOnly:false}' == 'false'")
 @Import(
     DatabaseConfig::class,
     EventSyncService::class,
