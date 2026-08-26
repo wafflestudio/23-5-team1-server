@@ -7,6 +7,9 @@ import com.team1.hangsha.common.error.DomainException
 import com.team1.hangsha.common.error.ErrorCode
 import com.team1.hangsha.common.extentions.truncateByDisplayLength
 import com.team1.hangsha.user.model.User
+import com.team1.hangsha.user.model.AuthProvider
+import com.team1.hangsha.user.model.UserIdentity
+import com.team1.hangsha.user.repository.UserIdentityRepository
 import com.team1.hangsha.user.repository.UserRepository
 import com.team1.hangsha.user.service.UserService
 import org.springframework.beans.factory.annotation.Value
@@ -22,7 +25,9 @@ import org.springframework.web.client.RestTemplate
 @Service
 class AuthService(
     private val userRepository: UserRepository,
+    private val userIdentityRepository: UserIdentityRepository,
     private val userService: UserService,
+    private val appleIdentityTokenVerifier: AppleIdentityTokenVerifier,
 
     @Value("\${spring.security.oauth2.client.registration.google.client-id}") val googleClientId: String,
     @Value("\${spring.security.oauth2.client.registration.google.client-secret}") val googleClientSecret: String,
@@ -41,6 +46,10 @@ class AuthService(
 
     @Transactional
     fun socialLogin(req: SocialLoginRequest): SocialLoginResult {
+        if (req.provider.equals("APPLE", ignoreCase = true)) {
+            return appleLogin(req)
+        }
+
         val socialProfile = when (req.provider.uppercase()) {
             "GOOGLE" -> getGoogleProfile(req.code,req.accessToken, req.codeVerifier, req.clientType) // codeVerifier 추가된 버전 유지
             "KAKAO" -> getKakaoProfile(req.code, req.accessToken)
@@ -70,6 +79,66 @@ class AuthService(
             accessToken = issued.accessToken,
             refreshCookie = issued.refreshCookie,
             isNewUser = isNewUser
+        )
+    }
+
+    private fun appleLogin(req: SocialLoginRequest): SocialLoginResult {
+        val identityToken = req.identityToken?.takeIf { it.isNotBlank() }
+            ?: throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS, "Apple identity token이 없습니다.")
+        val appleIdentity = appleIdentityTokenVerifier.verify(identityToken)
+
+        if (
+            !req.userIdentifier.isNullOrBlank() &&
+            req.userIdentifier != appleIdentity.providerUserId
+        ) {
+            throw DomainException(ErrorCode.AUTH_INVALID_CREDENTIALS, "Apple 사용자 식별자가 일치하지 않습니다.")
+        }
+
+        val existingIdentity = userIdentityRepository.findByProviderAndProviderUserId(
+            AuthProvider.APPLE,
+            appleIdentity.providerUserId,
+        )
+
+        var isNewUser = false
+        val user = if (existingIdentity != null) {
+            userRepository.findById(existingIdentity.userId)
+                .orElseThrow { DomainException(ErrorCode.USER_NOT_FOUND) }
+        } else {
+            val verifiedEmail = appleIdentity.email
+                ?: throw DomainException(
+                    ErrorCode.AUTH_INVALID_CREDENTIALS,
+                    "신규 Apple 계정의 검증된 이메일 정보가 없습니다.",
+                )
+            val existingUser = userRepository.findByEmail(verifiedEmail)
+            val linkedUser = existingUser ?: run {
+                isNewUser = true
+                val requestedName = req.name?.trim()?.takeIf { it.isNotBlank() }
+                val username = (requestedName ?: verifiedEmail.substringBefore("@"))
+                    .truncateByDisplayLength(20)
+                userRepository.save(
+                    User(
+                        email = verifiedEmail,
+                        username = username,
+                    ),
+                )
+            }
+
+            userIdentityRepository.save(
+                UserIdentity(
+                    userId = linkedUser.id!!,
+                    provider = AuthProvider.APPLE,
+                    providerUserId = appleIdentity.providerUserId,
+                    email = verifiedEmail,
+                ),
+            )
+            linkedUser
+        }
+
+        val issued = userService.issueAfterSocialLogin(user.id!!)
+        return SocialLoginResult(
+            accessToken = issued.accessToken,
+            refreshCookie = issued.refreshCookie,
+            isNewUser = isNewUser,
         )
     }
 
