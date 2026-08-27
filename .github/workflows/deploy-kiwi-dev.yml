@@ -5,6 +5,7 @@ on:
     branches: [ develop ]
     paths:
       - 'kiwi-service/**'
+  workflow_dispatch:
 
 jobs:
   deploy:
