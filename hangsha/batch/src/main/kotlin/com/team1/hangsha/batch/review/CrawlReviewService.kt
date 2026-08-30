@@ -120,16 +120,37 @@ class CrawlReviewService(
 
     private fun sendToDiscord(report: String) {
         report.chunked(DISCORD_LIMIT).forEach { chunk ->
-            val payload = objectMapper.writeValueAsString(
-                DiscordPayload(chunk, DiscordAllowedMentions(emptyList()))
-            )
-            val request = Request.Builder()
-                .url(discordWebhookUri)
-                .post(payload.toRequestBody(JSON_MEDIA_TYPE))
-                .build()
-            httpClient.newCall(request).execute().use { response ->
-                check(response.isSuccessful) { "Discord webhook failed: HTTP ${response.code}" }
+            sendChunkWithRetry(chunk)
+        }
+    }
+
+    private fun sendChunkWithRetry(chunk: String) {
+        val payload = objectMapper.writeValueAsString(
+            DiscordPayload(chunk, DiscordAllowedMentions(emptyList()))
+        )
+        val request = Request.Builder()
+            .url(discordWebhookUri)
+            .post(payload.toRequestBody(JSON_MEDIA_TYPE))
+            .build()
+
+        while (true) {
+            val retryAfterMillis = httpClient.newCall(request).execute().use { response ->
+                if (response.isSuccessful) return
+                check(response.code == 429) { "Discord webhook failed: HTTP ${response.code}" }
+
+                val body = response.body?.string()
+                val retryAfterSeconds = body?.let { responseBody ->
+                    runCatching {
+                        objectMapper.readTree(responseBody)["retry_after"]?.asDouble()
+                    }.getOrNull()
+                } ?: response.header("Retry-After")?.toDoubleOrNull()
+                    ?: DEFAULT_RETRY_AFTER_SECONDS
+
+                (retryAfterSeconds * 1_000).toLong().coerceAtLeast(MIN_RETRY_DELAY_MILLIS)
             }
+
+            log.warn("Discord webhook rate limited; retrying after {} ms", retryAfterMillis)
+            Thread.sleep(retryAfterMillis)
         }
     }
 
@@ -143,6 +164,8 @@ class CrawlReviewService(
     private companion object {
         const val CURSOR_NAME = "extra-snu-sync"
         const val DISCORD_LIMIT = 1_900
+        const val DEFAULT_RETRY_AFTER_SECONDS = 1.0
+        const val MIN_RETRY_DELAY_MILLIS = 100L
         val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
     }
 }
