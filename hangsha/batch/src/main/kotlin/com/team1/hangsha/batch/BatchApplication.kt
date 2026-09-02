@@ -14,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.annotation.Import
 import kotlin.system.exitProcess
+import com.team1.hangsha.batch.config.BookmarkNotificationDatabaseConfiguration
 
 @SpringBootApplication
 @Import(
@@ -21,6 +22,7 @@ import kotlin.system.exitProcess
     TestValueLogger::class,
     OciConfig::class,
     OciUploadService::class,
+    BookmarkNotificationDatabaseConfiguration::class,
 ) // for explicit bean import
 class BatchApplication
 
